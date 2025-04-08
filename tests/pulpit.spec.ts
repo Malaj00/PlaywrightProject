@@ -31,19 +31,28 @@ test.describe('Pulpit tests', () => {
   });
 
   test('Successful mobile top-up', async ({ page }) => {
-    await page.goto('https://demo-bank.vercel.app/');
-    await page.getByTestId('login-input').fill('tester12');
-    await page.getByTestId('password-input').fill('tester12');
+    // Arrange
+    const url = 'https://demo-bank.vercel.app/';
+    const userId = 'tester12';
+    const userPassword = '12312312';
+    const receiverTopup = '500 xxx xxx';
+    const transferAmount = '150';
+    const finalText = 'Doładowanie wykonane!';
+    const expectedMessage = `${finalText} ${transferAmount},00PLN na numer ${receiverTopup}`;
+
+    //Act
+    await page.goto(url);
+    await page.getByTestId('login-input').fill(userId);
+    await page.getByTestId('password-input').fill(userPassword);
     await page.getByTestId('login-button').click();
 
-    await page.locator('#widget_1_topup_receiver').selectOption('500 xxx xxx');
-    await page.locator('#widget_1_topup_amount').fill('150');
+    await page.locator('#widget_1_topup_receiver').selectOption(receiverTopup);
+    await page.locator('#widget_1_topup_amount').fill(transferAmount);
     await page.locator('#uniform-widget_1_topup_agreement span').click();
     await page.getByRole('button', { name: 'doładuj telefon' }).click();
     await page.getByTestId('close-button').click();
 
-    await expect(page.locator('#show_messages')).toHaveText(
-      'Doładowanie wykonane! 150,00PLN na numer 500 xxx xxx',
-    );
+    //Assert
+    await expect(page.locator('#show_messages')).toHaveText(expectedMessage);
   });
 });
