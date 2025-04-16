@@ -6,13 +6,14 @@ test.describe('Payment tests', () => {
   test.beforeEach(async ({ page }) => {
     const userId = loginData.userId;
     const userPassword = loginData.userPassword;
+    const loginPage = new LoginPage(page);
 
     await page.goto('/');
-    const loginPage = new LoginPage(page);
     await loginPage.loginInput.fill(userId);
     await loginPage.passwordInput.fill(userPassword);
     await loginPage.loginButton.click();
 
+    //pomijamy menu boczne
     await page.getByRole('link', { name: 'płatności' }).click();
   });
 
