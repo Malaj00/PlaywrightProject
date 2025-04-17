@@ -14,7 +14,7 @@ test.describe('Payment tests', () => {
     await loginPage.passwordInput.fill(userPassword);
     await loginPage.loginButton.click();
 
-    //pomijamy menu boczne
+    //menu boczne
     await page.getByRole('link', { name: 'płatności' }).click();
   });
 

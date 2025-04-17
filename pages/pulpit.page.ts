@@ -11,6 +11,7 @@ export class PulpitPage {
   topupCheckbox: Locator;
   topupSubmit: Locator;
   topupBalance: Locator;
+  correctUserName: Locator;
 
   constructor(private page: Page) {
     this.paymentReceiver = this.page.locator('#widget_1_transfer_receiver');
@@ -24,5 +25,7 @@ export class PulpitPage {
     this.topupCheckbox = page.locator('#uniform-widget_1_topup_agreement span');
     this.topupSubmit = page.getByRole('button', { name: 'doładuj telefon' });
     this.topupBalance = page.locator('#money_value');
+    this.correctUserName = this.page.getByTestId('user-name');
+
   }
 }

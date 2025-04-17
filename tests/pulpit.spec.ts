@@ -59,11 +59,11 @@ test.describe('Pulpit tests', () => {
 
   test('coreect balance after successful mobile top-up', async ({ page }) => {
     // Arrange
+    const pulpitPage = new PulpitPage(page);
     const receiverTopup = '500 xxx xxx';
     const transferAmount = '150';
-    const initialBalance = await page.locator('#money_value').innerText();
+    const initialBalance = await pulpitPage.topupBalance.innerText();
     const expectedBalance = Number(initialBalance) - Number(transferAmount);
-    const pulpitPage = new PulpitPage(page);
 
     //Act
     await pulpitPage.topupReceiver.selectOption(receiverTopup);
