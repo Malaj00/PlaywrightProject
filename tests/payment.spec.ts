@@ -2,20 +2,23 @@ import { test, expect } from '@playwright/test';
 import { loginData } from '../test-data/login.data';
 import { LoginPage } from '../pages/login.page';
 import { PaymentPage } from '../pages/payment.page';
+import { PulpitPage } from '../pages/pulpit.page';
 
 test.describe('Payment tests', () => {
   test.beforeEach(async ({ page }) => {
     const userId = loginData.userId;
     const userPassword = loginData.userPassword;
     const loginPage = new LoginPage(page);
+    const paymentPage = new PaymentPage(page);
 
     await page.goto('/');
     await loginPage.loginInput.fill(userId);
     await loginPage.passwordInput.fill(userPassword);
     await loginPage.loginButton.click();
-
+    
     //menu boczne
-    await page.getByRole('link', { name: 'płatności' }).click();
+    await paymentPage.sideMenu.paymentButton.click();
+    //await page.getByRole('link', { name: 'płatności' }).click();
   });
 
   test('Simple payment', async ({ page }) => {
