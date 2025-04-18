@@ -4,8 +4,11 @@ import { LoginPage } from '../pages/login.page';
 import { PulpitPage } from '../pages/pulpit.page';
 
 test.describe('User login to Demobank', () => {
+  let loginPage: LoginPage;
+
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
+    loginPage = new LoginPage(page);
   });
 
   test('successful login with correct credentials', async ({ page }) => {
@@ -13,13 +16,10 @@ test.describe('User login to Demobank', () => {
     const userId = loginData.userId;
     const userPassword = loginData.userPassword;
     const expectedUserName = 'Jan Demobankowy';
-    const loginPage = new LoginPage(page);
     const pulpitPage = new PulpitPage(page);
 
     //Act
-    await loginPage.loginInput.fill(userId);
-    await loginPage.passwordInput.fill(userPassword);
-    await loginPage.loginButton.click();
+    await loginPage.login(userId, userPassword) 
 
     //Assert
     await expect(pulpitPage.correctUserName).toHaveText(expectedUserName);
@@ -29,7 +29,6 @@ test.describe('User login to Demobank', () => {
     // Arrange
     const incorrectuserId = 'test';
     const expectedError = 'identyfikator ma min. 8 znaków';
-    const loginPage = new LoginPage(page);
 
     //Act
     await loginPage.loginInput.fill(incorrectuserId);
@@ -44,7 +43,6 @@ test.describe('User login to Demobank', () => {
     const expectedError = 'hasło ma min. 8 znaków';
     const userId = loginData.userId;
     const incorrectPassword = '1231';
-    const loginPage = new LoginPage(page);
 
     //Act
     await loginPage.loginInput.fill(userId);

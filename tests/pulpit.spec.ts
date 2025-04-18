@@ -4,15 +4,15 @@ import { LoginPage } from '../pages/login.page';
 import { PulpitPage } from '../pages/pulpit.page';
 
 test.describe('Pulpit tests', () => {
+  let pulpitPage: PulpitPage;
   test.beforeEach(async ({ page }) => {
     const userId = loginData.userId;
     const userPassword = loginData.userPassword;
     const loginPage = new LoginPage(page);
+    pulpitPage = new PulpitPage(page);
 
     await page.goto('/');
-    await loginPage.loginInput.fill(userId);
-    await loginPage.passwordInput.fill(userPassword);
-    await loginPage.loginButton.click();
+    await loginPage.login(userId, userPassword) 
   });
 
   test('Quick payment with correct data', async ({ page }) => {
@@ -21,7 +21,6 @@ test.describe('Pulpit tests', () => {
     const transferAmount = '150';
     const transferTitle = 'pizza';
     const expectedTransferReceiver = 'Chuck Demobankowy';
-    const pulpitPage = new PulpitPage(page);
 
     //Act
     await pulpitPage.paymentReceiver.selectOption(reciverId);
@@ -42,7 +41,6 @@ test.describe('Pulpit tests', () => {
     const transferAmount = '150';
     const finalText = 'Doładowanie wykonane!';
     const expectedMessage = `${finalText} ${transferAmount},00PLN na numer ${receiverTopup}`;
-    const pulpitPage = new PulpitPage(page);
 
     //Act
 
@@ -59,7 +57,6 @@ test.describe('Pulpit tests', () => {
 
   test('coreect balance after successful mobile top-up', async ({ page }) => {
     // Arrange
-    const pulpitPage = new PulpitPage(page);
     const receiverTopup = '500 xxx xxx';
     const transferAmount = '150';
     const initialBalance = await pulpitPage.topupBalance.innerText();
