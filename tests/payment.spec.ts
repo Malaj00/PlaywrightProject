@@ -13,10 +13,6 @@ test.describe('Payment tests', () => {
 
     await page.goto('/');
     await loginPage.login(userId, userPassword);
-    // await loginPage.loginInput.fill(userId);
-    // await loginPage.passwordInput.fill(userPassword);
-    // await loginPage.loginButton.click();
-
     //menu boczne
     await paymentPage.sideMenu.paymentButton.click();
   });
