@@ -10,7 +10,7 @@ export class PaymentPage {
   sideMenu: SideMenuComponent;
 
   constructor(private page: Page) {
-    this.sideMenu = new SideMenuComponent(this.page)
+    this.sideMenu = new SideMenuComponent(this.page);
     this.trasnferReceiver = this.page.getByTestId('transfer_receiver');
     this.transferReceiverNumber = this.page.getByTestId('form_account_to');
     this.transferAmount = this.page.getByTestId('form_amount');
@@ -19,5 +19,17 @@ export class PaymentPage {
     });
     this.popupClose = this.page.getByTestId('close-button');
     this.expectedMessage = page.locator('#show_messages');
+  }
+
+  async makeTransfer(
+    transferReceiver: string,
+    transferAccount: string,
+    transferAmount: string,
+  ): Promise<void> {
+    await this.trasnferReceiver.fill(transferReceiver);
+    await this.transferReceiverNumber.fill(transferAccount);
+    await this.transferAmount.fill(transferAmount);
+    await this.transferSubmit.click();
+    await this.popupClose.click();
   }
 }

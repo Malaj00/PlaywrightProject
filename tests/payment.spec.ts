@@ -12,14 +12,13 @@ test.describe('Payment tests', () => {
     paymentPage = new PaymentPage(page);
 
     await page.goto('/');
-    await loginPage.login(userId, userPassword) 
+    await loginPage.login(userId, userPassword);
     // await loginPage.loginInput.fill(userId);
     // await loginPage.passwordInput.fill(userPassword);
     // await loginPage.loginButton.click();
-    
+
     //menu boczne
     await paymentPage.sideMenu.paymentButton.click();
-
   });
 
   test('Simple payment', async ({ page }) => {
@@ -30,12 +29,11 @@ test.describe('Payment tests', () => {
     const expectedMessage = `Przelew wykonany! ${transferAmount},00PLN dla Jan Nowak`;
 
     //Act
-
-    await paymentPage.trasnferReceiver.fill(transferReceiver);
-    await paymentPage.transferReceiverNumber.fill(transferAccount);
-    await paymentPage.transferAmount.fill(transferAmount);
-    await paymentPage.transferSubmit.click();
-    await paymentPage.popupClose.click();
+    await paymentPage.makeTransfer(
+      transferReceiver,
+      transferAccount,
+      transferAmount,
+    );
 
     //Assert
     await expect(paymentPage.expectedMessage).toHaveText(expectedMessage);
