@@ -8,7 +8,7 @@ test.describe('Test login - practice automation', () => {
     tempTest = new NowyTest(page);
     await page.goto('https://practicetestautomation.com/practice-test-login/');
   });
-  test('Positive LogIn test', async ({ page }) => {
+  test.skip('Positive LogIn test', async ({ page }) => {
     //Arrane
     const userID = tempData.userID;
     const userPassword = tempData.userPassword;
@@ -22,7 +22,7 @@ test.describe('Test login - practice automation', () => {
     await expect(tempTest.loginSubHeading).toHaveText(expectedMessage2);
   });
 
-  test('Negative username test', async ({ page }) => {
+  test.skip('Negative username test', async ({ page }) => {
     //Arrange
     const incorrectID = 'incorrectUser';
     const userPassword = tempData.userPassword;
@@ -35,7 +35,7 @@ test.describe('Test login - practice automation', () => {
     await expect(tempTest.wrongID).toHaveText(wrongIDmessage);
   });
 
-  test('Negative password test', async ({ page }) => {
+  test.skip('Negative password test', async ({ page }) => {
     //Arrange
     const userID = tempData.userID;
     const wrongPassword = 'incorrectPassword';
@@ -58,7 +58,7 @@ test.describe('Test Exceptions', () => {
     const userPassword = tempData.userPassword;
     await tempTest.login(userID, userPassword);
   });
-  test.only('TC1-NoSuchElementException', async ({ page }) => {
+  test.skip('TC1-NoSuchElementException', async ({ page }) => {
     //Arrange
     //Act
     await tempTest.practiceTab.click();

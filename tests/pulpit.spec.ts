@@ -12,7 +12,7 @@ test.describe('Pulpit tests', () => {
     pulpitPage = new PulpitPage(page);
 
     await page.goto('/');
-    await loginPage.login(userId, userPassword) 
+    await loginPage.login(userId, userPassword);
   });
 
   test('Quick payment with correct data', async ({ page }) => {
@@ -23,11 +23,7 @@ test.describe('Pulpit tests', () => {
     const expectedTransferReceiver = 'Chuck Demobankowy';
 
     //Act
-    await pulpitPage.paymentReceiver.selectOption(reciverId);
-    await pulpitPage.paymentAmount.fill(transferAmount);
-    await pulpitPage.paymentTitle.fill(transferTitle);
-    await pulpitPage.paymentSubmit.click();
-    await pulpitPage.popupClose.click();
+    await pulpitPage.quickpayment(reciverId, transferAmount, transferTitle);
 
     //Assert
     await expect(pulpitPage.expectedTrasnferMessage).toHaveText(
@@ -43,11 +39,7 @@ test.describe('Pulpit tests', () => {
     const expectedMessage = `${finalText} ${transferAmount},00PLN na numer ${receiverTopup}`;
 
     //Act
-
-    await pulpitPage.topupReceiver.selectOption(receiverTopup);
-    await pulpitPage.topupAmount.fill(transferAmount);
-    await pulpitPage.topupCheckbox.click();
-    await pulpitPage.topupSubmit.click();
+    await pulpitPage.topup(receiverTopup, transferAmount);
 
     //Assert
     await expect(pulpitPage.expectedTrasnferMessage).toHaveText(
@@ -63,14 +55,9 @@ test.describe('Pulpit tests', () => {
     const expectedBalance = Number(initialBalance) - Number(transferAmount);
 
     //Act
-    await pulpitPage.topupReceiver.selectOption(receiverTopup);
-    await pulpitPage.topupAmount.fill(transferAmount);
-    await pulpitPage.topupCheckbox.click();
-    await pulpitPage.topupSubmit.click();
-    await pulpitPage.popupClose.click();
+    await pulpitPage.topup(receiverTopup, transferAmount);
 
     //Assert
-
     await expect(pulpitPage.topupBalance).toHaveText(`${expectedBalance}`);
   });
 });
