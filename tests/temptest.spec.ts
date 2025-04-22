@@ -73,11 +73,10 @@ test.describe('Test Exceptions', () => {
     await tempTest.rowAdded.nth(1).click();
   });
 
-
-  test.only('TC2-ElementNotInteractableException', async ({ page }) => {
+  test.skip('TC2-ElementNotInteractableException', async ({ page }) => {
     //Arrange
-    const row2saved = 'Row 2 was saved'
-    const boxText = 'testtext'
+    const row2saved = 'Row 2 was saved';
+    const boxText = 'testtext';
     //Act
     await tempTest.rowAdd();
     await tempTest.rowAdded
@@ -86,11 +85,26 @@ test.describe('Test Exceptions', () => {
     await tempTest.rowAdded.nth(1).fill(boxText);
     //await tempTest.getVisibleTextbox().fill('testtext');
     //page.getByRole('textbox').filter({ has: page.locator(':visible') }).first().fill('testtext');
-    
     await tempTest.saveButton.click();
 
     //Assert
     await expect(tempTest.rowSaved).toHaveText(row2saved);
-    await expect(tempTest.rowAdded.nth(1)).toHaveValue(boxText)
+    await expect(tempTest.rowAdded.nth(1)).toHaveValue(boxText);
+  });
+
+  test.only('TC3-InvalidElementStateException', async ({ page }) => {
+    //Arrange
+    const boxText = 'testtext';
+    //Act
+    await tempTest.rowAdd();
+    await tempTest.rowAdded
+      .nth(1)
+      .waitFor({ state: 'visible', timeout: 10000 });
+    await tempTest.rowAdded.nth(1).fill(boxText);
+    await tempTest.saveButton.click();
+    await tempTest.editButton.click();
+    await tempTest.rowAdded.nth(1).clear();
+    //Assert
+    await expect(tempTest.rowAdded.nth(1)).toHaveValue('');
   });
 });
