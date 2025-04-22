@@ -11,6 +11,9 @@ export class NowyTest {
   testExceptions: Locator;
   addRow: Locator;
   rowAdded: Locator;
+  saveButton: Locator;
+  rowSaved: Locator;
+
 
   constructor(private page: Page) {
     this.loginHeading = this.page.getByRole('heading', {
@@ -28,11 +31,18 @@ export class NowyTest {
     this.testExceptions = page.getByRole('link', { name: 'Test Exceptions' });
     this.addRow = page.getByRole('button', { name: 'Add' });
     this.rowAdded = page.getByRole('textbox');
+    this.saveButton = page.getByRole('button', { name: 'Save' });
+    this.rowSaved = page.getByText('Row 2 was saved');
   }
-
   async login(userID: string, userPassword: string) {
     await this.loginInput.fill(userID);
     await this.passwordInput.fill(userPassword);
     await this.sumbitButton.click();
+  }
+
+  async rowAdd(){
+    await this.practiceTab.click();
+    await this.testExceptions.click();
+    await this.addRow.click();
   }
 }

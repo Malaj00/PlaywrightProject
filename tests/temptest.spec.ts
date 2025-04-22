@@ -72,4 +72,21 @@ test.describe('Test Exceptions', () => {
       .waitFor({ state: 'visible', timeout: 10000 });
     await tempTest.rowAdded.nth(1).click();
   });
+
+
+  test.skip('TC2-ElementNotInteractableException', async ({ page }) => {
+    //Arrange
+    const row2saved = 'Row 2 was saved'
+    const boxText = 'testtext'
+    //Act
+    await tempTest.rowAdd();
+    await tempTest.rowAdded
+      .nth(1)
+      .waitFor({ state: 'visible', timeout: 10000 });
+    await tempTest.rowAdded.nth(1).fill(boxText);
+    await tempTest.saveButton.click();
+    //Assert
+    await expect(tempTest.rowSaved).toHaveText(row2saved);
+    await expect(tempTest.rowAdded.nth(1)).toHaveValue(boxText)
+  });
 });
