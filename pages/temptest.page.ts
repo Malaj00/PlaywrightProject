@@ -13,7 +13,7 @@ export class NowyTest {
   rowAdded: Locator;
   saveButton: Locator;
   rowSaved: Locator;
-
+  visibleTextbox: Locator;
 
   constructor(private page: Page) {
     this.loginHeading = this.page.getByRole('heading', {
@@ -40,9 +40,14 @@ export class NowyTest {
     await this.sumbitButton.click();
   }
 
-  async rowAdd(){
+  async rowAdd() {
     await this.practiceTab.click();
     await this.testExceptions.click();
     await this.addRow.click();
   }
+  // getVisibleTextbox(): Locator {
+  //   return this.page
+  //     .getByRole('textbox')
+  //     .filter({ has: this.page.locator(':visible') })
+  //     .first();
 }

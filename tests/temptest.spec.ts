@@ -74,7 +74,7 @@ test.describe('Test Exceptions', () => {
   });
 
 
-  test.skip('TC2-ElementNotInteractableException', async ({ page }) => {
+  test.only('TC2-ElementNotInteractableException', async ({ page }) => {
     //Arrange
     const row2saved = 'Row 2 was saved'
     const boxText = 'testtext'
@@ -84,7 +84,11 @@ test.describe('Test Exceptions', () => {
       .nth(1)
       .waitFor({ state: 'visible', timeout: 10000 });
     await tempTest.rowAdded.nth(1).fill(boxText);
+    //await tempTest.getVisibleTextbox().fill('testtext');
+    //page.getByRole('textbox').filter({ has: page.locator(':visible') }).first().fill('testtext');
+    
     await tempTest.saveButton.click();
+
     //Assert
     await expect(tempTest.rowSaved).toHaveText(row2saved);
     await expect(tempTest.rowAdded.nth(1)).toHaveValue(boxText)
