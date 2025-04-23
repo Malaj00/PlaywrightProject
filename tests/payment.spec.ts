@@ -17,7 +17,7 @@ test.describe('Payment tests', () => {
     await paymentPage.sideMenu.paymentButton.click();
   });
 
-  test('Simple payment', async ({ page }) => {
+  test('Simple payment',   { tag: ['@payment', '@integration'] }, async ({ page }) => {
     //Arrange
     const transferReceiver = 'Jan Nowak';
     const transferAccount = '12 1239 2939 2399 2939 2498 85772';

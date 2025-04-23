@@ -15,6 +15,7 @@ export class NowyTest {
   rowSaved: Locator;
   visibleTextbox: Locator;
   editButton: Locator;
+  instructionRow: Locator;
 
   constructor(private page: Page) {
     this.loginHeading = this.page.getByRole('heading', {
@@ -33,8 +34,9 @@ export class NowyTest {
     this.addRow = page.getByRole('button', { name: 'Add' });
     this.rowAdded = page.getByRole('textbox');
     this.saveButton = page.getByRole('button', { name: 'Save' });
-    this.rowSaved = page.getByText('Row 2 was saved');
+    this.rowSaved = page.locator('#confirmation');
     this.editButton = page.getByRole('button', { name: 'Edit' })
+    this.instructionRow = page.locator('#instructions');
   }
   async login(userID: string, userPassword: string) {
     await this.loginInput.fill(userID);

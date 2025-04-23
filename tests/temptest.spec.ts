@@ -54,16 +54,11 @@ test.describe('Test Exceptions', () => {
   test.beforeEach(async ({ page }) => {
     tempTest = new NowyTest(page);
     await page.goto('https://practicetestautomation.com/practice-test-login/');
-    const userID = tempData.userID;
-    const userPassword = tempData.userPassword;
-    await tempTest.login(userID, userPassword);
   });
   test.skip('TC1-NoSuchElementException', async ({ page }) => {
     //Arrange
     //Act
-    await tempTest.practiceTab.click();
-    await tempTest.testExceptions.click();
-    await tempTest.addRow.click();
+    await tempTest.rowAdd();
     //Assert
     //krok asercji, który powie Ci: "OK, element faktycznie się pojawił", zanim cokolwiek z nim zrobisz.
     //await expect(tempTest.rowAdded.nth(1)).toBeVisible();
@@ -92,7 +87,7 @@ test.describe('Test Exceptions', () => {
     await expect(tempTest.rowAdded.nth(1)).toHaveValue(boxText);
   });
 
-  test.only('TC3-InvalidElementStateException', async ({ page }) => {
+  test.skip('TC3-InvalidElementStateException', async ({ page }) => {
     //Arrange
     const boxText = 'testtext';
     //Act
@@ -106,5 +101,18 @@ test.describe('Test Exceptions', () => {
     await tempTest.rowAdded.nth(1).clear();
     //Assert
     await expect(tempTest.rowAdded.nth(1)).toHaveValue('');
+  });
+
+  test.skip('TC4-StaleElementReferenceException', async ({ page }) => {
+    //Arrange
+    const expectedInstruction = 'Push “Add” button to add another row';
+    //Act
+    await tempTest.practiceTab.click();
+    await tempTest.testExceptions.click();
+    await expect(tempTest.instructionRow).toHaveText(expectedInstruction);
+    await tempTest.addRow.click();
+    //Assert
+    await expect(tempTest.instructionRow).toHaveCount(0);
+
   });
 });
