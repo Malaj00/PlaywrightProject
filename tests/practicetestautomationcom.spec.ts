@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
-import { tempData } from '../test-data/templogin.data';
-import { NowyTest } from '../pages/temptest.page';
+import { tempData } from '../test-data/practicetestautomation.data';
+import { NowyTest } from '../pages/practicetestautomation.page';
 
 test.describe('Test login - practice automation', () => {
   let tempTest: NowyTest;

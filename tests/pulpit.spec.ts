@@ -17,7 +17,7 @@ test.describe('Pulpit tests', () => {
 
   test(
     'Quick payment with correct data',
-    { tag: ['@pulpit', '@integration'] },
+    { tag: ['@pulpit', '@integration'], annotation: {type: "documentation", description: "https://jaktestowac.pl/playwright/"} },
     async ({ page }) => {
       // Arrange
       const reciverId = '2';
@@ -55,7 +55,7 @@ test.describe('Pulpit tests', () => {
     },
   );
 
-  test.only(
+  test(
     'coreect balance after successful mobile top-up',
     { tag: ['@payment', '@integration'] },
     async ({ page }) => {
