@@ -15,9 +15,15 @@ test.describe('Pulpit tests', () => {
     await loginPage.login(userId, userPassword);
   });
 
-  test(
+  test.only(
     'Quick payment with correct data',
-    { tag: ['@pulpit', '@integration'], annotation: {type: "documentation", description: "https://jaktestowac.pl/playwright/"} },
+    {
+      tag: ['@pulpit', '@integration'],
+      annotation: {
+        type: 'documentation',
+        description: 'https://jaktestowac.pl/playwright/',
+      },
+    },
     async ({ page }) => {
       // Arrange
       const reciverId = '2';

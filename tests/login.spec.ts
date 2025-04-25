@@ -17,7 +17,8 @@ test.describe('User login to Demobank', () => {
       tag: ['@login', '@smoke'],
       annotation: {
         type: 'Happy Path',
-        description: 'Additional Information: link, requirments, description etc.',
+        description:
+          'Additional Information: link, requirments, description etc.',
       },
     },
     async ({ page }) => {
@@ -54,7 +55,7 @@ test.describe('User login to Demobank', () => {
 
   test(
     'unsuccessful login with too short password',
-    { tag: ['@login', '@unhappy_path']  },
+    { tag: ['@login', '@unhappy_path'] },
     async ({ page }) => {
       //Arrange
       const expectedError = 'hasło ma min. 8 znaków';

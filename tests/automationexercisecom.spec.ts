@@ -1,17 +1,23 @@
 import { test, expect } from '@playwright/test';
 import { LoginData } from '../test-data/automationexercise.data';
 import { RegisterPage } from '../pages/automationexercise.page';
-import { register } from 'module';
 
 test.describe('Register and login tests', () => {
   let registerPage: RegisterPage;
   test.beforeEach(async ({ page }) => {
     registerPage = new RegisterPage(page);
     await page.goto('http://automationexercise.com');
+    await expect(page.locator('#slider-carousel')).toBeVisible();
     await page.getByRole('button', { name: 'Consent' }).click();
     await page.getByRole('link', { name: ' Signup / Login' }).click();
+    await expect(page.getByText('Login to your account')).toHaveText(
+      'Login to your account',
+    );
+    await expect(page.getByText('New User Signup!')).toHaveText(
+      'New User Signup!',
+    );
   });
-  test.skip('TC1 - Register User', async ({ page }) => {
+  test('TC1 - Register User', async ({ page }) => {
     //Arrange
 
     //Act
@@ -62,10 +68,10 @@ test.describe('Register and login tests', () => {
     await expect(page.locator('[data-qa="account-created"]')).toHaveText(
       'Account Created!',
     );
-    await page.getByRole('link', { name: 'Continue' }).click();
-    await page.getByRole('link', { name: ' Delete Account' }).click();
-    await page.getByText('Account Deleted!').click();
-    await page.getByRole('link', { name: 'Continue' }).click();
+    // await page.getByRole('link', { name: 'Continue' }).click();
+    // await page.getByRole('link', { name: ' Delete Account' }).click();
+    // await page.getByText('Account Deleted!').click();
+    // await page.getByRole('link', { name: 'Continue' }).click();
   });
 
   test('TC2 - Login', async ({ page }) => {
@@ -73,7 +79,29 @@ test.describe('Register and login tests', () => {
     const userMail = LoginData.userMail;
     const userPassword = LoginData.userPassword;
     //Act
-    await registerPage.login(userMail, userPassword)
+    await registerPage.login(userMail, userPassword);
+    //Assert
+    await expect(page.getByText('Logged in as NewUser1337')).toHaveText(
+      'Logged in as NewUser1337',
+    );
+    // await page.getByRole('link', { name: ' Delete Account' }).click();
+    // await page.getByText('Account Deleted!').click();
+    // await page.getByRole('link', { name: 'Continue' }).click();
+  });
+  test('TC3 - Login with incorrect data', async ({ page }) => {
+    //Arrange
+    const userMail = 'blabla@mail.com'
+    const userPassword = 'blabla'
+    //Act
+    await registerPage.mailInput.fill(userMail);
+    await registerPage.passwordInput.fill(userPassword);
+    await registerPage.loginButton.click();
+    //Assert
+    await expect(page.getByText('Your email or password is incorrect!')).toHaveText('Your email or password is incorrect!');
+  });
+  test('TC4 - Logout User', async ({ page }) => {
+    //Arrange
+    //Act
     //Assert
   });
 });
