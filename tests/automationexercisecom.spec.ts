@@ -7,8 +7,8 @@ test.describe('Register and login tests', () => {
   test.beforeEach(async ({ page }) => {
     registerPage = new RegisterPage(page);
     await page.goto('http://automationexercise.com');
-    await expect(page.locator('#slider-carousel')).toBeVisible();
     await page.getByRole('button', { name: 'Consent' }).click();
+    await expect(page.locator('#slider-carousel')).toBeVisible();
     await page.getByRole('link', { name: ' Signup / Login' }).click();
     await expect(page.getByText('Login to your account')).toHaveText(
       'Login to your account',
@@ -19,16 +19,16 @@ test.describe('Register and login tests', () => {
   });
   test('TC1 - Register User', async ({ page }) => {
     //Arrange
-
+    const userMail = LoginData.userMail;
+    const userId = LoginData.userName;
+    const userPassword = LoginData.userPassword;
     //Act
     await expect(page.getByText('New User Signup!')).toBeVisible;
     await expect(page.getByText('New User Signup!')).toHaveText(
       'New User Signup!',
     );
-    await page.getByRole('textbox', { name: 'Name' }).fill('NewUser1337');
-    await page
-      .locator('[data-qa="signup-email"]')
-      .fill('newuser1337@pampampam.com');
+    await page.getByRole('textbox', { name: 'Name' }).fill(userId);
+    await page.locator('[data-qa="signup-email"]').fill(userMail);
     await page.getByRole('button', { name: 'Signup' }).click();
     await expect(page.getByText('Enter Account Information')).toBeVisible;
     await expect(page.getByText('Enter Account Information')).toHaveText(
@@ -38,7 +38,7 @@ test.describe('Register and login tests', () => {
     await page.locator('#days').selectOption('10');
     await page.locator('#months').selectOption('10');
     await page.locator('#years').selectOption('1990');
-    await page.getByRole('textbox', { name: 'Password *' }).fill('Password123');
+    await page.getByRole('textbox', { name: 'Password *' }).fill(userPassword);
     await page
       .getByRole('checkbox', { name: 'Sign up for our newsletter!' })
       .check();
@@ -64,13 +64,12 @@ test.describe('Register and login tests', () => {
       .getByRole('textbox', { name: 'Mobile Number *' })
       .fill('123123123');
     await page.getByRole('button', { name: 'Create Account' }).click();
-    await expect(page.locator('[data-qa="account-created"]')).toBeVisible;
     await expect(page.locator('[data-qa="account-created"]')).toHaveText(
       'Account Created!',
     );
     // await page.getByRole('link', { name: 'Continue' }).click();
     // await page.getByRole('link', { name: ' Delete Account' }).click();
-    // await page.getByText('Account Deleted!').click();
+    // await expect(page.getByText('Account Deleted!')).toHaveText("Account Deleted!");
     // await page.getByRole('link', { name: 'Continue' }).click();
   });
 
@@ -80,28 +79,96 @@ test.describe('Register and login tests', () => {
     const userPassword = LoginData.userPassword;
     //Act
     await registerPage.login(userMail, userPassword);
+    // await page.getByRole('link', { name: ' Delete Account' }).click();
+    // await expect(page.getByText('Account Deleted!')).toHaveText("Account Deleted!");
+    // await page.getByRole('link', { name: 'Continue' }).click();
     //Assert
     await expect(page.getByText('Logged in as NewUser1337')).toHaveText(
       'Logged in as NewUser1337',
     );
-    // await page.getByRole('link', { name: ' Delete Account' }).click();
-    // await page.getByText('Account Deleted!').click();
-    // await page.getByRole('link', { name: 'Continue' }).click();
   });
   test('TC3 - Login with incorrect data', async ({ page }) => {
     //Arrange
-    const userMail = 'blabla@mail.com'
-    const userPassword = 'blabla'
+    const userIncMail = 'blabla@mail.com';
+    const userIncPassword = 'blabla';
     //Act
-    await registerPage.mailInput.fill(userMail);
-    await registerPage.passwordInput.fill(userPassword);
+    await registerPage.mailInput.fill(userIncMail);
+    await registerPage.passwordInput.fill(userIncPassword);
     await registerPage.loginButton.click();
     //Assert
-    await expect(page.getByText('Your email or password is incorrect!')).toHaveText('Your email or password is incorrect!');
+    await expect(
+      page.getByText('Your email or password is incorrect!'),
+    ).toHaveText('Your email or password is incorrect!');
   });
   test('TC4 - Logout User', async ({ page }) => {
     //Arrange
+    const userMail = LoginData.userMail;
+    const userPassword = LoginData.userPassword;
     //Act
+    await registerPage.login(userMail, userPassword);
+    await expect(page.getByText('Logged in as NewUser1337')).toHaveText(
+      'Logged in as NewUser1337',
+    );
+    await page.getByRole('link', { name: ' Logout' }).click();
     //Assert
+    await expect(page.getByText('Login to your account')).toHaveText(
+      'Login to your account',
+    );
+  });
+  test('TC5 - Register User with existing email', async ({ page }) => {
+    //Arrange
+    const userId = LoginData.userName;
+    const userMail = LoginData.userMail;
+    //Act
+    await page.getByRole('textbox', { name: 'Name' }).fill(userId);
+    await page
+      .locator('form')
+      .filter({ hasText: 'Signup' })
+      .getByPlaceholder('Email Address')
+      .fill(userMail);
+    await page.getByRole('button', { name: 'Signup' }).click();
+    //Assert
+    await expect(page.getByText('Email Address already exist!')).toHaveText(
+      'Email Address already exist!',
+    );
+  });
+});
+
+test.describe('Other Pages', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('http://automationexercise.com');
+    await page.getByRole('button', { name: 'Consent' }).click();
+    await expect(page.locator('#slider-carousel')).toBeVisible();
+  });
+  test('TC6 - Contact Us Form', async ({ page }) => {
+    //Arrange
+    const userMail = LoginData.userMail;
+    const userId = LoginData.userName;
+    const subjestMess = 'AnySubject123';
+    const suppMess = 'Randomly generated message.';
+    //Act
+    await page.getByRole('link', { name: ' Contact us' }).click();
+    await page.getByRole('heading', { name: 'Get In Touch' }).click();
+    await page
+      .getByRole('textbox', { name: 'Email', exact: true })
+      .fill(userMail);
+    await page.getByRole('textbox', { name: 'Name' }).fill(userId);
+    await page.getByRole('textbox', { name: 'Subject' }).fill(subjestMess);
+    await page
+      .getByRole('textbox', { name: 'Your Message Here' })
+      .fill(suppMess);
+    await page.locator('input[name="upload_file"]').setInputFiles('README.md');
+    page.once('dialog', async (dialog) => {
+      console.log(`Dialog message: ${dialog.message()}`);
+      expect(dialog.message()).toContain('Press OK to proceed!');
+      await dialog.accept();
+    });
+    await page.getByRole('button', { name: 'Submit' }).click();
+    await expect(
+      page.locator('#contact-page').getByText('Success! Your details have been submitted successfully.'),
+    ).toHaveText('Success! Your details have been submitted successfully.');
+    await page.getByRole('link', { name: ' Home' }).click();
+    //Assert
+    await expect(page.locator('#slider-carousel')).toBeVisible();
   });
 });
