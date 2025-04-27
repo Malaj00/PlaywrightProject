@@ -165,10 +165,43 @@ test.describe('Other Pages', () => {
     });
     await page.getByRole('button', { name: 'Submit' }).click();
     await expect(
-      page.locator('#contact-page').getByText('Success! Your details have been submitted successfully.'),
+      page
+        .locator('#contact-page')
+        .getByText('Success! Your details have been submitted successfully.'),
     ).toHaveText('Success! Your details have been submitted successfully.');
     await page.getByRole('link', { name: ' Home' }).click();
     //Assert
     await expect(page.locator('#slider-carousel')).toBeVisible();
+  });
+
+  test('TC7 - Verify Test Cases Page', async ({ page }) => {
+    //Arrange
+
+    //Act
+    await page
+      .getByRole('link', { name: /Test Cases/ })
+      .first()
+      .click();
+    //Assert
+    await expect(page.locator('h2:has-text("Test Cases")')).toBeVisible();
+  });
+  test.only('TC8 - Verify All Products and product detail page', async ({
+    page,
+  }) => {
+    //Arrange
+    //Act
+    await page.getByRole('link', { name: /Products/ }).click();
+    await expect(
+      page.getByRole('heading', { name: 'All Products' }),
+    ).toBeVisible();
+    await expect(page.locator('.features_items')).toBeVisible();
+    await page.getByText('View Product').first().click();
+    //Assert
+    await expect(page.locator('h2:has-text("Blue Top")')).toBeVisible();
+    await expect(page.getByText('Category: Women > Tops')).toBeVisible();
+    await expect(page.getByText('Rs.')).toBeVisible();
+    await expect(page.getByText('Availability:')).toBeVisible();
+    await expect(page.getByText('Condition:')).toBeVisible();
+    await expect(page.getByText('Brand:')).toBeVisible();
   });
 });
