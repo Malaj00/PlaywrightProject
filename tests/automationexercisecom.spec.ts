@@ -203,7 +203,7 @@ test.describe('Other Pages', () => {
     await expect(page.getByText('Condition:')).toBeVisible();
     await expect(page.getByText('Brand:')).toBeVisible();
   });
-  test.only('TC9 - Search Product', async ({ page }) => {
+  test('TC9 - Search Product', async ({ page }) => {
     //Arrange
 
     //Act
@@ -223,5 +223,36 @@ test.describe('Other Pages', () => {
     await expect(
       page.locator('.features_items  .col-sm-4  p').first(),
     ).toContainText('Blue Top');
+  });
+  test('TC10 - Verify Subscription in home page', async ({ page }) => {
+    //Arrange
+    const userMail = LoginData.userMail;
+    //Act
+    await expect(
+      page.locator('#footer').locator('h2:has-text("Subscription")'),
+    ).toHaveText('Subscription');
+    await page.locator('#susbscribe_email').fill(userMail);
+    await page.getByRole('button', { name: '' }).click();
+    //Assert
+    await expect(page.getByText('You have been successfully')).toBeVisible();
+    await expect(page.getByText('You have been successfully')).toHaveText(
+      'You have been successfully subscribed!',
+    );
+  });
+  test('TC11 - Verify Subscription in Cart page', async ({ page }) => {
+    //Arrange
+    const userMail = LoginData.userMail;
+    //Act
+    await autoExer.topMenu.cartButton.click();
+    await expect(
+      page.locator('#footer').locator('h2:has-text("Subscription")'),
+    ).toHaveText('Subscription');
+    await page.locator('#susbscribe_email').fill(userMail);
+    await page.getByRole('button', { name: '' }).click();
+    //Assert
+    await expect(page.getByText('You have been successfully')).toBeVisible();
+    await expect(page.getByText('You have been successfully')).toHaveText(
+      'You have been successfully subscribed!',
+    );
   });
 });

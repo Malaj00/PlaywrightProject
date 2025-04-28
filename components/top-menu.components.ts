@@ -9,11 +9,11 @@ export class TopMenuComponent {
     contactButton: Locator;
 
     constructor(private page: Page) {
-        this.homeButton = page.getByRole('link', { name: /Home/ });
-        this.productsButton = page.getByRole('link', { name: /Products/ });
-        this.cartButton = page.getByRole('link', { name: /Cart/ });
-        this.signupLogin = page.getByRole('link', { name: /Signup/ });
-        this.testcasesButton =  page.getByRole('link', { name: /Test Cases/ });
-        this.contactButton = page.getByRole('link', { name: /Contact  us/ });
+        this.homeButton = page.locator('#header .nav a[href="/test_cases"]');
+        this.productsButton = page.locator('#header .nav a[href="/products"]');
+        this.cartButton = page.locator('#header .nav a[href="/view_cart"]');
+        this.signupLogin = page.locator('#header .nav a[href="/login"]');
+        this.testcasesButton =  page.locator('#header .nav a[href="/test_cases"]');
+        this.contactButton = page.locator('#header .nav a[href="/contact_us"]');
     }
 }
