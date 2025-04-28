@@ -1,15 +1,15 @@
 import { test, expect } from '@playwright/test';
 import { LoginData } from '../test-data/automationexercise.data';
-import { RegisterPage } from '../pages/automationexercise.page';
+import { AutomationExercise } from '../pages/automationexercise.page';
 
 test.describe('Register and login tests', () => {
-  let registerPage: RegisterPage;
+  let autoExer: AutomationExercise;
   test.beforeEach(async ({ page }) => {
-    registerPage = new RegisterPage(page);
+    autoExer = new AutomationExercise(page);
     await page.goto('http://automationexercise.com');
     await page.getByRole('button', { name: 'Consent' }).click();
     await expect(page.locator('#slider-carousel')).toBeVisible();
-    await page.getByRole('link', { name: ' Signup / Login' }).click();
+    await autoExer.topMenu.signupLogin.click();
     await expect(page.getByText('Login to your account')).toHaveText(
       'Login to your account',
     );
@@ -30,7 +30,7 @@ test.describe('Register and login tests', () => {
     await page.getByRole('textbox', { name: 'Name' }).fill(userId);
     await page.locator('[data-qa="signup-email"]').fill(userMail);
     await page.getByRole('button', { name: 'Signup' }).click();
-    await expect(page.getByText('Enter Account Information')).toBeVisible;
+    await expect(page.getByText('Enter Account Information')).toBeVisible();
     await expect(page.getByText('Enter Account Information')).toHaveText(
       'Enter Account Information',
     );
@@ -78,7 +78,7 @@ test.describe('Register and login tests', () => {
     const userMail = LoginData.userMail;
     const userPassword = LoginData.userPassword;
     //Act
-    await registerPage.login(userMail, userPassword);
+    await autoExer.login(userMail, userPassword);
     // await page.getByRole('link', { name: ' Delete Account' }).click();
     // await expect(page.getByText('Account Deleted!')).toHaveText("Account Deleted!");
     // await page.getByRole('link', { name: 'Continue' }).click();
@@ -92,9 +92,9 @@ test.describe('Register and login tests', () => {
     const userIncMail = 'blabla@mail.com';
     const userIncPassword = 'blabla';
     //Act
-    await registerPage.mailInput.fill(userIncMail);
-    await registerPage.passwordInput.fill(userIncPassword);
-    await registerPage.loginButton.click();
+    await autoExer.mailInput.fill(userIncMail);
+    await autoExer.passwordInput.fill(userIncPassword);
+    await autoExer.loginButton.click();
     //Assert
     await expect(
       page.getByText('Your email or password is incorrect!'),
@@ -105,7 +105,7 @@ test.describe('Register and login tests', () => {
     const userMail = LoginData.userMail;
     const userPassword = LoginData.userPassword;
     //Act
-    await registerPage.login(userMail, userPassword);
+    await autoExer.login(userMail, userPassword);
     await expect(page.getByText('Logged in as NewUser1337')).toHaveText(
       'Logged in as NewUser1337',
     );
@@ -135,7 +135,9 @@ test.describe('Register and login tests', () => {
 });
 
 test.describe('Other Pages', () => {
+  let autoExer: AutomationExercise;
   test.beforeEach(async ({ page }) => {
+    autoExer = new AutomationExercise(page);
     await page.goto('http://automationexercise.com');
     await page.getByRole('button', { name: 'Consent' }).click();
     await expect(page.locator('#slider-carousel')).toBeVisible();
@@ -147,7 +149,7 @@ test.describe('Other Pages', () => {
     const subjestMess = 'AnySubject123';
     const suppMess = 'Randomly generated message.';
     //Act
-    await page.getByRole('link', { name: ' Contact us' }).click();
+    await autoExer.topMenu.contactButton.click();
     await page.getByRole('heading', { name: 'Get In Touch' }).click();
     await page
       .getByRole('textbox', { name: 'Email', exact: true })
@@ -178,19 +180,16 @@ test.describe('Other Pages', () => {
     //Arrange
 
     //Act
-    await page
-      .getByRole('link', { name: /Test Cases/ })
-      .first()
-      .click();
+    await autoExer.topMenu.testcasesButton.click();
     //Assert
     await expect(page.locator('h2:has-text("Test Cases")')).toBeVisible();
   });
-  test.only('TC8 - Verify All Products and product detail page', async ({
+  test('TC8 - Verify All Products and product detail page', async ({
     page,
   }) => {
     //Arrange
     //Act
-    await page.getByRole('link', { name: /Products/ }).click();
+    await autoExer.topMenu.productsButton.click();
     await expect(
       page.getByRole('heading', { name: 'All Products' }),
     ).toBeVisible();
@@ -203,5 +202,26 @@ test.describe('Other Pages', () => {
     await expect(page.getByText('Availability:')).toBeVisible();
     await expect(page.getByText('Condition:')).toBeVisible();
     await expect(page.getByText('Brand:')).toBeVisible();
+  });
+  test.only('TC9 - Search Product', async ({ page }) => {
+    //Arrange
+
+    //Act
+    await autoExer.topMenu.productsButton.click();
+    await expect(
+      page.getByRole('heading', { name: 'All Products' }),
+    ).toBeVisible();
+    await page
+      .getByRole('textbox', { name: 'Search Product' })
+      .fill('Blue Top');
+    await page.locator('#submit_search').click();
+    await expect(
+      page.locator('h2:has-text("Searched Products")'),
+    ).toBeVisible();
+
+    //Assert
+    await expect(
+      page.locator('.features_items  .col-sm-4  p').first(),
+    ).toContainText('Blue Top');
   });
 });
