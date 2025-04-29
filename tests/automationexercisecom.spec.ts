@@ -198,10 +198,11 @@ test.describe('Other Pages', () => {
     //Assert
     await expect(page.locator('h2:has-text("Blue Top")')).toBeVisible();
     await expect(page.getByText('Category: Women > Tops')).toBeVisible();
-    await expect(page.getByText('Rs.')).toBeVisible();
-    await expect(page.getByText('Availability:')).toBeVisible();
-    await expect(page.getByText('Condition:')).toBeVisible();
-    await expect(page.getByText('Brand:')).toBeVisible();
+    await expect(page.getByText('Rs.')).toContainText(/^Rs\.\s*\d+/);
+    await expect(page.locator('p:has-text("Availability:")')).toHaveText(/^Availability:\s*\w.+/);
+    await expect(page.locator('p:has-text("Condition:")')).toHaveText(/^Condition:\s*\w.+/);
+    await expect(page.locator('p:has-text("Brand:")')).toHaveText(/^Brand:\s*\w.+/);
+
   });
   test('TC9 - Search Product', async ({ page }) => {
     //Arrange
@@ -274,7 +275,23 @@ test.describe('Other Pages', () => {
     await expect(page.locator('#product-1').locator('.cart_quantity').locator('.disabled')).toBeVisible();
     await expect(page.locator('#product-2').locator('.cart_quantity').locator('.disabled')).toBeVisible();
   });
+
+test('TC13 - Verify Product quantity in Cart', async ({ page }) => {
+  //Arrange
+
+  //Act
+  await page.goto('https://automationexercise.com/products');
+  await page.locator('div:nth-child(7) > .product-image-wrapper > .choose > .nav > li > a').click();
+  await expect(page.getByText('Rs.')).toBeVisible();
+  await expect(page.getByText('Availability:')).toBeVisible();
+  await expect(page.getByText('Condition:')).toBeVisible();
+  await expect(page.getByText('Brand:')).toBeVisible();
+  await page.locator('#quantity').fill('4');
+  await page.getByRole('button', { name: ' Add to cart' }).click();
+  await page.getByRole('link', { name: 'View Cart' }).click();
+  await page.getByRole('cell', { name: '4', exact: true }).click();
+  await page.getByRole('button', { name: '4' }).click();
+  //Assert
+ });
 });
 
-// 9. Verify both products are added to Cart
-// 10. Verify their prices, quantity and total price
