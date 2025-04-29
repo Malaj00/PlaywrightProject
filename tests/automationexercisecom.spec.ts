@@ -255,4 +255,26 @@ test.describe('Other Pages', () => {
       'You have been successfully subscribed!',
     );
   });
+  test('TC12 - Add Products in Cart', async ({ page }) => {
+    //Arrange
+    //Act
+    await autoExer.topMenu.productsButton.click();
+    await page.locator('[data-product-id="1"]').nth(0).click();
+    await page.getByRole('button', { name: 'Continue Shopping' }).click();
+    await page.locator('[data-product-id="2"]').nth(0).click();
+    await page.getByRole('link', { name: 'View Cart' }).click();
+
+    //Assert
+    await expect(page.locator('#product-1')).toBeVisible();
+    await expect(page.locator('#product-2')).toBeVisible();
+    await expect(page.locator('#product-1').locator('.cart_price')).toHaveText(/Rs\.\s*\d+/);
+    await expect(page.locator('#product-2').locator('.cart_price')).toHaveText(/Rs\.\s*\d+/);
+    await expect(page.locator('#product-1').locator('.cart_total_price')).toHaveText(/Rs\.\s*\d+/);
+    await expect(page.locator('#product-2').locator('.cart_total_price')).toHaveText(/Rs\.\s*\d+/);
+    await expect(page.locator('#product-1').locator('.cart_quantity').locator('.disabled')).toBeVisible();
+    await expect(page.locator('#product-2').locator('.cart_quantity').locator('.disabled')).toBeVisible();
+  });
 });
+
+// 9. Verify both products are added to Cart
+// 10. Verify their prices, quantity and total price
