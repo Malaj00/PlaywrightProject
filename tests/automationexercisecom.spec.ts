@@ -77,48 +77,45 @@ test.describe('Register and login tests', () => {
     //Arrange
     const userMail = LoginData.userMail;
     const userPassword = LoginData.userPassword;
+    const correctLogin = 'Logged in as NewUser1337';
     //Act
     await autoExer.login(userMail, userPassword);
     // await page.getByRole('link', { name: ' Delete Account' }).click();
     // await expect(page.getByText('Account Deleted!')).toHaveText("Account Deleted!");
     // await page.getByRole('link', { name: 'Continue' }).click();
     //Assert
-    await expect(page.getByText('Logged in as NewUser1337')).toHaveText(
-      'Logged in as NewUser1337',
-    );
+    await expect(page.getByText(correctLogin)).toHaveText(correctLogin);
   });
   test('TC3 - Login with incorrect data', async ({ page }) => {
     //Arrange
     const userIncMail = 'blabla@mail.com';
     const userIncPassword = 'blabla';
+    const incorrectInput = 'Your email or password is incorrect!';
     //Act
     await autoExer.mailInput.fill(userIncMail);
     await autoExer.passwordInput.fill(userIncPassword);
     await autoExer.loginButton.click();
     //Assert
-    await expect(
-      page.getByText('Your email or password is incorrect!'),
-    ).toHaveText('Your email or password is incorrect!');
+    await expect(page.getByText(incorrectInput)).toHaveText(incorrectInput);
   });
   test('TC4 - Logout User', async ({ page }) => {
     //Arrange
     const userMail = LoginData.userMail;
     const userPassword = LoginData.userPassword;
+    const correctLogin = 'Logged in as NewUser1337';
+    const logoutMessage = 'Login to your account';
     //Act
     await autoExer.login(userMail, userPassword);
-    await expect(page.getByText('Logged in as NewUser1337')).toHaveText(
-      'Logged in as NewUser1337',
-    );
+    await expect(page.getByText(correctLogin)).toHaveText(correctLogin);
     await page.getByRole('link', { name: ' Logout' }).click();
     //Assert
-    await expect(page.getByText('Login to your account')).toHaveText(
-      'Login to your account',
-    );
+    await expect(page.getByText(logoutMessage)).toHaveText(logoutMessage);
   });
   test('TC5 - Register User with existing email', async ({ page }) => {
     //Arrange
     const userId = LoginData.userName;
     const userMail = LoginData.userMail;
+    const emailExist = 'Email Address already exist!';
     //Act
     await page.getByRole('textbox', { name: 'Name' }).fill(userId);
     await page
@@ -128,9 +125,7 @@ test.describe('Register and login tests', () => {
       .fill(userMail);
     await page.getByRole('button', { name: 'Signup' }).click();
     //Assert
-    await expect(page.getByText('Email Address already exist!')).toHaveText(
-      'Email Address already exist!',
-    );
+    await expect(page.getByText(emailExist)).toHaveText(emailExist);
   });
 });
 
@@ -146,8 +141,10 @@ test.describe('Other Pages', () => {
     //Arrange
     const userMail = LoginData.userMail;
     const userId = LoginData.userName;
-    const subjestMess = 'AnySubject123';
+    const subjectMess = 'AnySubject123';
     const suppMess = 'Randomly generated message.';
+    const submitMessage =
+      'Success! Your details have been submitted successfully.';
     //Act
     await autoExer.topMenu.contactButton.click();
     await page.getByRole('heading', { name: 'Get In Touch' }).click();
@@ -155,7 +152,7 @@ test.describe('Other Pages', () => {
       .getByRole('textbox', { name: 'Email', exact: true })
       .fill(userMail);
     await page.getByRole('textbox', { name: 'Name' }).fill(userId);
-    await page.getByRole('textbox', { name: 'Subject' }).fill(subjestMess);
+    await page.getByRole('textbox', { name: 'Subject' }).fill(subjectMess);
     await page
       .getByRole('textbox', { name: 'Your Message Here' })
       .fill(suppMess);
@@ -167,10 +164,8 @@ test.describe('Other Pages', () => {
     });
     await page.getByRole('button', { name: 'Submit' }).click();
     await expect(
-      page
-        .locator('#contact-page')
-        .getByText('Success! Your details have been submitted successfully.'),
-    ).toHaveText('Success! Your details have been submitted successfully.');
+      page.locator('#contact-page').getByText(submitMessage),
+    ).toHaveText(submitMessage);
     await page.getByRole('link', { name: ' Home' }).click();
     //Assert
     await expect(page.locator('#slider-carousel')).toBeVisible();
@@ -199,10 +194,15 @@ test.describe('Other Pages', () => {
     await expect(page.locator('h2:has-text("Blue Top")')).toBeVisible();
     await expect(page.getByText('Category: Women > Tops')).toBeVisible();
     await expect(page.getByText('Rs.')).toContainText(/^Rs\.\s*\d+/);
-    await expect(page.locator('p:has-text("Availability:")')).toHaveText(/^Availability:\s*\w.+/);
-    await expect(page.locator('p:has-text("Condition:")')).toHaveText(/^Condition:\s*\w.+/);
-    await expect(page.locator('p:has-text("Brand:")')).toHaveText(/^Brand:\s*\w.+/);
-
+    await expect(page.locator('p:has-text("Availability:")')).toHaveText(
+      /^Availability:\s*\w.+/,
+    );
+    await expect(page.locator('p:has-text("Condition:")')).toHaveText(
+      /^Condition:\s*\w.+/,
+    );
+    await expect(page.locator('p:has-text("Brand:")')).toHaveText(
+      /^Brand:\s*\w.+/,
+    );
   });
   test('TC9 - Search Product', async ({ page }) => {
     //Arrange
@@ -268,30 +268,54 @@ test.describe('Other Pages', () => {
     //Assert
     await expect(page.locator('#product-1')).toBeVisible();
     await expect(page.locator('#product-2')).toBeVisible();
-    await expect(page.locator('#product-1').locator('.cart_price')).toHaveText(/Rs\.\s*\d+/);
-    await expect(page.locator('#product-2').locator('.cart_price')).toHaveText(/Rs\.\s*\d+/);
-    await expect(page.locator('#product-1').locator('.cart_total_price')).toHaveText(/Rs\.\s*\d+/);
-    await expect(page.locator('#product-2').locator('.cart_total_price')).toHaveText(/Rs\.\s*\d+/);
-    await expect(page.locator('#product-1').locator('.cart_quantity').locator('.disabled')).toBeVisible();
-    await expect(page.locator('#product-2').locator('.cart_quantity').locator('.disabled')).toBeVisible();
+    await expect(page.locator('#product-1').locator('.cart_price')).toHaveText(
+      /Rs\.\s*\d+/,
+    );
+    await expect(page.locator('#product-2').locator('.cart_price')).toHaveText(
+      /Rs\.\s*\d+/,
+    );
+    await expect(
+      page.locator('#product-1').locator('.cart_total_price'),
+    ).toHaveText(/Rs\.\s*\d+/);
+    await expect(
+      page.locator('#product-2').locator('.cart_total_price'),
+    ).toHaveText(/Rs\.\s*\d+/);
+    await expect(
+      page.locator('#product-1').locator('.cart_quantity').locator('.disabled'),
+    ).toBeVisible();
+    await expect(
+      page.locator('#product-2').locator('.cart_quantity').locator('.disabled'),
+    ).toBeVisible();
   });
 
-test('TC13 - Verify Product quantity in Cart', async ({ page }) => {
-  //Arrange
+  test('TC13 - Verify Product quantity in Cart', async ({ page }) => {
+    //Arrange
 
-  //Act
-  await page.goto('https://automationexercise.com/products');
-  await page.locator('div:nth-child(7) > .product-image-wrapper > .choose > .nav > li > a').click();
-  await expect(page.getByText('Rs.')).toBeVisible();
-  await expect(page.getByText('Availability:')).toBeVisible();
-  await expect(page.getByText('Condition:')).toBeVisible();
-  await expect(page.getByText('Brand:')).toBeVisible();
-  await page.locator('#quantity').fill('4');
-  await page.getByRole('button', { name: ' Add to cart' }).click();
-  await page.getByRole('link', { name: 'View Cart' }).click();
-  await page.getByRole('cell', { name: '4', exact: true }).click();
-  await page.getByRole('button', { name: '4' }).click();
-  //Assert
- });
+    //Act
+    await autoExer.topMenu.productsButton.click();
+    await page
+      .locator(
+        'div:nth-child(7) > .product-image-wrapper > .choose > .nav > li > a',
+      )
+      .click();
+    await expect(page.getByText('Rs.')).toContainText(/^Rs\.\s*\d+/);
+    await expect(page.locator('p:has-text("Availability:")')).toHaveText(
+      /^Availability:\s*\w.+/,
+    );
+    await expect(page.locator('p:has-text("Condition:")')).toHaveText(
+      /^Condition:\s*\w.+/,
+    );
+    await expect(page.locator('p:has-text("Brand:")')).toHaveText(
+      /^Brand:\s*\w.+/,
+    );
+    await page.locator('#quantity').fill('4');
+    await page.getByRole('button', { name: ' Add to cart' }).click();
+    await page.getByRole('link', { name: 'View Cart' }).click();
+    await page.locator('.active').waitFor({ state: 'visible', timeout: 10000 });
+    await expect(page.locator('.cart_product')).toBeVisible();
+    await expect(page.locator('.cart_quantity .disabled')).toHaveText(/\d+/);
+    //Assert
+  });
+
+  
 });
-
