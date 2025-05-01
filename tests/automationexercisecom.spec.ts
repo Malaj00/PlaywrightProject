@@ -17,7 +17,7 @@ test.describe('Register and login tests', () => {
       'New User Signup!',
     );
   });
-  test.skip('TC1 - Register User', async ({ page }) => {
+  test('TC1 - Register User', async ({ page }) => {
     //Arrange
     const userMail = LoginData.userMail;
     const userId = LoginData.userName;
@@ -324,7 +324,7 @@ test.describe('Other Pages', () => {
     const userId = LoginData.userName;
     const userPassword = LoginData.userPassword;
     const correctLogin = 'Logged in as NewUser1337';
-
+    const expectedmessagePayment = 'You have been successfully subscribed!';
     //Act
     await autoExer.topMenu.productsButton.click();
     await page.locator('[data-product-id="1"]').nth(0).click();
@@ -341,17 +341,20 @@ test.describe('Other Pages', () => {
     await expect(page.getByText(correctLogin)).toHaveText(correctLogin);
     await autoExer.topMenu.cartButton.click();
     await page.getByText('Proceed To Checkout').click();
-    await expect(page.locator('#adress_delivery').locator('.address_firstname')).toContainText(
-      'Mr. Firstname1 Lastname1',
-    );
-    await expect(page.locator('#adress_invoice').locator('.address_firstname')).toContainText(
-      'Mr. Firstname1 Lastname1',
-    );
+    await expect(
+      page.locator('#address_delivery').locator('.address_firstname'),
+    ).toContainText('Mr. Firstname1 Lastname1');
+    await expect(
+      page.locator('#address_invoice').locator('.address_firstname'),
+    ).toContainText('Mr. Firstname1 Lastname1');
     await expect(
       page.locator('#cart_items').locator('h2:has-text("Review Your Order")'),
     ).toBeVisible();
     await expect(page.locator('#product-1')).toBeVisible();
-    await page.locator('#ordermsg').fill('Testmessage');
+    await page
+      .locator('#ordermsg')
+      .locator('.form-control')
+      .fill('Testmessage');
     await page.getByRole('link', { name: 'Place Order' }).click();
     await page.locator('[data-qa="name-on-card"]').fill('NameOnCard');
     await page.locator('[data-qa="card-number"]').fill('777666555444');
@@ -359,11 +362,186 @@ test.describe('Other Pages', () => {
     await page.locator('[data-qa="expiry-month"]').fill('01');
     await page.locator('[data-qa="expiry-year"]').fill('1990');
     await page.locator('[data-qa="pay-button"]').click();
-    await expect(
-      page.getByText('Your order has been placed successfully!'),
-    ).toHaveText('Your order has been placed successfully!');
-    await autoExer.login(userMail, userPassword);
+    await expect(page.locator('.alert-success')).toHaveText(
+      expectedmessagePayment,
+    );
     await autoExer.deleteAccount();
     //Assert
+  });
+  test('TC15 - Place Order: Register while Checkout', async ({ page }) => {
+    //Arrange
+    const userMail = LoginData.userMail;
+    const userId = LoginData.userName;
+    const userPassword = LoginData.userPassword;
+    const correctLogin = 'Logged in as NewUser1337';
+    const expectedmessagePayment = 'You have been successfully subscribed!';
+    //Act
+    await autoExer.topMenu.signupLogin.click();
+    await autoExer.register(userId, userMail, userPassword);
+    await expect(page.locator('[data-qa="account-created"]')).toHaveText(
+      'Account Created!',
+    );
+    await page.locator('[data-qa="continue-button"]').click();
+    await expect(page.getByText(correctLogin)).toHaveText(correctLogin);
+    await autoExer.topMenu.productsButton.click();
+    await page.locator('[data-product-id="1"]').nth(0).click();
+    await page.getByRole('button', { name: 'Continue Shopping' }).click();
+    await autoExer.topMenu.cartButton.click();
+    await expect(page.getByText('Shopping Cart')).toBeVisible();
+    await page.getByText('Proceed To Checkout').click();
+    await expect(
+      page.locator('#address_delivery').locator('.address_firstname'),
+    ).toContainText('Mr. Firstname1 Lastname1');
+    await expect(
+      page.locator('#address_invoice').locator('.address_firstname'),
+    ).toContainText('Mr. Firstname1 Lastname1');
+    await expect(
+      page.locator('#cart_items').locator('h2:has-text("Review Your Order")'),
+    ).toBeVisible();
+    await expect(page.locator('#product-1')).toBeVisible();
+    await page
+      .locator('#ordermsg')
+      .locator('.form-control')
+      .fill('Testmessage');
+    await page.getByRole('link', { name: 'Place Order' }).click();
+    await page.locator('[data-qa="name-on-card"]').fill('NameOnCard');
+    await page.locator('[data-qa="card-number"]').fill('777666555444');
+    await page.locator('[data-qa="cvc"]').fill('777');
+    await page.locator('[data-qa="expiry-month"]').fill('01');
+    await page.locator('[data-qa="expiry-year"]').fill('1990');
+    await page.locator('[data-qa="pay-button"]').click();
+    await expect(page.locator('.alert-success')).toHaveText(
+      expectedmessagePayment,
+    );
+    await autoExer.deleteAccount();
+    //Assert
+  });
+  test('TC16 - Place Order: Login before Checkout', async ({ page }) => {
+    //Arrange
+    const userMail = LoginData.userMail;
+    const userPassword = LoginData.userPassword;
+    const correctLogin = 'Logged in as NewUser1337';
+    const expectedmessagePayment = 'You have been successfully subscribed!';
+    //Act
+    await autoExer.topMenu.signupLogin.click();
+    await autoExer.login(userMail, userPassword);
+    await expect(page.getByText(correctLogin)).toHaveText(correctLogin);
+    await page.locator('[data-product-id="1"]').nth(0).click();
+    await autoExer.topMenu.cartButton.click();
+    await expect(page.getByText('Shopping Cart')).toBeVisible();
+    await page.getByText('Proceed To Checkout').click();
+    await expect(
+      page.locator('#address_delivery').locator('.address_firstname'),
+    ).toContainText('Mr. Firstname1 Lastname1');
+    await expect(
+      page.locator('#address_invoice').locator('.address_firstname'),
+    ).toContainText('Mr. Firstname1 Lastname1');
+    await expect(
+      page.locator('#cart_items').locator('h2:has-text("Review Your Order")'),
+    ).toBeVisible();
+    await expect(page.locator('#product-1')).toBeVisible();
+    await page
+      .locator('#ordermsg')
+      .locator('.form-control')
+      .fill('Testmessage');
+    await page.getByRole('link', { name: 'Place Order' }).click();
+    await page.locator('[data-qa="name-on-card"]').fill('NameOnCard');
+    await page.locator('[data-qa="card-number"]').fill('777666555444');
+    await page.locator('[data-qa="cvc"]').fill('777');
+    await page.locator('[data-qa="expiry-month"]').fill('01');
+    await page.locator('[data-qa="expiry-year"]').fill('1990');
+    await page.locator('[data-qa="pay-button"]').click();
+    await expect(page.locator('.alert-success')).toHaveText(
+      expectedmessagePayment,
+    );
+    await autoExer.deleteAccount();
+    //Assert
+  });
+  test('TC17 - Remove Products From Cart', async ({ page }) => {
+    //Arrange
+    //Act
+    await page.locator('[data-product-id="1"]').nth(0).click();
+    await page.getByRole('button', { name: 'Continue Shopping' }).click();
+    await autoExer.topMenu.cartButton.click();
+    await expect(page.getByText('Shopping Cart')).toBeVisible();
+    await page.locator('[data-product-id="1"]').locator('.fa').first().click();
+    //Assert
+    await expect(page.locator('#empty_cart')).toBeVisible();
+  });
+  test('TC18 - View Category Products', async ({ page }) => {
+    //Arrange
+    //Act
+    await expect(
+      page.locator('.left-sidebar h2:has-text("Category")'),
+    ).toBeVisible();
+    await expect(page.locator('.panel-group')).toBeVisible();
+    await page.getByRole('link', { name: 'Women' }).click();
+    await page.getByRole('link', { name: 'Dress' }).click();
+    await expect(page.locator('.title')).toBeVisible();
+    await page.locator('.badge').nth(1).click();
+    await page.getByRole('link', { name: 'Jeans' }).click();
+    await expect(page.locator('.title')).toBeVisible();
+    //Assert
+  });
+  test('TC19 - View & Cart Brand Products', async ({ page }) => {
+    //Arrange
+    //Act
+    autoExer.topMenu.productsButton.click();
+    await expect(
+      page.locator('.left-sidebar h2:has-text("Brands")'),
+    ).toBeVisible();
+    await page.locator('.nav').first().click();
+    await expect(page.locator('.title')).toBeVisible();
+    await page.locator('.nav').nth(1).click();
+    await expect(page.locator('.title')).toBeVisible();
+    //Assert
+  });
+  test('TC20 - Search Products and Verify Cart After Login', async ({
+    page,
+  }) => {
+    //Arrange
+    const userMail = LoginData.userMail;
+    const userPassword = LoginData.userPassword;
+    //Act
+    autoExer.topMenu.productsButton.click();
+    await expect(
+      page.getByRole('heading', { name: 'All Products' }),
+    ).toBeVisible();
+    await page.locator('#search_product').fill('Blue Top');
+    await page.locator('#submit_search').click();
+    await expect(
+      page.locator('.productinfo p:has-text("Blue Top")'),
+    ).toBeVisible();
+    await page.locator('[data-product-id="1"]').first().click();
+    autoExer.topMenu.cartButton.click();
+    autoExer.topMenu.signupLogin.click();
+    await autoExer.login(userMail, userPassword);
+    autoExer.topMenu.cartButton.click();
+    await expect(page.locator('#product-1')).toBeVisible();
+    //Assert
+  });
+  test('TC21 - Add review on product', async ({ page }) => {
+    //Arrange
+    const userMail = LoginData.userMail;
+    const userId = LoginData.userName;
+    const addReview = 'Adding New Review';
+    const revMessage = 'Thank you for your review.';
+    //Act
+    autoExer.topMenu.productsButton.click();
+    page.getByRole('heading', { name: 'All Products' }),
+      await expect(
+        page.getByRole('heading', { name: 'All Products' }),
+      ).toBeVisible();
+    await page.getByText('View Product').first().click();
+    await expect(
+      page.locator('.category-tab .nav a[href="#reviews"]'),
+    ).toHaveText('Write Your Review');
+    await page.locator('#name').fill(userId);
+    await page.locator('#email').fill(userMail);
+    await page.locator('#review').fill(addReview);
+    await page.locator('#button-review').click();
+    //Assert
+    await expect(page.locator('#review-section')).toHaveText(revMessage);
+
   });
 });
