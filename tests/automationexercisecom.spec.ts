@@ -542,6 +542,55 @@ test.describe('Other Pages', () => {
     await page.locator('#button-review').click();
     //Assert
     await expect(page.locator('#review-section')).toHaveText(revMessage);
+  });
+  test('TC22 - Add to cart from Recommended items', async ({ page }) => {
+    //Arrange
 
+    //Act
+    await expect(page.locator('.recommended_items')).toBeVisible();
+    await page
+      .locator('#recommended-item-carousel')
+      .locator('.add-to-cart')
+      .first()
+      .click();
+    await page
+      .locator('.modal-content .text-center a[href="/view_cart"]')
+      .click();
+      //Assert
+    await expect(page.locator('#product-1')).toBeVisible();
+  });
+  test('TC23 - Verify address details in checkout page', async ({ page }) => {
+    //Arrange
+    const userMail = LoginData.userMail;
+    const userId = LoginData.userName;
+    const userPassword = LoginData.userPassword;
+    const correctLogin = 'Logged in as NewUser1337';
+
+    //Act
+    autoExer.topMenu.signupLogin.click();
+    await autoExer.register(userId, userMail, userPassword);
+    await expect(page.locator('[data-qa="account-created"]')).toHaveText(
+      'Account Created!',
+    );
+    await page.locator('[data-qa="continue-button"]').click();
+    await expect(page.getByText(correctLogin)).toHaveText(correctLogin);
+    await page.locator('[data-product-id="1"]').nth(0).click();
+    await page.getByRole('button', { name: 'Continue Shopping' }).click();
+    await autoExer.topMenu.cartButton.click();
+    await expect(page.getByText('Shopping Cart')).toBeVisible();
+    await page.getByText('Proceed To Checkout').click();
+      page.locator('#address_delivery').locator('.address_firstname'),
+      await expect(
+        page.locator('#address_delivery').locator('.address_firstname'),
+      ).toContainText('Mr. Firstname1 Lastname1');
+      await expect(
+        page.locator('#address_invoice').locator('.address_firstname'),
+      ).toContainText('Mr. Firstname1 Lastname1');
+    //Assert
+    await autoExer.deleteAccount();
   });
 });
+
+//DODANIE ZMIENNYCH DO REJESTRACJI
+//DODANIE ZMIENNYCH DO OBIEKTU REJESTRACJI
+//DODANIE ZMIENNYCH DO SPRAWDZANIA W ADRESACH
