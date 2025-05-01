@@ -17,7 +17,7 @@ test.describe('Register and login tests', () => {
       'New User Signup!',
     );
   });
-  test('TC1 - Register User', async ({ page }) => {
+  test.skip('TC1 - Register User', async ({ page }) => {
     //Arrange
     const userMail = LoginData.userMail;
     const userId = LoginData.userName;
@@ -67,10 +67,6 @@ test.describe('Register and login tests', () => {
     await expect(page.locator('[data-qa="account-created"]')).toHaveText(
       'Account Created!',
     );
-    // await page.getByRole('link', { name: 'Continue' }).click();
-    // await page.getByRole('link', { name: ' Delete Account' }).click();
-    // await expect(page.getByText('Account Deleted!')).toHaveText("Account Deleted!");
-    // await page.getByRole('link', { name: 'Continue' }).click();
   });
 
   test('TC2 - Login', async ({ page }) => {
@@ -80,9 +76,6 @@ test.describe('Register and login tests', () => {
     const correctLogin = 'Logged in as NewUser1337';
     //Act
     await autoExer.login(userMail, userPassword);
-    // await page.getByRole('link', { name: ' Delete Account' }).click();
-    // await expect(page.getByText('Account Deleted!')).toHaveText("Account Deleted!");
-    // await page.getByRole('link', { name: 'Continue' }).click();
     //Assert
     await expect(page.getByText(correctLogin)).toHaveText(correctLogin);
   });
@@ -126,6 +119,15 @@ test.describe('Register and login tests', () => {
     await page.getByRole('button', { name: 'Signup' }).click();
     //Assert
     await expect(page.getByText(emailExist)).toHaveText(emailExist);
+  });
+  test('TC0 - Deleting Account', async ({ page }) => {
+    //Arrange
+    const userMail = LoginData.userMail;
+    const userPassword = LoginData.userPassword;
+    //Act
+    await autoExer.login(userMail, userPassword);
+    await autoExer.deleteAccount();
+    //Assert
   });
 });
 
@@ -294,9 +296,8 @@ test.describe('Other Pages', () => {
     //Act
     await autoExer.topMenu.productsButton.click();
     await page
-      .locator(
-        'div:nth-child(7) > .product-image-wrapper > .choose > .nav > li > a',
-      )
+      .locator('.product-image-wrapper a:has-text("View Product")')
+      .nth(6)
       .click();
     await expect(page.getByText('Rs.')).toContainText(/^Rs\.\s*\d+/);
     await expect(page.locator('p:has-text("Availability:")')).toHaveText(
@@ -317,5 +318,52 @@ test.describe('Other Pages', () => {
     //Assert
   });
 
-  
+  test('TC14 - Place Order: Register while Checkout', async ({ page }) => {
+    //Arrange
+    const userMail = LoginData.userMail;
+    const userId = LoginData.userName;
+    const userPassword = LoginData.userPassword;
+    const correctLogin = 'Logged in as NewUser1337';
+
+    //Act
+    await autoExer.topMenu.productsButton.click();
+    await page.locator('[data-product-id="1"]').nth(0).click();
+    await page.getByRole('button', { name: 'Continue Shopping' }).click();
+    await autoExer.topMenu.cartButton.click();
+    await expect(page.getByText('Shopping Cart')).toBeVisible();
+    await page.getByText('Proceed To Checkout').click();
+    await page.getByRole('link', { name: 'Register / Login' }).click();
+    await autoExer.register(userId, userMail, userPassword);
+    await expect(page.locator('[data-qa="account-created"]')).toHaveText(
+      'Account Created!',
+    );
+    await page.locator('[data-qa="continue-button"]').click();
+    await expect(page.getByText(correctLogin)).toHaveText(correctLogin);
+    await autoExer.topMenu.cartButton.click();
+    await page.getByText('Proceed To Checkout').click();
+    await expect(page.locator('#adress_delivery').locator('.address_firstname')).toContainText(
+      'Mr. Firstname1 Lastname1',
+    );
+    await expect(page.locator('#adress_invoice').locator('.address_firstname')).toContainText(
+      'Mr. Firstname1 Lastname1',
+    );
+    await expect(
+      page.locator('#cart_items').locator('h2:has-text("Review Your Order")'),
+    ).toBeVisible();
+    await expect(page.locator('#product-1')).toBeVisible();
+    await page.locator('#ordermsg').fill('Testmessage');
+    await page.getByRole('link', { name: 'Place Order' }).click();
+    await page.locator('[data-qa="name-on-card"]').fill('NameOnCard');
+    await page.locator('[data-qa="card-number"]').fill('777666555444');
+    await page.locator('[data-qa="cvc"]').fill('777');
+    await page.locator('[data-qa="expiry-month"]').fill('01');
+    await page.locator('[data-qa="expiry-year"]').fill('1990');
+    await page.locator('[data-qa="pay-button"]').click();
+    await expect(
+      page.getByText('Your order has been placed successfully!'),
+    ).toHaveText('Your order has been placed successfully!');
+    await autoExer.login(userMail, userPassword);
+    await autoExer.deleteAccount();
+    //Assert
+  });
 });
