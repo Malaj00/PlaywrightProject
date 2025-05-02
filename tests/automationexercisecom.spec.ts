@@ -126,8 +126,9 @@ test.describe('Register and login tests', () => {
     const userPassword = LoginData.userPassword;
     //Act
     await autoExer.login(userMail, userPassword);
-    await autoExer.deleteAccount();
+    await autoExer.topMenu.deleteButton.click();
     //Assert
+    await expect(page.locator('[data-qa="account-deleted"]')).toBeVisible();
   });
 });
 
@@ -556,7 +557,7 @@ test.describe('Other Pages', () => {
     await page
       .locator('.modal-content .text-center a[href="/view_cart"]')
       .click();
-      //Assert
+    //Assert
     await expect(page.locator('#product-1')).toBeVisible();
   });
   test('TC23 - Verify address details in checkout page', async ({ page }) => {
@@ -579,18 +580,112 @@ test.describe('Other Pages', () => {
     await autoExer.topMenu.cartButton.click();
     await expect(page.getByText('Shopping Cart')).toBeVisible();
     await page.getByText('Proceed To Checkout').click();
+    await expect(
       page.locator('#address_delivery').locator('.address_firstname'),
-      await expect(
-        page.locator('#address_delivery').locator('.address_firstname'),
-      ).toContainText('Mr. Firstname1 Lastname1');
-      await expect(
-        page.locator('#address_invoice').locator('.address_firstname'),
-      ).toContainText('Mr. Firstname1 Lastname1');
+    ).toContainText('Mr. Firstname1 Lastname1');
+    await expect(
+      page.locator('#address_invoice').locator('.address_firstname'),
+    ).toContainText('Mr. Firstname1 Lastname1');
     //Assert
-    await autoExer.deleteAccount();
+    await autoExer.deleteAcc.click();
+    await expect(page.locator('[data-qa="account-deleted"]')).toBeVisible();
+  });
+
+  test('TC24 - Download Invoice after purchase order', async ({ page }) => {
+    //Arrange
+    const userMail = LoginData.userMail;
+    const userId = LoginData.userName;
+    const userPassword = LoginData.userPassword;
+    const correctLogin = 'Logged in as NewUser1337';
+    const expectedmessagePayment = 'You have been successfully subscribed!';
+
+    //Act
+    await page.locator('[data-product-id="1"]').nth(0).click();
+    await page.getByRole('button', { name: 'Continue Shopping' }).click();
+    await autoExer.topMenu.cartButton.click();
+    await expect(page.getByText('Shopping Cart')).toBeVisible();
+    await page.getByText('Proceed To Checkout').click();
+    await page.getByRole('button', { name: 'Continue On Cart' }).click();
+    await autoExer.topMenu.signupLogin.click();
+    await autoExer.register(userId, userMail, userPassword);
+    await expect(page.locator('[data-qa="account-created"]')).toHaveText(
+      'Account Created!',
+    );
+    await page.locator('[data-qa="continue-button"]').click();
+    await expect(page.getByText(correctLogin)).toHaveText(correctLogin);
+    await autoExer.topMenu.cartButton.click();
+    await page.getByText('Proceed To Checkout').click();
+    await expect(
+      page.locator('#address_delivery').locator('.address_firstname'),
+    ).toContainText('Mr. Firstname1 Lastname1');
+    await expect(
+      page.locator('#address_invoice').locator('.address_firstname'),
+    ).toContainText('Mr. Firstname1 Lastname1');
+    await expect(
+      page.locator('#cart_items').locator('h2:has-text("Review Your Order")'),
+    ).toBeVisible();
+    await expect(page.locator('#product-1')).toBeVisible();
+    await page
+      .locator('#ordermsg')
+      .locator('.form-control')
+      .fill('Testmessage');
+    await page.getByRole('link', { name: 'Place Order' }).click();
+    await page.locator('[data-qa="name-on-card"]').fill('NameOnCard');
+    await page.locator('[data-qa="card-number"]').fill('777666555444');
+    await page.locator('[data-qa="cvc"]').fill('777');
+    await page.locator('[data-qa="expiry-month"]').fill('01');
+    await page.locator('[data-qa="expiry-year"]').fill('1990');
+    await page.locator('[data-qa="pay-button"]').click();
+    await expect(page.locator('.alert-success')).toHaveText(
+      expectedmessagePayment,
+    );
+    const downloadPromise = page.waitForEvent('download');
+    await page.getByRole('link', { name: 'Download Invoice' }).click();
+    await page.getByRole('link', { name: 'Continue' }).click();
+    //Assert
+    await autoExer.topMenu.deleteButton.click();
+    await expect(page.locator('[data-qa="account-deleted"]')).toBeVisible();
+  });
+
+  test('TC25 - Verify Scroll Up using Arrow button and Scroll Down functionality', async ({
+    page,
+  }) => {
+    //Arrange
+    const expectedMess =
+      'Full-Fledged practice website for Automation Engineers';
+    //Act
+    await expect(
+      page.locator('#footer').locator('h2:has-text("Subscription")'),
+    ).toHaveText('Subscription');
+    await page.locator('.grippy-host').click();
+    await page.evaluate(() => {
+      window.scrollBy(0, 700);
+    });
+    await page.locator('#scrollUp').click();
+    await page.waitForTimeout(200);
+    //Assert
+    await expect(page.locator('#slider-carousel')).toBeInViewport();
+    await expect(page.locator('#slider-carousel')).toContainText(expectedMess);
+  });
+  test('TC26 - Verify Scroll Up using Arrow button and Scroll Down functionality', async ({
+    page,
+  }) => {
+    //Arrange
+    const expectedMess =
+      'Full-Fledged practice website for Automation Engineers';
+    //Act
+    await expect(
+      page.locator('#footer').locator('h2:has-text("Subscription")'),
+    ).toHaveText('Subscription');
+    await page.locator('.grippy-host').click();
+    await page.evaluate(() => {
+      window.scrollBy(0, 700);
+    });
+    await page.evaluate(() => {
+      window.scrollBy(0, -700);
+    });
+    //Assert
+    await expect(page.locator('#slider-carousel')).toBeInViewport();
+    await expect(page.locator('#slider-carousel')).toContainText(expectedMess);
   });
 });
-
-//DODANIE ZMIENNYCH DO REJESTRACJI
-//DODANIE ZMIENNYCH DO OBIEKTU REJESTRACJI
-//DODANIE ZMIENNYCH DO SPRAWDZANIA W ADRESACH

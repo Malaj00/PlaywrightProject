@@ -7,6 +7,7 @@ export class TopMenuComponent {
     signupLogin: Locator;
     testcasesButton: Locator;
     contactButton: Locator;
+    deleteButton: Locator;
 
     constructor(private page: Page) {
         this.homeButton = page.locator('#header .nav a[href="/test_cases"]');
@@ -15,5 +16,6 @@ export class TopMenuComponent {
         this.signupLogin = page.locator('#header .nav a[href="/login"]');
         this.testcasesButton =  page.locator('#header .nav a[href="/test_cases"]');
         this.contactButton = page.locator('#header .nav a[href="/contact_us"]');
+        this.deleteButton = page.locator('#header .nav a[href="/delete_account"]');
     }
 }
