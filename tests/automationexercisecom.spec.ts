@@ -17,7 +17,8 @@ test.describe('Register and login tests', () => {
       'New User Signup!',
     );
   });
-  test('TC1 - Register User', async ({ page }) => {
+  test('TC1 - Register User', {tag: '@register'}, async ({ page }) => {
+    
     //Arrange
     const userMail = LoginData.userMail;
     const userId = LoginData.userName;
@@ -69,7 +70,7 @@ test.describe('Register and login tests', () => {
     );
   });
 
-  test('TC2 - Login', async ({ page }) => {
+  test('TC2 - Login', {tag: '@login'}, async ({ page }) => {
     //Arrange
     const userMail = LoginData.userMail;
     const userPassword = LoginData.userPassword;
@@ -79,7 +80,7 @@ test.describe('Register and login tests', () => {
     //Assert
     await expect(page.getByText(correctLogin)).toHaveText(correctLogin);
   });
-  test('TC3 - Login with incorrect data', async ({ page }) => {
+  test('TC3 - Login with incorrect data', {tag: '@login'}, async ({ page }) => {
     //Arrange
     const userIncMail = 'blabla@mail.com';
     const userIncPassword = 'blabla';
@@ -91,7 +92,7 @@ test.describe('Register and login tests', () => {
     //Assert
     await expect(page.getByText(incorrectInput)).toHaveText(incorrectInput);
   });
-  test('TC4 - Logout User', async ({ page }) => {
+  test('TC4 - Logout User', {tag: '@login'}, async ({ page }) => {
     //Arrange
     const userMail = LoginData.userMail;
     const userPassword = LoginData.userPassword;
@@ -104,7 +105,7 @@ test.describe('Register and login tests', () => {
     //Assert
     await expect(page.getByText(logoutMessage)).toHaveText(logoutMessage);
   });
-  test('TC5 - Register User with existing email', async ({ page }) => {
+  test('TC5 - Register User with existing email', {tag: '@register'}, async ({ page }) => {
     //Arrange
     const userId = LoginData.userName;
     const userMail = LoginData.userMail;
@@ -120,7 +121,7 @@ test.describe('Register and login tests', () => {
     //Assert
     await expect(page.getByText(emailExist)).toHaveText(emailExist);
   });
-  test('TC0 - Deleting Account', async ({ page }) => {
+  test('TC0 - Deleting Account', {tag: '@delete'}, async ({ page }) => {
     //Arrange
     const userMail = LoginData.userMail;
     const userPassword = LoginData.userPassword;
@@ -140,7 +141,7 @@ test.describe('Other Pages', () => {
     await page.getByRole('button', { name: 'Consent' }).click();
     await expect(page.locator('#slider-carousel')).toBeVisible();
   });
-  test('TC6 - Contact Us Form', async ({ page }) => {
+  test('TC6 - Contact Us Form', {tag: '@topmenu'}, async ({ page }) => {
     //Arrange
     const userMail = LoginData.userMail;
     const userId = LoginData.userName;
@@ -174,7 +175,7 @@ test.describe('Other Pages', () => {
     await expect(page.locator('#slider-carousel')).toBeVisible();
   });
 
-  test('TC7 - Verify Test Cases Page', async ({ page }) => {
+  test('TC7 - Verify Test Cases Page', {tag: '@topmenu'}, async ({ page }) => {
     //Arrange
 
     //Act
@@ -182,7 +183,7 @@ test.describe('Other Pages', () => {
     //Assert
     await expect(page.locator('h2:has-text("Test Cases")')).toBeVisible();
   });
-  test('TC8 - Verify All Products and product detail page', async ({
+  test('TC8 - Verify All Products and product detail page', {tag: '@topmenu'}, async ({
     page,
   }) => {
     //Arrange
@@ -207,7 +208,7 @@ test.describe('Other Pages', () => {
       /^Brand:\s*\w.+/,
     );
   });
-  test('TC9 - Search Product', async ({ page }) => {
+  test('TC9 - Search Product', {tag: '@search'}, async ({ page }) => {
     //Arrange
 
     //Act
@@ -228,7 +229,7 @@ test.describe('Other Pages', () => {
       page.locator('.features_items  .col-sm-4  p').first(),
     ).toContainText('Blue Top');
   });
-  test('TC10 - Verify Subscription in home page', async ({ page }) => {
+  test('TC10 - Verify Subscription in home page', {tag: '@subscription'}, async ({ page }) => {
     //Arrange
     const userMail = LoginData.userMail;
     //Act
@@ -243,7 +244,7 @@ test.describe('Other Pages', () => {
       'You have been successfully subscribed!',
     );
   });
-  test('TC11 - Verify Subscription in Cart page', async ({ page }) => {
+  test('TC11 - Verify Subscription in Cart page', {tag: '@subscription'}, async ({ page }) => {
     //Arrange
     const userMail = LoginData.userMail;
     //Act
@@ -259,7 +260,7 @@ test.describe('Other Pages', () => {
       'You have been successfully subscribed!',
     );
   });
-  test('TC12 - Add Products in Cart', async ({ page }) => {
+  test('TC12 - Add Products in Cart', {tag: '@cart'}, async ({ page }) => {
     //Arrange
     //Act
     await autoExer.topMenu.productsButton.click();
@@ -291,7 +292,7 @@ test.describe('Other Pages', () => {
     ).toBeVisible();
   });
 
-  test('TC13 - Verify Product quantity in Cart', async ({ page }) => {
+  test('TC13 - Verify Product quantity in Cart', {tag: '@cart'}, async ({ page }) => {
     //Arrange
 
     //Act
@@ -319,7 +320,7 @@ test.describe('Other Pages', () => {
     //Assert
   });
 
-  test('TC14 - Place Order: Register while Checkout', async ({ page }) => {
+  test('TC14 - Place Order: Register while Checkout', {tag: '@register'}, async ({ page }) => {
     //Arrange
     const userMail = LoginData.userMail;
     const userId = LoginData.userName;
@@ -369,7 +370,7 @@ test.describe('Other Pages', () => {
     await autoExer.deleteAccount();
     //Assert
   });
-  test('TC15 - Place Order: Register while Checkout', async ({ page }) => {
+  test('TC15 - Place Order: Register while Checkout', {tag: '@register'}, async ({ page }) => {
     //Arrange
     const userMail = LoginData.userMail;
     const userId = LoginData.userName;
@@ -417,7 +418,7 @@ test.describe('Other Pages', () => {
     await autoExer.deleteAccount();
     //Assert
   });
-  test('TC16 - Place Order: Login before Checkout', async ({ page }) => {
+  test('TC16 - Place Order: Login before Checkout', {tag: '@register'}, async ({ page }) => {
     //Arrange
     const userMail = LoginData.userMail;
     const userPassword = LoginData.userPassword;
@@ -458,7 +459,7 @@ test.describe('Other Pages', () => {
     await autoExer.deleteAccount();
     //Assert
   });
-  test('TC17 - Remove Products From Cart', async ({ page }) => {
+  test('TC17 - Remove Products From Cart', {tag: '@cart'}, async ({ page }) => {
     //Arrange
     //Act
     await page.locator('[data-product-id="1"]').nth(0).click();
@@ -469,7 +470,7 @@ test.describe('Other Pages', () => {
     //Assert
     await expect(page.locator('#empty_cart')).toBeVisible();
   });
-  test('TC18 - View Category Products', async ({ page }) => {
+  test('TC18 - View Category Products', {tag: '@category'}, async ({ page }) => {
     //Arrange
     //Act
     await expect(
@@ -484,7 +485,7 @@ test.describe('Other Pages', () => {
     await expect(page.locator('.title')).toBeVisible();
     //Assert
   });
-  test('TC19 - View & Cart Brand Products', async ({ page }) => {
+  test('TC19 - View & Cart Brand Products', {tag: '@cart'}, async ({ page }) => {
     //Arrange
     //Act
     autoExer.topMenu.productsButton.click();
@@ -497,7 +498,7 @@ test.describe('Other Pages', () => {
     await expect(page.locator('.title')).toBeVisible();
     //Assert
   });
-  test('TC20 - Search Products and Verify Cart After Login', async ({
+  test('TC20 - Search Products and Verify Cart After Login', {tag: ['@cart', '@login']}, async ({
     page,
   }) => {
     //Arrange
@@ -521,7 +522,7 @@ test.describe('Other Pages', () => {
     await expect(page.locator('#product-1')).toBeVisible();
     //Assert
   });
-  test('TC21 - Add review on product', async ({ page }) => {
+  test('TC21 - Add review on product', {tag: '@revuew'}, async ({ page }) => {
     //Arrange
     const userMail = LoginData.userMail;
     const userId = LoginData.userName;
@@ -544,7 +545,7 @@ test.describe('Other Pages', () => {
     //Assert
     await expect(page.locator('#review-section')).toHaveText(revMessage);
   });
-  test('TC22 - Add to cart from Recommended items', async ({ page }) => {
+  test('TC22 - Add to cart from Recommended items', {tag: '@cart'}, async ({ page }) => {
     //Arrange
 
     //Act
@@ -560,7 +561,7 @@ test.describe('Other Pages', () => {
     //Assert
     await expect(page.locator('#product-1')).toBeVisible();
   });
-  test('TC23 - Verify address details in checkout page', async ({ page }) => {
+  test('TC23 - Verify address details in checkout page', {tag: '@register'}, async ({ page }) => {
     //Arrange
     const userMail = LoginData.userMail;
     const userId = LoginData.userName;
@@ -591,7 +592,7 @@ test.describe('Other Pages', () => {
     await expect(page.locator('[data-qa="account-deleted"]')).toBeVisible();
   });
 
-  test('TC24 - Download Invoice after purchase order', async ({ page }) => {
+  test('TC24 - Download Invoice after purchase order', {tag: '@invoice'}, async ({ page }) => {
     //Arrange
     const userMail = LoginData.userMail;
     const userId = LoginData.userName;
@@ -647,7 +648,7 @@ test.describe('Other Pages', () => {
     await expect(page.locator('[data-qa="account-deleted"]')).toBeVisible();
   });
 
-  test('TC25 - Verify Scroll Up using Arrow button and Scroll Down functionality', async ({
+  test('TC25 - Verify Scroll Up using Arrow button and Scroll Down functionality', {tag: '@scroll'}, async ({
     page,
   }) => {
     //Arrange
@@ -667,7 +668,7 @@ test.describe('Other Pages', () => {
     await expect(page.locator('#slider-carousel')).toBeInViewport();
     await expect(page.locator('#slider-carousel')).toContainText(expectedMess);
   });
-  test('TC26 - Verify Scroll Up using Arrow button and Scroll Down functionality', async ({
+  test('TC26 - Verify Scroll Up using Arrow button and Scroll Down functionality', {tag: '@scroll'}, async ({
     page,
   }) => {
     //Arrange
