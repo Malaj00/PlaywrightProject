@@ -60,8 +60,6 @@ test.describe('Test Exceptions', () => {
     //Act
     await tempTest.rowAdd();
     //Assert
-    //krok asercji, który powie Ci: "OK, element faktycznie się pojawił", zanim cokolwiek z nim zrobisz.
-    //await expect(tempTest.rowAdded.nth(1)).toBeVisible();
     await tempTest.rowAdded
       .nth(1)
       .waitFor({ state: 'visible', timeout: 10000 });

@@ -3,3 +3,26 @@ export const LoginData = {
     userPassword: "Password123",
     userName: "NewUser1337"
 };
+
+export const RegisterData = {
+    days: "10",
+    month: "12",
+    year: "1944",
+    firstName: "First Name",
+    lastName: "Lastname",
+    company: "TestingCompany",
+    address: "TE 12 ST",
+    country: "United States",
+    state: "KCstate",
+    city: "Thais",
+    zipcode: "03405",
+    mobile: "000333444"
+}
+
+export const CardData = {
+    nameOnCard: "Card Name",
+    cardNumber: "1231 1405 4924 0533",
+    cvcNumber: "007",
+    exprMonth: "01",
+    exprYears: "30"
+}

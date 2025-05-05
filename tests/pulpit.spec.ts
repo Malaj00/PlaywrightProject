@@ -15,7 +15,7 @@ test.describe('Pulpit tests', () => {
     await loginPage.login(userId, userPassword);
   });
 
-  test.only(
+  test(
     'Quick payment with correct data',
     {
       tag: ['@pulpit', '@integration'],
