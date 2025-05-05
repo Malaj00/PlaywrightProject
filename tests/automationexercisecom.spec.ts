@@ -88,11 +88,9 @@ test.describe('Register and login tests', () => {
 
   test('TC2 - Login', { tag: '@login' }, async ({ page }) => {
     //Arrange
-    const userMail = LoginData.userMail;
-    const userPassword = LoginData.userPassword;
     const correctLogin = 'Logged in as NewUser1337';
     //Act
-    await autoExer.login(userCredentials);
+    await autoExer.login(userCredentials.userMail, userCredentials.userPassword);
     //Assert
     await expect(page.getByText(correctLogin)).toHaveText(correctLogin);
   });

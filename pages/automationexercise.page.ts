@@ -89,7 +89,13 @@ export class AutomationExercise {
       .fill(regMobile);
     await this.page.getByRole('button', { name: 'Create Account' }).click();
   }
-  async cardPay(nameOnCard: string, cardNumber: string, cvcNumber: string, exprMonth: string, exprYears: string): Promise<void> {
+  async cardPay(
+    nameOnCard: string,
+    cardNumber: string,
+    cvcNumber: string,
+    exprMonth: string,
+    exprYears: string,
+  ): Promise<void> {
     await this.page.locator('[data-qa="name-on-card"]').fill(nameOnCard);
     await this.page.locator('[data-qa="card-number"]').fill(cardNumber);
     await this.page.locator('[data-qa="cvc"]').fill(cvcNumber);
