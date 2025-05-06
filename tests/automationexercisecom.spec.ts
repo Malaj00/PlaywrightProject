@@ -8,7 +8,6 @@ import { AutomationExercise } from '../pages/automationexercise.page';
 
 const userCredentials = require('../test-data/user-credentials.json');
 
-
 test.describe('Register and login tests', () => {
   let autoExer: AutomationExercise;
   test.beforeEach(async ({ page }) => {
@@ -26,28 +25,16 @@ test.describe('Register and login tests', () => {
   });
   test('TC1 - Register User', { tag: '@register' }, async ({ page }) => {
     //Arrange
-    const userMail = LoginData.userMail;
-    const userId = LoginData.userName;
-    const userPassword = LoginData.userPassword;
-    const regDays = RegisterData.days;
-    const regMonth = RegisterData.month;
-    const regYear = RegisterData.year;
-    const regCompany = RegisterData.company;
-    const regFName = RegisterData.firstName;
-    const regLName = RegisterData.lastName;
-    const regAddres = RegisterData.address;
-    const regMobile = RegisterData.mobile;
-    const regCountry = RegisterData.country;
-    const regState = RegisterData.state;
-    const regCity = RegisterData.city;
-    const regZip = RegisterData.zipcode;
 
     //Act
     await expect(page.getByText('New User Signup!')).toBeVisible;
     await expect(page.getByText('New User Signup!')).toHaveText(
       'New User Signup!',
     );
-    await page.getByRole('textbox', { name: 'Name' }).fill(userId);
+    const userMail = LoginData.userMail;
+    await page
+      .getByRole('textbox', { name: 'Name' })
+      .fill(userCredentials.userName);
     await page.locator('[data-qa="signup-email"]').fill(userMail);
     await page.getByRole('button', { name: 'Signup' }).click();
     await expect(page.getByText('Enter Account Information')).toBeVisible();
@@ -55,10 +42,12 @@ test.describe('Register and login tests', () => {
       'Enter Account Information',
     );
     await page.getByRole('radio', { name: 'Mr.' }).check();
-    await page.locator('#days').selectOption(regDays);
-    await page.locator('#months').selectOption(regMonth);
-    await page.locator('#years').selectOption(regYear);
-    await page.getByRole('textbox', { name: 'Password *' }).fill(userPassword);
+    await page.locator('#days').selectOption(userCredentials.days);
+    await page.locator('#months').selectOption(userCredentials.month);
+    await page.locator('#years').selectOption(userCredentials.year);
+    await page
+      .getByRole('textbox', { name: 'Password *' })
+      .fill(userCredentials.userPassword);
     await page
       .getByRole('checkbox', { name: 'Sign up for our newsletter!' })
       .check();
@@ -67,19 +56,27 @@ test.describe('Register and login tests', () => {
       .check();
     await page
       .getByRole('textbox', { name: 'Company', exact: true })
-      .fill(regCompany);
-    await page.getByRole('textbox', { name: 'First name *' }).fill(regFName);
-    await page.getByRole('textbox', { name: 'Last name *' }).fill(regLName);
+      .fill(userCredentials.company);
+    await page
+      .getByRole('textbox', { name: 'First name *' })
+      .fill(userCredentials.firstName);
+    await page
+      .getByRole('textbox', { name: 'Last name *' })
+      .fill(userCredentials.lastName);
     await page
       .getByRole('textbox', { name: 'Address * (Street address, P.' })
-      .fill(regAddres);
-    await page.getByLabel('Country *').selectOption(regCountry);
-    await page.getByRole('textbox', { name: 'State *' }).fill(regState);
-    await page.getByRole('textbox', { name: 'City * Zipcode *' }).fill(regCity);
-    await page.locator('#zipcode').fill(regZip);
+      .fill(userCredentials.address);
+    await page.getByLabel('Country *').selectOption(userCredentials.country);
+    await page
+      .getByRole('textbox', { name: 'State *' })
+      .fill(userCredentials.state);
+    await page
+      .getByRole('textbox', { name: 'City * Zipcode *' })
+      .fill(userCredentials.city);
+    await page.locator('#zipcode').fill(userCredentials.zipcode);
     await page
       .getByRole('textbox', { name: 'Mobile Number *' })
-      .fill(regMobile);
+      .fill(userCredentials.mobile);
     await page.getByRole('button', { name: 'Create Account' }).click();
     await expect(page.locator('[data-qa="account-created"]')).toHaveText(
       'Account Created!',
@@ -90,7 +87,10 @@ test.describe('Register and login tests', () => {
     //Arrange
     const correctLogin = 'Logged in as NewUser1337';
     //Act
-    await autoExer.login(userCredentials.userMail, userCredentials.userPassword);
+    await autoExer.login(
+      userCredentials.userMail,
+      userCredentials.userPassword,
+    );
     //Assert
     await expect(page.getByText(correctLogin)).toHaveText(correctLogin);
   });
@@ -112,12 +112,14 @@ test.describe('Register and login tests', () => {
   );
   test('TC4 - Logout User', { tag: '@login' }, async ({ page }) => {
     //Arrange
-    const userMail = LoginData.userMail;
-    const userPassword = LoginData.userPassword;
+
     const correctLogin = 'Logged in as NewUser1337';
     const logoutMessage = 'Login to your account';
     //Act
-    await autoExer.login(userMail, userPassword);
+    await autoExer.login(
+      userCredentials.userMail,
+      userCredentials.userPassword,
+    );
     await expect(page.getByText(correctLogin)).toHaveText(correctLogin);
     await page.getByRole('link', { name: ' Logout' }).click();
     //Assert
@@ -128,16 +130,16 @@ test.describe('Register and login tests', () => {
     { tag: '@register' },
     async ({ page }) => {
       //Arrange
-      const userId = LoginData.userName;
-      const userMail = LoginData.userMail;
       const emailExist = 'Email Address already exist!';
       //Act
-      await page.getByRole('textbox', { name: 'Name' }).fill(userId);
+      await page
+        .getByRole('textbox', { name: 'Name' })
+        .fill(userCredentials.userName);
       await page
         .locator('form')
         .filter({ hasText: 'Signup' })
         .getByPlaceholder('Email Address')
-        .fill(userMail);
+        .fill(userCredentials.userMail);
       await page.getByRole('button', { name: 'Signup' }).click();
       //Assert
       await expect(page.getByText(emailExist)).toHaveText(emailExist);
@@ -145,10 +147,11 @@ test.describe('Register and login tests', () => {
   );
   test('TC0 - Deleting Account', { tag: '@delete' }, async ({ page }) => {
     //Arrange
-    const userMail = LoginData.userMail;
-    const userPassword = LoginData.userPassword;
     //Act
-    await autoExer.login(userMail, userPassword);
+    await autoExer.login(
+      userCredentials.userMail,
+      userCredentials.userPassword,
+    );
     await autoExer.topMenu.deleteButton.click();
     //Assert
     await expect(page.locator('[data-qa="account-deleted"]')).toBeVisible();
@@ -165,8 +168,6 @@ test.describe('Other Pages', () => {
   });
   test('TC6 - Contact Us Form', { tag: '@topmenu' }, async ({ page }) => {
     //Arrange
-    const userMail = LoginData.userMail;
-    const userId = LoginData.userName;
     const subjectMess = 'AnySubject123';
     const suppMess = 'Randomly generated message.';
     const submitMessage =
@@ -176,8 +177,10 @@ test.describe('Other Pages', () => {
     await page.getByRole('heading', { name: 'Get In Touch' }).click();
     await page
       .getByRole('textbox', { name: 'Email', exact: true })
-      .fill(userMail);
-    await page.getByRole('textbox', { name: 'Name' }).fill(userId);
+      .fill(userCredentials.userMail);
+    await page
+      .getByRole('textbox', { name: 'Name' })
+      .fill(userCredentials.userName);
     await page.getByRole('textbox', { name: 'Subject' }).fill(subjectMess);
     await page
       .getByRole('textbox', { name: 'Your Message Here' })
@@ -238,7 +241,6 @@ test.describe('Other Pages', () => {
   );
   test('TC9 - Search Product', { tag: '@search' }, async ({ page }) => {
     //Arrange
-
     //Act
     await autoExer.topMenu.productsButton.click();
     await expect(
@@ -262,12 +264,11 @@ test.describe('Other Pages', () => {
     { tag: '@subscription' },
     async ({ page }) => {
       //Arrange
-      const userMail = LoginData.userMail;
       //Act
       await expect(
         page.locator('#footer').locator('h2:has-text("Subscription")'),
       ).toHaveText('Subscription');
-      await page.locator('#susbscribe_email').fill(userMail);
+      await page.locator('#susbscribe_email').fill(userCredentials.userMail);
       await page.getByRole('button', { name: '' }).click();
       //Assert
       await expect(page.getByText('You have been successfully')).toBeVisible();
@@ -281,13 +282,12 @@ test.describe('Other Pages', () => {
     { tag: '@subscription' },
     async ({ page }) => {
       //Arrange
-      const userMail = LoginData.userMail;
       //Act
       await autoExer.topMenu.cartButton.click();
       await expect(
         page.locator('#footer').locator('h2:has-text("Subscription")'),
       ).toHaveText('Subscription');
-      await page.locator('#susbscribe_email').fill(userMail);
+      await page.locator('#susbscribe_email').fill(userCredentials.userMail);
       await page.getByRole('button', { name: '' }).click();
       //Assert
       await expect(page.getByText('You have been successfully')).toBeVisible();
@@ -367,28 +367,8 @@ test.describe('Other Pages', () => {
     { tag: '@register' },
     async ({ page }) => {
       //Arrange
-      const userMail = LoginData.userMail;
-      const userId = LoginData.userName;
-      const userPassword = LoginData.userPassword;
-      const correctLogin = 'Logged in as NewUser1337';
+      const correctLogin = `Logged in as ${userCredentials.userName}`;
       const expectedmessagePayment = 'You have been successfully subscribed!';
-      const regDays = RegisterData.days;
-      const regMonth = RegisterData.month;
-      const regYear = RegisterData.year;
-      const regCompany = RegisterData.company;
-      const regFName = RegisterData.firstName;
-      const regLName = RegisterData.lastName;
-      const regAddres = RegisterData.address;
-      const regMobile = RegisterData.mobile;
-      const regCountry = RegisterData.country;
-      const regState = RegisterData.state;
-      const regCity = RegisterData.city;
-      const regZip = RegisterData.zipcode;
-      const nameCard = CardData.nameOnCard;
-      const numberCard = CardData.cardNumber;
-      const cvcCard = CardData.cvcNumber;
-      const monthCard = CardData.exprMonth;
-      const yearCard = CardData.exprYears;
       //Act
       await autoExer.topMenu.productsButton.click();
       await page.locator('[data-product-id="1"]').nth(0).click();
@@ -398,21 +378,21 @@ test.describe('Other Pages', () => {
       await page.getByText('Proceed To Checkout').click();
       await page.getByRole('link', { name: 'Register / Login' }).click();
       await autoExer.register(
-        userId,
-        userMail,
-        userPassword,
-        regDays,
-        regMonth,
-        regYear,
-        regCompany,
-        regFName,
-        regLName,
-        regAddres,
-        regMobile,
-        regCountry,
-        regState,
-        regCity,
-        regZip,
+        userCredentials.userName,
+        userCredentials.userMail,
+        userCredentials.userPassword,
+        userCredentials.days,
+        userCredentials.month,
+        userCredentials.year,
+        userCredentials.company,
+        userCredentials.firstName,
+        userCredentials.lastName,
+        userCredentials.address,
+        userCredentials.mobile,
+        userCredentials.country,
+        userCredentials.state,
+        userCredentials.city,
+        userCredentials.zipcode,
       );
       await expect(page.locator('[data-qa="account-created"]')).toHaveText(
         'Account Created!',
@@ -423,10 +403,14 @@ test.describe('Other Pages', () => {
       await page.getByText('Proceed To Checkout').click();
       await expect(
         page.locator('#address_delivery').locator('.address_firstname'),
-      ).toContainText(`Mr. ${regFName} ${regLName}`);
+      ).toContainText(
+        `Mr. ${userCredentials.firstName} ${userCredentials.lastName}`,
+      );
       await expect(
         page.locator('#address_invoice').locator('.address_firstname'),
-      ).toContainText(`Mr. ${regFName} ${regLName}`);
+      ).toContainText(
+        `Mr. ${userCredentials.firstName} ${userCredentials.lastName}`,
+      );
       await expect(
         page.locator('#cart_items').locator('h2:has-text("Review Your Order")'),
       ).toBeVisible();
@@ -437,11 +421,11 @@ test.describe('Other Pages', () => {
         .fill('Testmessage');
       await page.getByRole('link', { name: 'Place Order' }).click();
       await autoExer.cardPay(
-        nameCard,
-        numberCard,
-        cvcCard,
-        monthCard,
-        yearCard,
+        userCredentials.nameOnCard,
+        userCredentials.cardNumber,
+        userCredentials.cvcNumber,
+        userCredentials.exprMonth,
+        userCredentials.exprYears,
       );
       await expect(page.locator('.alert-success')).toHaveText(
         expectedmessagePayment,
@@ -455,46 +439,26 @@ test.describe('Other Pages', () => {
     { tag: '@register' },
     async ({ page }) => {
       //Arrange
-      const userMail = LoginData.userMail;
-      const userId = LoginData.userName;
-      const userPassword = LoginData.userPassword;
-      const correctLogin = 'Logged in as NewUser1337';
+      const correctLogin = `Logged in as ${userCredentials.userName}`;
       const expectedmessagePayment = 'You have been successfully subscribed!';
-      const regDays = RegisterData.days;
-      const regMonth = RegisterData.month;
-      const regYear = RegisterData.year;
-      const regCompany = RegisterData.company;
-      const regFName = RegisterData.firstName;
-      const regLName = RegisterData.lastName;
-      const regAddres = RegisterData.address;
-      const regMobile = RegisterData.mobile;
-      const regCountry = RegisterData.country;
-      const regState = RegisterData.state;
-      const regCity = RegisterData.city;
-      const regZip = RegisterData.zipcode;
-      const nameCard = CardData.nameOnCard;
-      const numberCard = CardData.cardNumber;
-      const cvcCard = CardData.cvcNumber;
-      const monthCard = CardData.exprMonth;
-      const yearCard = CardData.exprYears;
       //Act
       await autoExer.topMenu.signupLogin.click();
       await autoExer.register(
-        userId,
-        userMail,
-        userPassword,
-        regDays,
-        regMonth,
-        regYear,
-        regCompany,
-        regFName,
-        regLName,
-        regAddres,
-        regMobile,
-        regCountry,
-        regState,
-        regCity,
-        regZip,
+        userCredentials.userName,
+        userCredentials.userMail,
+        userCredentials.userPassword,
+        userCredentials.days,
+        userCredentials.month,
+        userCredentials.year,
+        userCredentials.company,
+        userCredentials.firstName,
+        userCredentials.lastName,
+        userCredentials.address,
+        userCredentials.mobile,
+        userCredentials.country,
+        userCredentials.state,
+        userCredentials.city,
+        userCredentials.zipcode,
       );
       await expect(page.locator('[data-qa="account-created"]')).toHaveText(
         'Account Created!',
@@ -509,10 +473,14 @@ test.describe('Other Pages', () => {
       await page.getByText('Proceed To Checkout').click();
       await expect(
         page.locator('#address_delivery').locator('.address_firstname'),
-      ).toContainText(`Mr. ${regFName} ${regLName}`);
+      ).toContainText(
+        `Mr. ${userCredentials.firstName} ${userCredentials.lastName}`,
+      );
       await expect(
         page.locator('#address_invoice').locator('.address_firstname'),
-      ).toContainText(`Mr. ${regFName} ${regLName}`);
+      ).toContainText(
+        `Mr. ${userCredentials.firstName} ${userCredentials.lastName}`,
+      );
       await expect(
         page.locator('#cart_items').locator('h2:has-text("Review Your Order")'),
       ).toBeVisible();
@@ -523,11 +491,11 @@ test.describe('Other Pages', () => {
         .fill('Testmessage');
       await page.getByRole('link', { name: 'Place Order' }).click();
       await autoExer.cardPay(
-        nameCard,
-        numberCard,
-        cvcCard,
-        monthCard,
-        yearCard,
+        userCredentials.nameOnCard,
+        userCredentials.cardNumber,
+        userCredentials.cvcNumber,
+        userCredentials.exprMonth,
+        userCredentials.exprYears,
       );
       await expect(page.locator('.alert-success')).toHaveText(
         expectedmessagePayment,
@@ -541,47 +509,26 @@ test.describe('Other Pages', () => {
     { tag: '@login' },
     async ({ page }) => {
       //Arrange
-      const userId = LoginData.userName;
-      const userMail = LoginData.userMail;
-      const userPassword = LoginData.userPassword;
-      const userName = LoginData.userName
-      const correctLogin = `Logged in as ${userName}`;
+      const correctLogin = `Logged in as ${userCredentials.userName}`;
       const expectedmessagePayment = 'You have been successfully subscribed!';
-      const nameCard = CardData.nameOnCard;
-      const numberCard = CardData.cardNumber;
-      const cvcCard = CardData.cvcNumber;
-      const monthCard = CardData.exprMonth;
-      const yearCard = CardData.exprYears;
-      const regDays = RegisterData.days;
-      const regMonth = RegisterData.month;
-      const regYear = RegisterData.year;
-      const regCompany = RegisterData.company;
-      const regFName = RegisterData.firstName;
-      const regLName = RegisterData.lastName;
-      const regAddres = RegisterData.address;
-      const regMobile = RegisterData.mobile;
-      const regCountry = RegisterData.country;
-      const regState = RegisterData.state;
-      const regCity = RegisterData.city;
-      const regZip = RegisterData.zipcode;
       //Act
       await autoExer.topMenu.signupLogin.click();
       await autoExer.register(
-        userId,
-        userMail,
-        userPassword,
-        regDays,
-        regMonth,
-        regYear,
-        regCompany,
-        regFName,
-        regLName,
-        regAddres,
-        regMobile,
-        regCountry,
-        regState,
-        regCity,
-        regZip,
+        userCredentials.userName,
+        userCredentials.userMail,
+        userCredentials.userPassword,
+        userCredentials.days,
+        userCredentials.month,
+        userCredentials.year,
+        userCredentials.company,
+        userCredentials.firstName,
+        userCredentials.lastName,
+        userCredentials.address,
+        userCredentials.mobile,
+        userCredentials.country,
+        userCredentials.state,
+        userCredentials.city,
+        userCredentials.zipcode,
       );
       await page.locator('[data-qa="continue-button"]').click();
       await expect(page.getByText(correctLogin)).toHaveText(correctLogin);
@@ -592,10 +539,14 @@ test.describe('Other Pages', () => {
       await page.getByText('Proceed To Checkout').click();
       await expect(
         page.locator('#address_delivery').locator('.address_firstname'),
-      ).toContainText(`Mr. ${regFName} ${regLName}`);
+      ).toContainText(
+        `Mr. ${userCredentials.firstName} ${userCredentials.lastName}`,
+      );
       await expect(
         page.locator('#address_invoice').locator('.address_firstname'),
-      ).toContainText(`Mr. ${regFName} ${regLName}`);
+      ).toContainText(
+        `Mr. ${userCredentials.firstName} ${userCredentials.lastName}`,
+      );
       await expect(
         page.locator('#cart_items').locator('h2:has-text("Review Your Order")'),
       ).toBeVisible();
@@ -604,13 +555,13 @@ test.describe('Other Pages', () => {
         .locator('#ordermsg')
         .locator('.form-control')
         .fill('Testmessage');
-        await page.getByRole('link', { name: 'Place Order' }).click();
-        await autoExer.cardPay(
-        nameCard,
-        numberCard,
-        cvcCard,
-        monthCard,
-        yearCard,
+      await page.getByRole('link', { name: 'Place Order' }).click();
+      await autoExer.cardPay(
+        userCredentials.nameOnCard,
+        userCredentials.cardNumber,
+        userCredentials.cvcNumber,
+        userCredentials.exprMonth,
+        userCredentials.exprYears,
       );
       await expect(page.locator('.alert-success')).toHaveText(
         expectedmessagePayment,
@@ -679,8 +630,6 @@ test.describe('Other Pages', () => {
     { tag: ['@cart', '@login'] },
     async ({ page }) => {
       //Arrange
-      const userMail = LoginData.userMail;
-      const userPassword = LoginData.userPassword;
       //Act
       autoExer.topMenu.productsButton.click();
       await expect(
@@ -694,7 +643,10 @@ test.describe('Other Pages', () => {
       await page.locator('[data-product-id="1"]').first().click();
       autoExer.topMenu.cartButton.click();
       autoExer.topMenu.signupLogin.click();
-      await autoExer.login(userMail, userPassword);
+      await autoExer.login(
+        userCredentials.userMail,
+        userCredentials.userPassword,
+      );
       autoExer.topMenu.cartButton.click();
       await expect(page.locator('#product-1')).toBeVisible();
       //Assert
@@ -702,8 +654,6 @@ test.describe('Other Pages', () => {
   );
   test('TC21 - Add review on product', { tag: '@revuew' }, async ({ page }) => {
     //Arrange
-    const userMail = LoginData.userMail;
-    const userId = LoginData.userName;
     const addReview = 'Adding New Review';
     const revMessage = 'Thank you for your review.';
     //Act
@@ -716,8 +666,8 @@ test.describe('Other Pages', () => {
     await expect(
       page.locator('.category-tab .nav a[href="#reviews"]'),
     ).toHaveText('Write Your Review');
-    await page.locator('#name').fill(userId);
-    await page.locator('#email').fill(userMail);
+    await page.locator('#name').fill(userCredentials.userName);
+    await page.locator('#email').fill(userCredentials.userMail);
     await page.locator('#review').fill(addReview);
     await page.locator('#button-review').click();
     //Assert
@@ -748,40 +698,26 @@ test.describe('Other Pages', () => {
     { tag: '@register' },
     async ({ page }) => {
       //Arrange
-      const userMail = LoginData.userMail;
-      const userId = LoginData.userName;
-      const userPassword = LoginData.userPassword;
-      const correctLogin = 'Logged in as NewUser1337';
-      const regDays = RegisterData.days;
-      const regMonth = RegisterData.month;
-      const regYear = RegisterData.year;
-      const regCompany = RegisterData.company;
-      const regFName = RegisterData.firstName;
-      const regLName = RegisterData.lastName;
-      const regAddres = RegisterData.address;
-      const regMobile = RegisterData.mobile;
-      const regCountry = RegisterData.country;
-      const regState = RegisterData.state;
-      const regCity = RegisterData.city;
-      const regZip = RegisterData.zipcode;
+      const correctLogin = `Logged in as ${userCredentials.userName}`;
+
       //Act
       autoExer.topMenu.signupLogin.click();
       await autoExer.register(
-        userId,
-        userMail,
-        userPassword,
-        regDays,
-        regMonth,
-        regYear,
-        regCompany,
-        regFName,
-        regLName,
-        regAddres,
-        regMobile,
-        regCountry,
-        regState,
-        regCity,
-        regZip,
+        userCredentials.userName,
+        userCredentials.userMail,
+        userCredentials.userPassword,
+        userCredentials.days,
+        userCredentials.month,
+        userCredentials.year,
+        userCredentials.company,
+        userCredentials.firstName,
+        userCredentials.lastName,
+        userCredentials.address,
+        userCredentials.mobile,
+        userCredentials.country,
+        userCredentials.state,
+        userCredentials.city,
+        userCredentials.zipcode,
       );
       await expect(page.locator('[data-qa="account-created"]')).toHaveText(
         'Account Created!',
@@ -795,10 +731,14 @@ test.describe('Other Pages', () => {
       await page.getByText('Proceed To Checkout').click();
       await expect(
         page.locator('#address_delivery').locator('.address_firstname'),
-      ).toContainText(`Mr. ${regFName} ${regLName}`);
+      ).toContainText(
+        `Mr. ${userCredentials.firstName} ${userCredentials.lastName}`,
+      );
       await expect(
         page.locator('#address_invoice').locator('.address_firstname'),
-      ).toContainText(`Mr. ${regFName} ${regLName}`);
+      ).toContainText(
+        `Mr. ${userCredentials.firstName} ${userCredentials.lastName}`,
+      );
       //Assert
       await autoExer.deleteAcc.click();
       await expect(page.locator('[data-qa="account-deleted"]')).toBeVisible();
@@ -810,29 +750,8 @@ test.describe('Other Pages', () => {
     { tag: ['@invoice', '@register'] },
     async ({ page }) => {
       //Arrange
-      const userMail = LoginData.userMail;
-      const userId = LoginData.userName;
-      const userPassword = LoginData.userPassword;
-      const correctLogin = 'Logged in as NewUser1337';
+      const correctLogin = `Logged in as ${userCredentials.userName}`;
       const expectedmessagePayment = 'You have been successfully subscribed!';
-      const regDays = RegisterData.days;
-      const regMonth = RegisterData.month;
-      const regYear = RegisterData.year;
-      const regCompany = RegisterData.company;
-      const regFName = RegisterData.firstName;
-      const regLName = RegisterData.lastName;
-      const regAddres = RegisterData.address;
-      const regMobile = RegisterData.mobile;
-      const regCountry = RegisterData.country;
-      const regState = RegisterData.state;
-      const regCity = RegisterData.city;
-      const regZip = RegisterData.zipcode;
-      const nameCard = CardData.nameOnCard;
-      const numberCard = CardData.cardNumber;
-      const cvcCard = CardData.cvcNumber;
-      const monthCard = CardData.exprMonth;
-      const yearCard = CardData.exprYears;
-
       //Act
       await page.locator('[data-product-id="1"]').nth(0).click();
       await page.getByRole('button', { name: 'Continue Shopping' }).click();
@@ -842,21 +761,21 @@ test.describe('Other Pages', () => {
       await page.getByRole('button', { name: 'Continue On Cart' }).click();
       await autoExer.topMenu.signupLogin.click();
       await autoExer.register(
-        userId,
-        userMail,
-        userPassword,
-        regDays,
-        regMonth,
-        regYear,
-        regCompany,
-        regFName,
-        regLName,
-        regAddres,
-        regMobile,
-        regCountry,
-        regState,
-        regCity,
-        regZip,
+        userCredentials.userName,
+        userCredentials.userMail,
+        userCredentials.userPassword,
+        userCredentials.days,
+        userCredentials.month,
+        userCredentials.year,
+        userCredentials.company,
+        userCredentials.firstName,
+        userCredentials.lastName,
+        userCredentials.address,
+        userCredentials.mobile,
+        userCredentials.country,
+        userCredentials.state,
+        userCredentials.city,
+        userCredentials.zipcode,
       );
       await expect(page.locator('[data-qa="account-created"]')).toHaveText(
         'Account Created!',
@@ -867,10 +786,14 @@ test.describe('Other Pages', () => {
       await page.getByText('Proceed To Checkout').click();
       await expect(
         page.locator('#address_delivery').locator('.address_firstname'),
-      ).toContainText(`Mr. ${regFName} ${regLName}`);
+      ).toContainText(
+        `Mr. ${userCredentials.firstName} ${userCredentials.lastName}`,
+      );
       await expect(
         page.locator('#address_invoice').locator('.address_firstname'),
-      ).toContainText(`Mr. ${regFName} ${regLName}`);
+      ).toContainText(
+        `Mr. ${userCredentials.firstName} ${userCredentials.lastName}`,
+      );
       await expect(
         page.locator('#cart_items').locator('h2:has-text("Review Your Order")'),
       ).toBeVisible();
@@ -881,11 +804,11 @@ test.describe('Other Pages', () => {
         .fill('Testmessage');
       await page.getByRole('link', { name: 'Place Order' }).click();
       await autoExer.cardPay(
-        nameCard,
-        numberCard,
-        cvcCard,
-        monthCard,
-        yearCard,
+        userCredentials.nameOnCard,
+        userCredentials.cardNumber,
+        userCredentials.cvcNumber,
+        userCredentials.exprMonth,
+        userCredentials.exprYears,
       );
       await expect(page.locator('.alert-success')).toHaveText(
         expectedmessagePayment,

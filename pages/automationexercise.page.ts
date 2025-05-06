@@ -34,29 +34,29 @@ export class AutomationExercise {
     await this.continueButton.click();
   }
   async register(
-    userId: string,
+    userName: string,
     userMail: string,
     userPassword: string,
-    regDays: string,
-    regMonth: string,
-    regYear: string,
-    regCompany: string,
-    regFName: string,
-    regLName: string,
-    regAddres: string,
-    regMobile: string,
-    regCountry: string,
-    regState: string,
-    regCity: string,
-    regZip: string,
+    days: string,
+    month: string,
+    year: string,
+    company: string,
+    firstName: string,
+    lastName: string,
+    address: string,
+    mobile: string,
+    country: string,
+    state: string,
+    city: string,
+    zipcode: string,
   ): Promise<void> {
-    await this.nameBox.fill(userId);
+    await this.nameBox.fill(userName);
     await this.page.locator('[data-qa="signup-email"]').fill(userMail);
     await this.page.getByRole('button', { name: 'Signup' }).click();
     await this.page.getByRole('radio', { name: 'Mr.' }).check();
-    await this.page.locator('#days').selectOption(regDays);
-    await this.page.locator('#months').selectOption(regMonth);
-    await this.page.locator('#years').selectOption(regYear);
+    await this.page.locator('#days').selectOption(days);
+    await this.page.locator('#months').selectOption(month);
+    await this.page.locator('#years').selectOption(year);
     await this.page
       .getByRole('textbox', { name: 'Password *' })
       .fill(userPassword);
@@ -68,25 +68,25 @@ export class AutomationExercise {
       .check();
     await this.page
       .getByRole('textbox', { name: 'Company', exact: true })
-      .fill(regCompany);
+      .fill(company);
     await this.page
       .getByRole('textbox', { name: 'First name *' })
-      .fill(regFName);
+      .fill(firstName);
     await this.page
       .getByRole('textbox', { name: 'Last name *' })
-      .fill(regLName);
+      .fill(lastName);
     await this.page
       .getByRole('textbox', { name: 'Address * (Street address, P.' })
-      .fill(regAddres);
-    await this.page.getByLabel('Country *').selectOption(regCountry);
-    await this.page.getByRole('textbox', { name: 'State *' }).fill(regState);
+      .fill(address);
+    await this.page.getByLabel('Country *').selectOption(country);
+    await this.page.getByRole('textbox', { name: 'State *' }).fill(state);
     await this.page
       .getByRole('textbox', { name: 'City * Zipcode *' })
-      .fill(regCity);
-    await this.page.locator('#zipcode').fill(regZip);
+      .fill(city);
+    await this.page.locator('#zipcode').fill(zipcode);
     await this.page
       .getByRole('textbox', { name: 'Mobile Number *' })
-      .fill(regMobile);
+      .fill(mobile);
     await this.page.getByRole('button', { name: 'Create Account' }).click();
   }
   async cardPay(
