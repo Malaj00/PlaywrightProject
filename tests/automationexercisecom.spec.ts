@@ -1,12 +1,7 @@
 import { test, expect } from '@playwright/test';
-import {
-  CardData,
-  LoginData,
-  RegisterData,
-} from '../test-data/automationexercise.data';
 import { AutomationExercise } from '../pages/automationexercise.page';
+import userCredentials from '../test-data/userCredentials.json';
 
-const userCredentials = require('../test-data/user-credentials.json');
 
 test.describe('Register and login tests', () => {
   let autoExer: AutomationExercise;
@@ -31,11 +26,12 @@ test.describe('Register and login tests', () => {
     await expect(page.getByText('New User Signup!')).toHaveText(
       'New User Signup!',
     );
-    const userMail = LoginData.userMail;
     await page
       .getByRole('textbox', { name: 'Name' })
       .fill(userCredentials.userName);
-    await page.locator('[data-qa="signup-email"]').fill(userMail);
+    await page
+      .locator('[data-qa="signup-email"]')
+      .fill(userCredentials.userMail);
     await page.getByRole('button', { name: 'Signup' }).click();
     await expect(page.getByText('Enter Account Information')).toBeVisible();
     await expect(page.getByText('Enter Account Information')).toHaveText(
@@ -833,7 +829,6 @@ test.describe('Other Pages', () => {
       await expect(
         page.locator('#footer').locator('h2:has-text("Subscription")'),
       ).toHaveText('Subscription');
-      await page.locator('.grippy-host').click();
       await page.evaluate(() => {
         window.scrollBy(0, 700);
       });
