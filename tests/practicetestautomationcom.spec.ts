@@ -8,7 +8,7 @@ test.describe('Test login - practice automation', () => {
     tempTest = new NowyTest(page);
     await page.goto('https://practicetestautomation.com/practice-test-login/');
   });
-  test.skip('Positive LogIn test', async ({ page }) => {
+  test('Positive LogIn test', async ({ page }) => {
     //Arrane
     const userID = tempData.userID;
     const userPassword = tempData.userPassword;
@@ -22,7 +22,7 @@ test.describe('Test login - practice automation', () => {
     await expect(tempTest.loginSubHeading).toHaveText(expectedMessage2);
   });
 
-  test.skip('Negative username test', async ({ page }) => {
+  test('Negative username test', async ({ page }) => {
     //Arrange
     const incorrectID = 'incorrectUser';
     const userPassword = tempData.userPassword;
@@ -35,7 +35,7 @@ test.describe('Test login - practice automation', () => {
     await expect(tempTest.wrongID).toHaveText(wrongIDmessage);
   });
 
-  test.skip('Negative password test', async ({ page }) => {
+  test('Negative password test', async ({ page }) => {
     //Arrange
     const userID = tempData.userID;
     const wrongPassword = 'incorrectPassword';
@@ -55,7 +55,7 @@ test.describe('Test Exceptions', () => {
     tempTest = new NowyTest(page);
     await page.goto('https://practicetestautomation.com/practice-test-login/');
   });
-  test.skip('TC1-NoSuchElementException', async ({ page }) => {
+  test('TC1-NoSuchElementException', async ({ page }) => {
     //Arrange
     //Act
     await tempTest.rowAdd();
@@ -66,7 +66,7 @@ test.describe('Test Exceptions', () => {
     await tempTest.rowAdded.nth(1).click();
   });
 
-  test.skip('TC2-ElementNotInteractableException', async ({ page }) => {
+  test('TC2-ElementNotInteractableException', async ({ page }) => {
     //Arrange
     const row2saved = 'Row 2 was saved';
     const boxText = 'testtext';
@@ -85,7 +85,7 @@ test.describe('Test Exceptions', () => {
     await expect(tempTest.rowAdded.nth(1)).toHaveValue(boxText);
   });
 
-  test.skip('TC3-InvalidElementStateException', async ({ page }) => {
+  test('TC3-InvalidElementStateException', async ({ page }) => {
     //Arrange
     const boxText = 'testtext';
     //Act
@@ -101,7 +101,7 @@ test.describe('Test Exceptions', () => {
     await expect(tempTest.rowAdded.nth(1)).toHaveValue('');
   });
 
-  test.skip('TC4-StaleElementReferenceException', async ({ page }) => {
+  test('TC4-StaleElementReferenceException', async ({ page }) => {
     //Arrange
     const expectedInstruction = 'Push “Add” button to add another row';
     //Act

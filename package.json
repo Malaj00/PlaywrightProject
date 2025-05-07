@@ -4,9 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "npx playwright test",
-    "testui": "npx playwright test --ui",
-    "test:exercise:headed": "npm run test tests/automationexercisecom.spec.ts -- --headed",
-    "test:headed": "npx playwright test --headed",
+    "test:headed": "npx playwright test --headed"
   },
   "keywords": [],
   "author": "",
