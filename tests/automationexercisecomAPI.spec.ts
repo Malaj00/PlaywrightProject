@@ -102,7 +102,7 @@ test.describe('API TESTING', () => {
     expect(text).toContain('User exists!');
     console.log(await response.json());
   });
-  
+
   test('API 8 - POST To Verify Login without email parameter', async ({
     request,
   }) => {
@@ -231,7 +231,7 @@ test.describe('API TESTING', () => {
           lastname: userCredentials.lastName,
           company: userCredentials.company,
           address1: userCredentials.address,
-          address2: "New Address For Test",
+          address2: 'New Address For Test',
           country: userCredentials.country,
           state: userCredentials.state,
           city: userCredentials.city,
@@ -249,7 +249,7 @@ test.describe('API TESTING', () => {
 
   test('API 14 - GET user account detail by email', async ({ request }) => {
     const response = await request.get(
-      `https://automationexercise.com/api/getUserDetailByEmail?email=${userCredentials.userMail}`
+      `https://automationexercise.com/api/getUserDetailByEmail?email=${userCredentials.userMail}`,
     );
     expect(response.status()).toBe(200);
     const text = await response.text();

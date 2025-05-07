@@ -2,7 +2,6 @@ import { test, expect } from '@playwright/test';
 import { AutomationExercise } from '../pages/automationexercise.page';
 import userCredentials from '../test-data/userCredentials.json';
 
-
 test.describe('Register and login tests', () => {
   let autoExer: AutomationExercise;
   test.beforeEach(async ({ page }) => {

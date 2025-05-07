@@ -111,6 +111,5 @@ test.describe('Test Exceptions', () => {
     await tempTest.addRow.click();
     //Assert
     await expect(tempTest.instructionRow).toHaveCount(0);
-
   });
 });
