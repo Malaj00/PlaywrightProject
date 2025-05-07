@@ -852,7 +852,7 @@ test.describe('Other Pages', () => {
       await expect(
         page.locator('#footer').locator('h2:has-text("Subscription")'),
       ).toHaveText('Subscription');
-      await page.locator('.grippy-host').click();
+      //await page.locator('.grippy-host').click();
       await page.evaluate(() => {
         window.scrollBy(0, 700);
       });
