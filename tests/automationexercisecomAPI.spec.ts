@@ -84,6 +84,32 @@ test.describe('API TESTING', () => {
   test('API 7 - POST To Verify Login with valid details', async ({
     request,
   }) => {
+    const register = await request.post(
+      'https://automationexercise.com/api/createAccount',
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        form: {
+          name: userCredentials.userName,
+          password: userCredentials.userPassword,
+          email: userCredentials.userMail,
+          title: userCredentials.title,
+          birth_date: userCredentials.days,
+          birth_month: userCredentials.year,
+          firstname: userCredentials.firstName,
+          lastname: userCredentials.lastName,
+          company: userCredentials.company,
+          address1: userCredentials.address,
+          country: userCredentials.country,
+          state: userCredentials.state,
+          city: userCredentials.city,
+          zipcode: userCredentials.zipcode,
+          mobile_number: userCredentials.mobile,
+        },
+      },
+    );
+
     const response = await request.post(
       'https://automationexercise.com/api/verifyLogin',
       {
@@ -214,6 +240,32 @@ test.describe('API TESTING', () => {
   });
 
   test('API 13 - PUT METHOD To Update User Account', async ({ request }) => {
+    const register = await request.post(
+      'https://automationexercise.com/api/createAccount',
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        form: {
+          name: userCredentials.userName,
+          password: userCredentials.userPassword,
+          email: userCredentials.userMail,
+          title: userCredentials.title,
+          birth_date: userCredentials.days,
+          birth_month: userCredentials.year,
+          firstname: userCredentials.firstName,
+          lastname: userCredentials.lastName,
+          company: userCredentials.company,
+          address1: userCredentials.address,
+          country: userCredentials.country,
+          state: userCredentials.state,
+          city: userCredentials.city,
+          zipcode: userCredentials.zipcode,
+          mobile_number: userCredentials.mobile,
+        },
+      },
+    );
+
     const response = await request.put(
       'https://automationexercise.com/api/updateAccount',
       {
