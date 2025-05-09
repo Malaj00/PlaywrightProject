@@ -16,4 +16,9 @@ export class SauceDemo {
     await this.passwordInput.fill(userPassword);
     await this.loginButton.click();
   }
+
+  async cartAdd(){
+    await this.page.locator('#add-to-cart-sauce-labs-backpack').click();
+    await this.page.locator('[data-test="shopping-cart-link"]').click();
+  }
 }
