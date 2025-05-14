@@ -7,9 +7,10 @@ The tests cover UI interactions, element verifications, and API requests.
 
 ---
 
-## Links
+## Links with tested websites
 - https://automationexercise.com/test_cases
 - https://practicetestautomation.com/practice/
+- https://www.saucedemo.com/
 
 ---
 
@@ -25,6 +26,9 @@ The tests cover UI interactions, element verifications, and API requests.
 
 - GitLens - view details of your repository i.e. commits history
 - Prettier - default formatter for editor
+- Playwright Helpers - adds predefined commands for Node.js Playwright.
+- Playwright Snippets for VS Code - adds predefined useful code snippets for Playwright.
+- Playwright Snippets UI for VS Code - adds UI for extension Playwright Snippets for VS Code.
 
 ---
 

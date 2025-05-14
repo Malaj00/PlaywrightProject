@@ -49,9 +49,4 @@ export class NowyTest {
     await this.testExceptions.click();
     await this.addRow.click();
   }
-  // getVisibleTextbox(): Locator {
-  //   return this.page
-  //     .getByRole('textbox')
-  //     .filter({ has: this.page.locator(':visible') })
-  //     .first();
 }

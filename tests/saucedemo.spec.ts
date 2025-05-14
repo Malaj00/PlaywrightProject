@@ -177,6 +177,24 @@ test.describe('Shop Cart tests', () => {
     await page.locator('#back-to-products').click();
     await expect(page.locator('[data-test="title"]')).toHaveText('Products');
   });
+
+  test('TC10 - Checkout validation', async ({ page }) => {
+    //Arrange
+    //Act
+    await page.locator('[data-test="shopping-cart-link"]').click();
+    await expect(page.locator('[data-test="title"]')).toHaveText('Your Cart')
+    await page.locator('#checkout').click();
+    await page.locator('#continue').click();
+    await expect(page.locator('[data-test="error"]')).toHaveText('Error: First Name is required')
+    await page.locator('#first-name').fill(saucedemoCredentials.firstname);
+    await page.locator('#continue').click();
+    await expect(page.locator('[data-test="error"]')).toHaveText('Error: Last Name is required')
+    await page.locator('#last-name').fill(saucedemoCredentials.lastname);
+    await page.locator('#continue').click();
+    await expect(page.locator('[data-test="error"]')).toHaveText('Error: Postal Code is required')
+    //Assert
+  });
+  
 });
 
 test.describe('Other Page tests', () => {
@@ -191,7 +209,7 @@ test.describe('Other Page tests', () => {
     await expect(page.locator('[data-test="title"]')).toHaveText('Products');
   });
 
-  test('TC10 - Sorting products on page ', async ({ page }) => {
+  test('TC11 - Sorting products on page ', async ({ page }) => {
     //Arrange
     //Act
     await expect(
@@ -205,9 +223,10 @@ test.describe('Other Page tests', () => {
     await page
       .locator('[data-test="product-sort-container"]')
       .selectOption('lohi');
-    await expect(
+    //Assert
+        await expect(
       page.locator('[data-test="inventory-item-name"]').first(),
     ).toHaveText('Sauce Labs Onesie');
-    //Assert
   });
+
 });
