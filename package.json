@@ -14,5 +14,8 @@
     "@playwright/test": "^1.51.1",
     "@types/node": "^22.13.14",
     "prettier": "3.5.3"
+  },
+  "dependencies": {
+    "clipboardy": "^4.0.0"
   }
 }

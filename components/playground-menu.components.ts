@@ -11,6 +11,15 @@ export class PlaygroundMenu {
   textInput: Locator;
   scollbars: Locator;
   dynamicTable: Locator;
+  verifyText: Locator;
+  progressBar: Locator;
+  visibility: Locator;
+  sampleApp: Locator;
+  mouseOver: Locator;
+  nonBreaking: Locator;
+  overlapped: Locator;
+  shadowDOM: Locator;
+  alerts: Locator;
 
   constructor(private page: Page) {
     this.dynamicID = page.locator('#overview .container a[href="/dynamicid"]');
@@ -26,7 +35,25 @@ export class PlaygroundMenu {
     this.click = page.locator('#overview .container a[href="/click"]');
     this.textInput = page.locator('#overview .container a[href="/textinput"]');
     this.scollbars = page.locator('#overview .container a[href="/scrollbars"]');
-    this.dynamicTable = page.locator('#overview .container a[href="/dynamictable"]');
+    this.dynamicTable = page.locator(
+      '#overview .container a[href="/dynamictable"]',
+    );
+    this.verifyText = page.locator(
+      '#overview .container a[href="/verifytext"]',
+    );
+    this.progressBar = page.locator(
+      '#overview .container a[href="/progressbar"]',
+    );
+    this.visibility = page.locator(
+      '#overview .container a[href="/visibility"]',
+    );
+    this.sampleApp = page.locator('#overview .container a[href="/sampleapp"]');
+    this.mouseOver = page.locator('#overview .container a[href="/mouseover"]');
+    this.nonBreaking = page.locator('#overview .container a[href="/nbsp"]');
+    this.overlapped = page.locator('#overview .container a[href="/overlapped"]');
+    this.shadowDOM = page.locator('#overview .container a[href="/shadowdom"]');
+    this.alerts = page.locator('#overview .container a[href="/alerts"]');
+
 
   }
 }
