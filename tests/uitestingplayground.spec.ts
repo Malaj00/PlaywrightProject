@@ -334,17 +334,36 @@ test.describe('Playground', () => {
     await expect(page.locator('#opstatus')).toHaveText(expectedMess);
   });
 
-  test("Disabled Input", async ({ page }) => {
-    // Arrange:
-    // Act
-    // Assert
-    
-  });
-
-  test("Auto Wait", async ({ page }) => {
+  test('Disabled Input', async ({ page }) => {
     // Arrange
     // Act
+    await pgMenu.disabledInput.click();
+    await page.locator('#inputField').fill('TestText123');
+    await page.locator('#enableButton').click();
+    await expect(page.locator('#opstatus')).toContainText('Input Disabled');
+    await page.waitForTimeout(5001);
+    await expect(page.locator('#opstatus')).toContainText('Input Enabled');
+    await page.locator('#inputField').clear();
+
     // Assert
-    
+  });
+
+  test('Auto Wait', async ({ page }) => {
+    // Arrange
+    // Act
+    await pgMenu.autoWait.click();
+    await page.locator('#enabled').click();
+    await page.locator('#applyButton5').click();
+    await expect(page.locator('#opstatus')).toHaveText(
+      'Target element settings applied for 5 seconds.',
+    );
+    await page.waitForTimeout(5001);
+    await expect(page.locator('#opstatus')).toHaveText(
+      'Target element state restored.',
+    );
+    await page.locator('#target').click();
+
+    // Assert
+    await expect(page.locator('#opstatus')).toHaveText('Target clicked.');
   });
 });
