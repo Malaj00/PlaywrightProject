@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { PlaygroundMenu } from '../components/playground-menu.components';
 import clipboard from 'clipboardy';
+import path from 'path';
 
 test.describe('Playground', () => {
   let pgMenu: PlaygroundMenu;
@@ -270,7 +271,6 @@ test.describe('Playground', () => {
 
   test('Alerts', async ({ page }) => {
     // Arrange
-
     // Act
     await pgMenu.alerts.click();
     page.once('dialog', async (dialog) => {
@@ -285,6 +285,66 @@ test.describe('Playground', () => {
       await dialog.accept();
     });
     await page.locator('#confirmButton').click();
+    page.once('dialog', async (dialog) => {
+      console.log(`Dialog message: ${dialog.message()}`);
+      expect(dialog.message()).toContain('Yes');
+      await dialog.accept();
+    });
+    await page.waitForTimeout(3000);
+    page.once('dialog', async (dialog) => {
+      console.log(`Dialog message: ${dialog.message()}`);
+      expect(dialog.message()).toContain(`Choose "cats" or 'dogs'.`);
+      await dialog.accept('dogs');
+    });
+    await page.locator('#promptButton').click();
     // Assert
+    await page.waitForTimeout(2000);
+    page.once('dialog', async (dialog) => {
+      console.log(`Dialog message: ${dialog.message()}`);
+      expect(dialog.message()).toContain('User value: dogs');
+      await dialog.accept();
+    });
+  });
+
+  test('File Upload', async ({ page }) => {
+    // Arrange
+    const uplFile = 'uploadfile.txt';
+    // Act
+    await pgMenu.fileUpload.click();
+    const filePath = path.resolve(`test-data/${uplFile}`);
+    const frame = await page.frameLocator('iframe');
+    await frame.locator('input[type="file"]').setInputFiles(filePath);
+    // Assert
+    await expect(
+      page.locator('iframe').contentFrame().getByText('uploadfile.txt'),
+    ).toHaveText(uplFile);
+  });
+
+  test('Animated Button', async ({ page }) => {
+    // Arrange
+    const expectedMess =
+      "Moving Target clicked. It's class name is 'btn btn-primary'";
+    // Act
+    await pgMenu.animatedButton.click();
+    await page.locator('#animationButton').click();
+    await page.waitForTimeout(5000);
+    await expect(page.locator('#movingTarget')).not.toHaveClass(/spin/);
+    await page.locator('#movingTarget').click();
+    // Assert
+    await expect(page.locator('#opstatus')).toHaveText(expectedMess);
+  });
+
+  test("Disabled Input", async ({ page }) => {
+    // Arrange:
+    // Act
+    // Assert
+    
+  });
+
+  test("Auto Wait", async ({ page }) => {
+    // Arrange
+    // Act
+    // Assert
+    
   });
 });

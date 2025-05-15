@@ -20,6 +20,10 @@ export class PlaygroundMenu {
   overlapped: Locator;
   shadowDOM: Locator;
   alerts: Locator;
+  fileUpload: Locator;
+  animatedButton: Locator;
+  disabledInput: Locator;
+  autoWait: Locator;
 
   constructor(private page: Page) {
     this.dynamicID = page.locator('#overview .container a[href="/dynamicid"]');
@@ -50,10 +54,18 @@ export class PlaygroundMenu {
     this.sampleApp = page.locator('#overview .container a[href="/sampleapp"]');
     this.mouseOver = page.locator('#overview .container a[href="/mouseover"]');
     this.nonBreaking = page.locator('#overview .container a[href="/nbsp"]');
-    this.overlapped = page.locator('#overview .container a[href="/overlapped"]');
+    this.overlapped = page.locator(
+      '#overview .container a[href="/overlapped"]',
+    );
     this.shadowDOM = page.locator('#overview .container a[href="/shadowdom"]');
     this.alerts = page.locator('#overview .container a[href="/alerts"]');
-
-
+    this.fileUpload = page.locator('#overview .container a[href="/upload"]');
+    this.animatedButton = page.locator(
+      '#overview .container a[href="/animation"]',
+    );
+    this.disabledInput = page.locator(
+      '#overview .container a[href="/disabledinput"]',
+    );
+    this.autoWait = page.locator('#overview .container a[href="/autowait"]');
   }
 }
