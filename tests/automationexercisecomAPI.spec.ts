@@ -5,7 +5,7 @@ test.describe('API TESTING', () => {
   test('API 1 - Get All Products List', async ({ request }) => {
     const response = await request.get(
       'https://automationexercise.com/api/productsList',
-    ); //get method link
+    );
     expect(response.status()).toBe(200); //sprawdzanie czy odpowiedz jest poprawna czyli ma kod 200
     const text = await response.text(); //text jest odpowiedzia z tekstem
     expect(text).toContain('Blue Top'); //odpowiedz zawiera Blue Top czyli jeden z wielu produtkow

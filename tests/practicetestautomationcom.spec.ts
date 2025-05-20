@@ -59,11 +59,12 @@ test.describe('Test Exceptions', () => {
     //Arrange
     //Act
     await tempTest.rowAdd();
-    //Assert
     await tempTest.rowAdded
       .nth(1)
       .waitFor({ state: 'visible', timeout: 10000 });
     await tempTest.rowAdded.nth(1).click();
+    //Assert
+    await expect(page.locator('#confirmation')).toBeVisible();
   });
 
   test('TC2-ElementNotInteractableException', async ({ page }) => {
@@ -76,10 +77,7 @@ test.describe('Test Exceptions', () => {
       .nth(1)
       .waitFor({ state: 'visible', timeout: 10000 });
     await tempTest.rowAdded.nth(1).fill(boxText);
-    //await tempTest.getVisibleTextbox().fill('testtext');
-    //page.getByRole('textbox').filter({ has: page.locator(':visible') }).first().fill('testtext');
     await tempTest.saveButton.click();
-
     //Assert
     await expect(tempTest.rowSaved).toHaveText(row2saved);
     await expect(tempTest.rowAdded.nth(1)).toHaveValue(boxText);

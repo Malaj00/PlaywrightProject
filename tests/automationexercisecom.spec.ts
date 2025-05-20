@@ -73,6 +73,7 @@ test.describe('Register and login tests', () => {
       .getByRole('textbox', { name: 'Mobile Number *' })
       .fill(userCredentials.mobile);
     await page.getByRole('button', { name: 'Create Account' }).click();
+    //Assert:
     await expect(page.locator('[data-qa="account-created"]')).toHaveText(
       'Account Created!',
     );
@@ -107,7 +108,6 @@ test.describe('Register and login tests', () => {
   );
   test('TC4 - Logout User', { tag: '@login' }, async ({ page }) => {
     //Arrange
-
     const correctLogin = 'Logged in as NewUser1337';
     const logoutMessage = 'Login to your account';
     //Act
@@ -200,7 +200,6 @@ test.describe('Other Pages', () => {
     { tag: '@topmenu' },
     async ({ page }) => {
       //Arrange
-
       //Act
       await autoExer.topMenu.testcasesButton.click();
       //Assert
@@ -248,7 +247,6 @@ test.describe('Other Pages', () => {
     await expect(
       page.locator('h2:has-text("Searched Products")'),
     ).toBeVisible();
-
     //Assert
     await expect(
       page.locator('.features_items  .col-sm-4  p').first(),
@@ -351,9 +349,9 @@ test.describe('Other Pages', () => {
       await page
         .locator('.active')
         .waitFor({ state: 'visible', timeout: 10000 });
+      //Assert
       await expect(page.locator('.cart_product')).toBeVisible();
       await expect(page.locator('.cart_quantity .disabled')).toHaveText(/\d+/);
-      //Assert
     },
   );
 
@@ -422,11 +420,11 @@ test.describe('Other Pages', () => {
         userCredentials.exprMonth,
         userCredentials.exprYears,
       );
+      //Assert
       await expect(page.locator('.alert-success')).toHaveText(
         expectedmessagePayment,
       );
       await autoExer.deleteAccount();
-      //Assert
     },
   );
   test(
@@ -492,11 +490,11 @@ test.describe('Other Pages', () => {
         userCredentials.exprMonth,
         userCredentials.exprYears,
       );
+      //Assert
       await expect(page.locator('.alert-success')).toHaveText(
         expectedmessagePayment,
       );
       await autoExer.deleteAccount();
-      //Assert
     },
   );
   test(
@@ -558,11 +556,11 @@ test.describe('Other Pages', () => {
         userCredentials.exprMonth,
         userCredentials.exprYears,
       );
+      //Assert
       await expect(page.locator('.alert-success')).toHaveText(
         expectedmessagePayment,
       );
       await autoExer.deleteAccount();
-      //Assert
     },
   );
   test(
@@ -599,8 +597,8 @@ test.describe('Other Pages', () => {
       await expect(page.locator('.title')).toBeVisible();
       await page.locator('.badge').nth(1).click();
       await page.getByRole('link', { name: 'Jeans' }).click();
-      await expect(page.locator('.title')).toBeVisible();
       //Assert
+      await expect(page.locator('.title')).toBeVisible();
     },
   );
   test(
@@ -616,8 +614,8 @@ test.describe('Other Pages', () => {
       await page.locator('.nav').first().click();
       await expect(page.locator('.title')).toBeVisible();
       await page.locator('.nav').nth(1).click();
-      await expect(page.locator('.title')).toBeVisible();
       //Assert
+      await expect(page.locator('.title')).toBeVisible();
     },
   );
   test(
@@ -643,8 +641,8 @@ test.describe('Other Pages', () => {
         userCredentials.userPassword,
       );
       autoExer.topMenu.cartButton.click();
-      await expect(page.locator('#product-1')).toBeVisible();
       //Assert
+      await expect(page.locator('#product-1')).toBeVisible();
     },
   );
   test('TC21 - Add review on product', { tag: '@revuew' }, async ({ page }) => {
@@ -694,7 +692,6 @@ test.describe('Other Pages', () => {
     async ({ page }) => {
       //Arrange
       const correctLogin = `Logged in as ${userCredentials.userName}`;
-
       //Act
       autoExer.topMenu.signupLogin.click();
       await autoExer.register(

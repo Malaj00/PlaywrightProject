@@ -11,6 +11,7 @@ The tests cover UI interactions, element verifications, and API requests.
 - https://automationexercise.com/test_cases
 - https://practicetestautomation.com/practice/
 - https://www.saucedemo.com/
+- http://www.uitestingplayground.com/
 
 ---
 
