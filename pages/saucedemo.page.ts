@@ -6,9 +6,9 @@ export class SauceDemo {
   loginButton: Locator;
 
   constructor(private page: Page) {
-    this.loginInput = page.locator('[data-test="username"]');
-    this.passwordInput = page.locator('[data-test="password"]');
-    this.loginButton = page.locator('[data-test="login-button"]')
+    this.loginInput = page.getByTestId('username');
+    this.passwordInput = page.getByTestId('password');
+    this.loginButton = page.getByTestId('login-button')
   }
 
   async login(userName: string, userPassword: string) {
@@ -19,6 +19,6 @@ export class SauceDemo {
 
   async cartAdd(){
     await this.page.locator('#add-to-cart-sauce-labs-backpack').click();
-    await this.page.locator('[data-test="shopping-cart-link"]').click();
+    await this.page.getByTestId('shopping-cart-link').click();
   }
 }

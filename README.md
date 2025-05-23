@@ -2,24 +2,26 @@
 
 ## Description
 
-This project contains end-to-end (E2E) automated tests built using **Playwright** with TypeScript. 
+This project contains end-to-end (E2E) automated tests built using **Playwright** with TypeScript.
 The tests cover UI interactions, element verifications, and API requests.
 
 ---
 
 ## Links with tested websites
+
 - https://automationexercise.com/test_cases
 - https://practicetestautomation.com/practice/
 - https://www.saucedemo.com/
 - http://www.uitestingplayground.com/
+- https://automationteststore.com/
 
 ---
 
 ## Requirements
 
-* Node.js (recommended LTS version, e.g., 18.x)
-* Playwright (installed via npm install)
-* Installed project dependencies
+- Node.js (recommended LTS version, e.g., 18.x)
+- Playwright (installed via npm install)
+- Installed project dependencies
 
 ---
 
@@ -98,10 +100,10 @@ playwright.config.ts
 
 You can configure:
 
-* test timeouts
-* test file locations
-* devices/browsers (e.g., Chrome, Firefox)
-* retries on failure
+- test timeouts
+- test file locations
+- devices/browsers (e.g., Chrome, Firefox)
+- retries on failure
 
 ---
 
