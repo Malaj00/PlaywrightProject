@@ -34,5 +34,10 @@ export class AutomationStore {
     await this.page.getByTitle('Continue').click();
   }
 
-  async login()
+  async login(userName: string, userPassword: string){
+    await this.page.locator('#loginFrm_loginname').fill(userName)
+    await this.page.locator('#loginFrm_password').fill(userPassword)
+    await this.page.getByRole('button', { name: 'Login' }).click();
+  }
+
 }
