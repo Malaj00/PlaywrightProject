@@ -101,4 +101,81 @@ test.describe('Login and Register functionality', () => {
       correctMess,
     );
   });
+
+  test('Forgot password negative', async ({ page }) => {
+    // Arrange:
+    const forgotPasshref = `href="https://automationteststore.com/index.php?rt=account/forgotten/password"`;
+    const errorMess =
+      'Error: No records found matching information your provided, please check your information and try again!';
+    // Act:
+    await page.locator(`a[${forgotPasshref}]`).click();
+    await page.locator('#forgottenFrm_loginname').fill('test123');
+    await page
+      .locator('#forgottenFrm_email')
+      .fill(autostoreCredential.userMail);
+    await page.getByRole('button', { name: 'Continue' }).click();
+    // Assert:
+    await expect(page.locator('.alert.alert-danger')).toContainText(errorMess);
+  });
+
+  test('Forgot login positive', async ({ page }) => {
+    // Arrange:
+    const forgotLoginhref = `href="https://automationteststore.com/index.php?rt=account/forgotten/loginname"`;
+    const correctMess =
+      'Success: Your login name reminder has been sent to your e-mail address.';
+    // Act:
+    await page.locator(`a[${forgotLoginhref}]`).click();
+    await page
+      .locator('#forgottenFrm_lastname')
+      .fill(autostoreCredential.lastName);
+    await page
+      .locator('#forgottenFrm_email')
+      .fill(autostoreCredential.userMail);
+    await page.getByRole('button', { name: 'Continue' }).click();
+    // Assert:
+    await expect(page.locator('.alert.alert-success')).toContainText(
+      correctMess,
+    );
+  });
+
+  test('Forgot login negative', async ({ page }) => {
+    // Arrange:
+    const forgotLoginhref = `href="https://automationteststore.com/index.php?rt=account/forgotten/loginname"`;
+    const errorMess =
+      'Error: No records found matching information your provided, please check your information and try again!';
+    // Act:
+    await page.locator(`a[${forgotLoginhref}]`).click();
+    await page.locator('#forgottenFrm_lastname').fill('test123');
+    await page
+      .locator('#forgottenFrm_email')
+      .fill(autostoreCredential.userMail);
+    await page.getByRole('button', { name: 'Continue' }).click();
+    // Assert:
+    await expect(page.locator('.alert.alert-danger')).toContainText(errorMess);
+  });
+});
+
+test.describe('Cart tests', () => {
+  test.use({ testIdAttribute: 'data-id' });
+  test.beforeEach(async ({ page }) => {
+    await page.goto('https://automationteststore.com/');
+    await expect(page.locator('#maincontainer .welcome_msg')).toContainText(
+      'Welcome to the Automation Test Store!',
+    );
+  });
+
+  test('Add product to cart', async ({ page }) => {
+    // Arrange:
+    const cartButton = `href="https://automationteststore.com/index.php?rt=checkout/cart"`;
+    // Act:
+    await page.getByTestId('52').click();
+    await page.locator(`.dropdown.hover >>> a[${cartButton}]`).click();
+    // Assert:
+    await expect(
+      page
+        .getByRole('row')
+        .filter({ has: page.getByText('Benefit Bella Bamba') }),
+    ).toBeVisible();
+    await expect(page.locator('#cart_quantity52')).toHaveValue('2');
+  });
 });
