@@ -156,18 +156,26 @@ test.describe('Login and Register functionality', () => {
 });
 
 test.describe('Cart tests', () => {
+  let storePage: AutomationStore;
   test.use({ testIdAttribute: 'data-id' });
   test.beforeEach(async ({ page }) => {
+    storePage = new AutomationStore(page);
     await page.goto('https://automationteststore.com/');
     await expect(page.locator('#maincontainer .welcome_msg')).toContainText(
       'Welcome to the Automation Test Store!',
     );
+    await storePage.loginPage.click();
+    await storePage.login(
+      autostoreCredential.userName,
+      autostoreCredential.userPassword,
+    );
   });
 
-  test('Add product to cart', async ({ page }) => {
+  test('Add product to cart while logged', async ({ page }) => {
     // Arrange:
     const cartButton = `href="https://automationteststore.com/index.php?rt=checkout/cart"`;
     // Act:
+    await page.locator('.active.menu_home').click();
     await page.getByTestId('52').click();
     await page.locator(`.dropdown.hover >>> a[${cartButton}]`).click();
     // Assert:
@@ -178,4 +186,55 @@ test.describe('Cart tests', () => {
     ).toBeVisible();
     await expect(page.locator('#cart_quantity52')).toHaveValue('2');
   });
+
+  test('Checkout page', async ({ page }) => {
+    // Arrange:
+    const cartButton = `href="https://automationteststore.com/index.php?rt=checkout/cart"`;
+    const checkoutLocator = page.locator('tbody tr td.align_left');
+    // Act:
+    await page.locator('.active.menu_home').click();
+    await page.getByTestId('52').click();
+    await page.locator(`.dropdown.hover >>> a[${cartButton}]`).click();
+    await page.locator('#cart_checkout1').click();
+    // Assert:
+    await expect(checkoutLocator.first()).toHaveText(
+      `${autostoreCredential.firstName} ${autostoreCredential.lastName}`,
+    );
+    await expect(checkoutLocator.nth(1)).toHaveText(
+      'TE 12 ST Thais Guera 03405 Chad',
+    );
+    await expect(checkoutLocator.nth(2)).toHaveText('Flat Shipping Rate');
+    await expect(checkoutLocator.nth(3)).toHaveText(
+      `${autostoreCredential.firstName} ${autostoreCredential.lastName}`,
+    );
+    await expect(checkoutLocator.nth(4)).toHaveText(
+      'TE 12 ST Thais Guera 03405 Chad',
+    );
+    await expect(checkoutLocator.nth(5)).toHaveText('Cash On Delivery');
+  });
+
+  test('Confirm order', async ({ page }) => {
+    // Arrange:
+    const cartButton = `href="https://automationteststore.com/index.php?rt=checkout/cart"`;
+    const successOrder = 'Your Order Has Been Processed!';
+    // Act:
+    await page.locator('.active.menu_home').click();
+    await page.getByTestId('52').click();
+    await page.locator(`.dropdown.hover >>> a[${cartButton}]`).click();
+    await page.locator('#cart_checkout1').click();
+    await page.locator('#checkout_btn').click();
+    // Assert:
+    await expect(page.locator('.maintext')).toContainText(successOrder);
+  });
+
+  test('Check your order', async ({ page }) => {
+    // Arrange:
+    // Act:
+    await page.getByText('Account').nth(2).hover();
+    await page.getByRole('link').filter({hasText: 'Check Your Order' }).click();
+    await page.getByRole('button').filter({hasText: 'View'}).first().click();
+    // Assert:
+  });
 });
+
+//53424

@@ -39,5 +39,4 @@ export class AutomationStore {
     await this.page.locator('#loginFrm_password').fill(userPassword)
     await this.page.getByRole('button', { name: 'Login' }).click();
   }
-
 }
