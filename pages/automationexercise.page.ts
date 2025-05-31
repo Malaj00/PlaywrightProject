@@ -10,6 +10,13 @@ export class AutomationExercise {
   accDeleted: Locator;
   topMenu: TopMenuComponent;
   nameBox: Locator;
+  consentButton: Locator;
+  sliderCarousel: Locator;
+  loginToAcc: Locator;
+  newUserSignup: Locator;
+  mailReg: Locator;
+  signupButton: Locator;
+  accInf: Locator;
 
   constructor(private page: Page) {
     this.mailInput = page
@@ -23,6 +30,13 @@ export class AutomationExercise {
     this.accDeleted = page.getByText('Account Deleted!');
     this.topMenu = new TopMenuComponent(this.page);
     this.nameBox = page.getByRole('textbox', { name: 'Name' });
+    this.consentButton = page.getByRole('button', { name: 'Consent' });
+    this.sliderCarousel = page.locator('#slider-carousel');
+    this.loginToAcc = page.getByText('Login to your account');
+    this.newUserSignup = page.getByText('New User Signup!');
+    this.mailReg = page.locator('[data-qa="signup-email"]');
+    this.signupButton = page.getByRole('button', { name: 'Signup' })
+    this.accInf = page.getByText('Enter Account Information')
   }
   async login(userMail: string, userPassword: string): Promise<void> {
     await this.mailInput.fill(userMail);

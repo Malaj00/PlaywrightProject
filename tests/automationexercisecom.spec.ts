@@ -7,35 +7,23 @@ test.describe('Register and login tests', () => {
   test.beforeEach(async ({ page }) => {
     autoExer = new AutomationExercise(page);
     await page.goto('http://automationexercise.com');
-    await page.getByRole('button', { name: 'Consent' }).click();
-    await expect(page.locator('#slider-carousel')).toBeVisible();
+    await autoExer.consentButton.click();
+    await expect(autoExer.sliderCarousel).toBeVisible();
     await autoExer.topMenu.signupLogin.click();
-    await expect(page.getByText('Login to your account')).toHaveText(
-      'Login to your account',
-    );
-    await expect(page.getByText('New User Signup!')).toHaveText(
-      'New User Signup!',
-    );
+    await expect(autoExer.loginToAcc).toHaveText('Login to your account');
+    await expect(autoExer.newUserSignup).toHaveText('New User Signup!');
   });
   test('TC1 - Register User', { tag: '@register' }, async ({ page }) => {
     //Arrange
 
     //Act
-    await expect(page.getByText('New User Signup!')).toBeVisible;
-    await expect(page.getByText('New User Signup!')).toHaveText(
-      'New User Signup!',
-    );
-    await page
-      .getByRole('textbox', { name: 'Name' })
-      .fill(userCredentials.userName);
-    await page
-      .locator('[data-qa="signup-email"]')
-      .fill(userCredentials.userMail);
-    await page.getByRole('button', { name: 'Signup' }).click();
-    await expect(page.getByText('Enter Account Information')).toBeVisible();
-    await expect(page.getByText('Enter Account Information')).toHaveText(
-      'Enter Account Information',
-    );
+    await expect(autoExer.newUserSignup).toBeVisible;
+    await expect(autoExer.newUserSignup).toHaveText('New User Signup!');
+    await autoExer.nameBox.fill(userCredentials.userName);
+    await autoExer.mailReg.fill(userCredentials.userMail);
+    await autoExer.signupButton.click();
+    await expect(autoExer.accInf).toBeVisible();
+    await expect(autoExer.accInf).toHaveText('Enter Account Information');
     await page.getByRole('radio', { name: 'Mr.' }).check();
     await page.locator('#days').selectOption(userCredentials.days);
     await page.locator('#months').selectOption(userCredentials.month);
@@ -43,9 +31,7 @@ test.describe('Register and login tests', () => {
     await page
       .getByRole('textbox', { name: 'Password *' })
       .fill(userCredentials.userPassword);
-    await page
-      .getByRole('checkbox', { name: 'Sign up for our newsletter!' })
-      .check();
+    await page.locator('#newsletter').click();
     await page
       .getByRole('checkbox', { name: 'Receive special offers from' })
       .check();
