@@ -13,35 +13,36 @@ test.describe('Login tests', () => {
 
   test('TC1 - Positive Login test', async ({ page }) => {
     //Arrange
+    const products = 'Products';
     //Act
     await sauceDemo.login(
       saucedemoCredentials.userName,
       saucedemoCredentials.userPassword,
     );
     //Assert
-    await expect(page.getByTestId('title')).toHaveText('Products');
+    await expect(sauceDemo.titleText).toHaveText(products);
   });
 
   test('TC2 - Negative Login test - Incorrect password', async ({ page }) => {
     //Arrange
     const incPass = '123';
     //Act
-    await page.getByTestId('username').fill(saucedemoCredentials.userName);
-    await page.getByTestId('password').fill(incPass);
-    await page.getByTestId('login-button').click();
+    await sauceDemo.loginInput.fill(saucedemoCredentials.userName);
+    await sauceDemo.passwordInput.fill(incPass);
+    await sauceDemo.loginButton.click();
     //Assert
-    await expect(page.getByTestId('error')).toBeVisible();
+    await expect(sauceDemo.errorMessage).toBeVisible();
   });
 
   test('TC3 - Negative Login test - Incorrect username', async ({ page }) => {
     //Arrange
     const incUsername = 'l05in';
     //Act
-    await page.getByTestId('username').fill(incUsername);
-    await page.getByTestId('password').fill(saucedemoCredentials.userPassword);
-    await page.getByTestId('login-button').click();
+    await sauceDemo.loginInput.fill(incUsername);
+    await sauceDemo.passwordInput.fill(saucedemoCredentials.userPassword);
+    await sauceDemo.loginButton.click();
     //Assert
-    await expect(page.getByTestId('error')).toBeVisible();
+    await expect(sauceDemo.errorMessage).toBeVisible();
   });
 });
 
@@ -55,66 +56,62 @@ test.describe('Shop Cart tests', () => {
       saucedemoCredentials.userName,
       saucedemoCredentials.userPassword,
     );
-    await expect(page.getByTestId('title')).toHaveText('Products');
+    await expect(sauceDemo.titleText).toHaveText('Products');
   });
 
   test('TC4 - Lookup on product', async ({ page }) => {
     //Arrange
+    const labsBackpack = 'Sauce Labs Backpack';
     //Act
-    await page.getByTestId('inventory-item-name').first().click();
+    await sauceDemo.inventoryItemName.first().click();
     //Assert
-    await expect(page.getByTestId('inventory-item-name')).toHaveText(
-      'Sauce Labs Backpack',
-    );
+    await expect(sauceDemo.inventoryItemName).toHaveText(labsBackpack);
   });
 
   test('TC6 - Adding product to cart', async ({ page }) => {
     //Arrange
+    const labsBackpack = 'Sauce Labs Backpack';
     //Act
-    await page.locator('#add-to-cart-sauce-labs-backpack').click();
-    await expect(page.getByTestId('shopping-cart-badge')).toBeVisible();
-    await expect(page.locator('#remove-sauce-labs-backpack')).toBeVisible();
-    await page.getByTestId('shopping-cart-link').click();
+    await sauceDemo.labsBackpackCart.click();
+    await expect(sauceDemo.cartBadge).toBeVisible();
+    await expect(sauceDemo.removeLabsBackpack).toBeVisible();
+    await sauceDemo.cartButton.click();
     //Assert
-    await expect(page.getByTestId('inventory-item-name')).toHaveText(
-      'Sauce Labs Backpack',
-    );
+    await expect(sauceDemo.inventoryItemName).toHaveText(labsBackpack);
   });
 
   test('TC7 - Removing product from cart', async ({ page }) => {
     //Arrange
+    const labsBackpack = 'Sauce Labs Backpack';
     //Act
-    await page.locator('#add-to-cart-sauce-labs-backpack').click();
-    await expect(page.locator('#remove-sauce-labs-backpack')).toBeVisible();
-    await expect(page.getByTestId('shopping-cart-badge')).toBeVisible();
-    await page.getByTestId('shopping-cart-link').click();
-    await expect(page.getByTestId('inventory-item-name')).toHaveText(
-      'Sauce Labs Backpack',
-    );
-    await page.getByRole('button', { name: 'Remove' }).click();
+    await sauceDemo.labsBackpackCart.click();
+    await expect(sauceDemo.removeLabsBackpack).toBeVisible();
+    await expect(sauceDemo.cartBadge).toBeVisible();
+    await sauceDemo.cartButton.click();
+    await expect(sauceDemo.inventoryItemName).toHaveText(labsBackpack);
+    await sauceDemo.removeButton.click();
     //Assert
-    await expect(page.getByTestId('inventory-item-name')).toHaveCount(0);
-    await expect(page.getByTestId('shopping-cart-badge')).toHaveCount(0);
+    await expect(sauceDemo.inventoryItemName).toHaveCount(0);
+    await expect(sauceDemo.cartBadge).toHaveCount(0);
   });
 
   test('TC8 - More than one product in cart', async ({ page }) => {
     //Arrange
+    const labsTshirt = 'Sauce Labs Bolt T-Shirt';
+    const labsBackpack = 'Sauce Labs Backpack';
+    const oneQunatity = '1';
     //Act
-    await page.locator('#add-to-cart-sauce-labs-bolt-t-shirt').click();
-    await page.locator('#add-to-cart-sauce-labs-backpack').click();
-    await expect(page.locator('#remove-sauce-labs-backpack')).toBeVisible();
-    await expect(page.locator('#remove-sauce-labs-bolt-t-shirt')).toBeVisible();
-    await expect(page.getByTestId('shopping-cart-badge')).toBeVisible();
-    await page.getByTestId('shopping-cart-link').click();
+    await sauceDemo.labsTshirtCart.click();
+    await sauceDemo.labsBackpackCart.click();
+    await expect(sauceDemo.removeLabsBackpack).toBeVisible();
+    await expect(sauceDemo.removeLabsTshirt).toBeVisible();
+    await expect(sauceDemo.cartBadge).toBeVisible();
+    await sauceDemo.cartButton.click();
     //Assert
-    await expect(page.getByTestId('inventory-item-name').nth(0)).toHaveText(
-      'Sauce Labs Bolt T-Shirt',
-    );
-    await expect(page.getByTestId('inventory-item-name').nth(1)).toHaveText(
-      'Sauce Labs Backpack',
-    );
-    await expect(page.getByTestId('item-quantity').nth(0)).toHaveText('1');
-    await expect(page.getByTestId('item-quantity').nth(1)).toHaveText('1');
+    await expect(sauceDemo.inventoryItemName.nth(0)).toHaveText(labsTshirt);
+    await expect(sauceDemo.inventoryItemName.nth(1)).toHaveText(labsBackpack);
+    await expect(sauceDemo.itemQuantity.nth(0)).toHaveText(oneQunatity);
+    await expect(sauceDemo.itemQuantity.nth(1)).toHaveText(oneQunatity);
   });
 
   test('TC9 - Checkout in cart', async ({ page }) => {
@@ -122,64 +119,57 @@ test.describe('Shop Cart tests', () => {
     const itemTotal = '29.99';
     const tax = '2.40';
     const summary = Number(itemTotal) + Number(tax);
+    const checkoutInfo = 'Checkout: Your Information';
+    const checkoutOvr = 'Checkout: Overview';
+    const labsBackpack = 'Sauce Labs Backpack';
+    const orderMess = 'Thank you for your order!';
+    const products = 'Products';
     //Act
     await sauceDemo.cartAdd();
-    await page.locator('#checkout').click();
-    await expect(page.getByTestId('title')).toHaveText(
-      'Checkout: Your Information',
-    );
-    await page.locator('#first-name').fill(saucedemoCredentials.firstname);
-    await page.locator('#first-name').blur();
-    await expect(page.locator('#first-name')).toHaveValue(
+    await sauceDemo.checkoutButton.click();
+    await expect(sauceDemo.titleText).toHaveText(checkoutInfo);
+    await sauceDemo.firstName.fill(saucedemoCredentials.firstname);
+    await sauceDemo.firstName.blur();
+    await expect(sauceDemo.firstName).toHaveValue(
       saucedemoCredentials.firstname,
     );
-    await page.locator('#last-name').fill(saucedemoCredentials.lastname);
-    await page.locator('#last-name').blur();
-    await expect(page.locator('#last-name')).toHaveValue(
-      saucedemoCredentials.lastname,
-    );
-    await page.locator('#postal-code').fill(saucedemoCredentials.zipcode);
-    await page.locator('#continue').click();
-    await expect(page.getByTestId('title')).toHaveText('Checkout: Overview');
-    await expect(page.getByTestId('inventory-item-name')).toHaveText(
-      'Sauce Labs Backpack',
-    );
-    await expect(page.getByTestId('item-quantity')).toHaveText('1');
-    await expect(page.getByTestId('inventory-item-price')).toContainText(
-      itemTotal,
-    );
-    await expect(page.getByTestId('tax-label')).toContainText(tax);
-    await expect(page.getByTestId('total-label')).toContainText(`${summary}`);
-    await page.locator('#finish').click();
-    await expect(page.getByTestId('complete-header')).toContainText(
-      'Thank you for your order!',
-    );
-    await page.locator('#back-to-products').click();
+    await sauceDemo.lastName.fill(saucedemoCredentials.lastname);
+    await sauceDemo.lastName.blur();
+    await expect(sauceDemo.lastName).toHaveValue(saucedemoCredentials.lastname);
+    await sauceDemo.postalCode.fill(saucedemoCredentials.zipcode);
+    await sauceDemo.continueButton.click();
+    await expect(sauceDemo.titleText).toHaveText(checkoutOvr);
+    await expect(sauceDemo.inventoryItemName).toHaveText(labsBackpack);
+    await expect(sauceDemo.itemQuantity).toHaveText('1');
+    await expect(sauceDemo.itemPrice).toContainText(itemTotal);
+    await expect(sauceDemo.taxLabel).toContainText(tax);
+    await expect(sauceDemo.totalLabel).toContainText(`${summary}`);
+    await sauceDemo.finishButton.click();
+    await expect(sauceDemo.completeHeader).toContainText(orderMess);
+    await sauceDemo.backProdButton.click();
     //Assert:
-    await expect(page.getByTestId('title')).toHaveText('Products');
+    await expect(sauceDemo.titleText).toHaveText(products);
   });
 
   test('TC10 - Checkout validation', async ({ page }) => {
     //Arrange
+    const yourCart = 'Your Cart';
+    const errorFName = 'Error: First Name is required';
+    const errorLName = 'Error: Last Name is required';
+    const errorPostal = 'Error: Postal Code is required';
     //Act
-    await page.getByTestId('shopping-cart-link').click();
-    await expect(page.getByTestId('title')).toHaveText('Your Cart');
-    await page.locator('#checkout').click();
-    await page.locator('#continue').click();
-    await expect(page.getByTestId('error')).toHaveText(
-      'Error: First Name is required',
-    );
-    await page.locator('#first-name').fill(saucedemoCredentials.firstname);
-    await page.locator('#continue').click();
-    await expect(page.getByTestId('error')).toHaveText(
-      'Error: Last Name is required',
-    );
-    await page.locator('#last-name').fill(saucedemoCredentials.lastname);
-    await page.locator('#continue').click();
+    await sauceDemo.cartButton.click();
+    await expect(sauceDemo.titleText).toHaveText(yourCart);
+    await sauceDemo.checkoutButton.click();
+    await sauceDemo.continueButton.click();
+    await expect(sauceDemo.errorMessage).toHaveText(errorFName);
+    await sauceDemo.firstName.fill(saucedemoCredentials.firstname);
+    await sauceDemo.continueButton.click();
+    await expect(sauceDemo.errorMessage).toHaveText(errorLName);
+    await sauceDemo.lastName.fill(saucedemoCredentials.lastname);
+    await sauceDemo.continueButton.click();
     //Assert
-    await expect(page.getByTestId('error')).toHaveText(
-      'Error: Postal Code is required',
-    );
+    await expect(sauceDemo.errorMessage).toHaveText(errorPostal);
   });
 });
 
@@ -193,20 +183,20 @@ test.describe('Other Page tests', () => {
       saucedemoCredentials.userName,
       saucedemoCredentials.userPassword,
     );
-    await expect(page.getByTestId('title')).toHaveText('Products');
+    await expect(sauceDemo.titleText).toHaveText('Products');
   });
 
   test('TC11 - Sorting products on page ', async ({ page }) => {
     //Arrange
+    const labsBackpack = 'Sauce Labs Backpack';
+    const expectedSort = 'az';
+    const sortOption = 'lohi';
+    const labsOnesie = 'Sauce Labs Onesie';
     //Act
-    await expect(page.getByTestId('product-sort-container')).toHaveValue('az');
-    await expect(page.getByTestId('inventory-item-name').first()).toHaveText(
-      'Sauce Labs Backpack',
-    );
-    await page.getByTestId('product-sort-container').selectOption('lohi');
+    await expect(sauceDemo.sortContainer).toHaveValue(expectedSort);
+    await expect(sauceDemo.inventoryItemName.first()).toHaveText(labsBackpack);
+    await sauceDemo.sortContainer.selectOption(sortOption);
     //Assert
-    await expect(page.getByTestId('inventory-item-name').first()).toHaveText(
-      'Sauce Labs Onesie',
-    );
+    await expect(sauceDemo.inventoryItemName.first()).toHaveText(labsOnesie);
   });
 });
