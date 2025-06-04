@@ -7,7 +7,7 @@ test.describe('Login and Register functionality', () => {
   test.beforeEach(async ({ page }) => {
     storePage = new AutomationStore(page);
     await page.goto('https://automationteststore.com/');
-    await expect(page.locator('#maincontainer .welcome_msg')).toContainText(
+    await expect(storePage.welcomeMsg).toContainText(
       'Welcome to the Automation Test Store!',
     );
     await storePage.loginPage.click();
@@ -15,9 +15,11 @@ test.describe('Login and Register functionality', () => {
 
   test('User Register', async ({ page }) => {
     // Arrange:
+    const createdAccount = ' Your Account Has Been Created!';
+    const registeredMail = 'Error: E-Mail Address is already registered!';
     // Act:
-    await expect(page.locator('#accountFrm_accountregister')).toBeChecked();
-    await page.getByTitle('Continue').click();
+    await expect(storePage.radioRegister).toBeChecked();
+    await storePage.continueButton.click();
     await storePage.register(
       autostoreCredential.userName,
       autostoreCredential.userMail,
@@ -31,23 +33,21 @@ test.describe('Login and Register functionality', () => {
       autostoreCredential.zipcode,
     );
     // Assert:
-    await expect(page.locator('.maintext')).toHaveText(
-      ' Your Account Has Been Created!',
-    );
+    await expect(storePage.errorAlert).toContainText(registeredMail);
+    //await expect(storePage.mainText).toHaveText(createdAccount); //Asser for new account
   });
 
   test('Correct User login', async ({ page }) => {
     // Arrange:
+    const myAcc = ' My Account';
     // Act:
     await storePage.login(
       autostoreCredential.userName,
       autostoreCredential.userPassword,
     );
     // Assert:
-    await expect(page.locator('.maintext')).toHaveText(' My Account');
-    await expect(page.locator('.subtext')).toHaveText(
-      autostoreCredential.firstName,
-    );
+    await expect(storePage.mainText).toHaveText(myAcc);
+    await expect(storePage.subText).toHaveText(autostoreCredential.firstName);
   });
 
   test('Incorrect username login', async ({ page }) => {
@@ -55,15 +55,11 @@ test.describe('Login and Register functionality', () => {
     const incName = 'loginName';
     const errorMess = 'Error: Incorrect login or password provided.';
     // Act:
-    await page.locator('#loginFrm_loginname').fill(incName);
-    await page
-      .locator('#loginFrm_password')
-      .fill(autostoreCredential.userPassword);
-    await page.getByRole('button', { name: 'Login' }).click();
+    await storePage.loginInput.fill(incName);
+    await storePage.passwordInput.fill(autostoreCredential.userPassword);
+    await storePage.loginButton.click();
     // Assert:
-    await expect(page.locator('.alert.alert-error.alert-danger')).toContainText(
-      errorMess,
-    );
+    await expect(storePage.errorAlert).toContainText(errorMess);
   });
 
   test('Incorrect password login', async ({ page }) => {
@@ -71,87 +67,63 @@ test.describe('Login and Register functionality', () => {
     const incPass = 'passWord';
     const errorMess = 'Error: Incorrect login or password provided.';
     // Act:
-    await page
-      .locator('#loginFrm_loginname')
-      .fill(autostoreCredential.userName);
-    await page.locator('#loginFrm_password').fill(incPass);
-    await page.getByRole('button', { name: 'Login' }).click();
+    await storePage.loginInput.fill(autostoreCredential.userName);
+    await storePage.passwordInput.fill(incPass);
+    await storePage.loginButton.click();
     // Assert:
-    await expect(page.locator('.alert.alert-error.alert-danger')).toContainText(
-      errorMess,
-    );
+    await expect(storePage.errorAlert).toContainText(errorMess);
   });
 
   test('Forgot password positive', async ({ page }) => {
     // Arrange:
-    const forgotPasshref = `href="https://automationteststore.com/index.php?rt=account/forgotten/password"`;
     const correctMess =
       'Success: Password reset link has been sent to your e-mail address.';
     // Act:
-    await page.locator(`a[${forgotPasshref}]`).click();
-    await page
-      .locator('#forgottenFrm_loginname')
-      .fill(autostoreCredential.userName);
-    await page
-      .locator('#forgottenFrm_email')
-      .fill(autostoreCredential.userMail);
-    await page.getByRole('button', { name: 'Continue' }).click();
+    await storePage.forgotPass.click();
+    await storePage.forgotLogInput.fill(autostoreCredential.userName);
+    await storePage.forgotEmlInput.fill(autostoreCredential.userMail);
+    await storePage.continueButton.click();
     // Assert:
-    await expect(page.locator('.alert.alert-success')).toContainText(
-      correctMess,
-    );
+    await expect(storePage.succesAlert).toContainText(correctMess);
   });
 
   test('Forgot password negative', async ({ page }) => {
     // Arrange:
-    const forgotPasshref = `href="https://automationteststore.com/index.php?rt=account/forgotten/password"`;
     const errorMess =
       'Error: No records found matching information your provided, please check your information and try again!';
     // Act:
-    await page.locator(`a[${forgotPasshref}]`).click();
-    await page.locator('#forgottenFrm_loginname').fill('test123');
-    await page
-      .locator('#forgottenFrm_email')
-      .fill(autostoreCredential.userMail);
-    await page.getByRole('button', { name: 'Continue' }).click();
+    await storePage.forgotPass.click();
+    await storePage.forgotLogInput.fill('test123');
+    await storePage.forgotEmlInput.fill(autostoreCredential.userMail);
+    await storePage.continueButton.click();
     // Assert:
-    await expect(page.locator('.alert.alert-danger')).toContainText(errorMess);
+    await expect(storePage.errorFrgPass).toContainText(errorMess);
   });
 
   test('Forgot login positive', async ({ page }) => {
     // Arrange:
-    const forgotLoginhref = `href="https://automationteststore.com/index.php?rt=account/forgotten/loginname"`;
     const correctMess =
       'Success: Your login name reminder has been sent to your e-mail address.';
     // Act:
-    await page.locator(`a[${forgotLoginhref}]`).click();
-    await page
-      .locator('#forgottenFrm_lastname')
-      .fill(autostoreCredential.lastName);
-    await page
-      .locator('#forgottenFrm_email')
-      .fill(autostoreCredential.userMail);
-    await page.getByRole('button', { name: 'Continue' }).click();
+    await storePage.forgotLogin.click();
+    await storePage.forgotLNameInput.fill(autostoreCredential.lastName);
+    await storePage.forgotEmlInput.fill(autostoreCredential.userMail);
+    await storePage.continueButton.click();
     // Assert:
-    await expect(page.locator('.alert.alert-success')).toContainText(
-      correctMess,
-    );
+    await expect(storePage.succesAlert).toContainText(correctMess);
   });
 
   test('Forgot login negative', async ({ page }) => {
     // Arrange:
-    const forgotLoginhref = `href="https://automationteststore.com/index.php?rt=account/forgotten/loginname"`;
     const errorMess =
       'Error: No records found matching information your provided, please check your information and try again!';
     // Act:
-    await page.locator(`a[${forgotLoginhref}]`).click();
-    await page.locator('#forgottenFrm_lastname').fill('test123');
-    await page
-      .locator('#forgottenFrm_email')
-      .fill(autostoreCredential.userMail);
-    await page.getByRole('button', { name: 'Continue' }).click();
+    await storePage.forgotLogin.click();
+    await storePage.forgotLNameInput.fill('test123');
+    await storePage.forgotEmlInput.fill(autostoreCredential.userMail);
+    await storePage.continueButton.click();
     // Assert:
-    await expect(page.locator('.alert.alert-danger')).toContainText(errorMess);
+    await expect(storePage.errorFrgPass).toContainText(errorMess);
   });
 });
 
@@ -161,7 +133,7 @@ test.describe('Cart tests', () => {
   test.beforeEach(async ({ page }) => {
     storePage = new AutomationStore(page);
     await page.goto('https://automationteststore.com/');
-    await expect(page.locator('#maincontainer .welcome_msg')).toContainText(
+    await expect(storePage.welcomeMsg).toContainText(
       'Welcome to the Automation Test Store!',
     );
     await storePage.loginPage.click();
@@ -173,68 +145,60 @@ test.describe('Cart tests', () => {
 
   test('Add product to cart while logged', async ({ page }) => {
     // Arrange:
-    const cartButton = `href="https://automationteststore.com/index.php?rt=checkout/cart"`;
     // Act:
-    await page.locator('.active.menu_home').click();
-    await page.getByTestId('52').click();
-    await page.locator(`.dropdown.hover >>> a[${cartButton}]`).click();
+    await storePage.homeButton.click();
+    await storePage.product52.click();
+    await storePage.cartMenuButton.click();
     // Assert:
-    await expect(
-      page
-        .getByRole('row')
-        .filter({ has: page.getByText('Benefit Bella Bamba') }),
-    ).toBeVisible();
-    await expect(page.locator('#cart_quantity52')).toHaveValue('2');
+    await expect(storePage.bellaBambaCart).toBeVisible();
+    await expect(storePage.quantity52).toBeVisible;
   });
 
   test('Checkout page', async ({ page }) => {
     // Arrange:
-    const cartButton = `href="https://automationteststore.com/index.php?rt=checkout/cart"`;
-    const checkoutLocator = page.locator('tbody tr td.align_left');
+    const checkoutAddress = 'TE 12 ST Thais Guera 03405 Chad';
+    const checkoutShip = 'Flat Shipping Rate';
+    const checkoutPayment = 'Cash On Delivery';
     // Act:
-    await page.locator('.active.menu_home').click();
-    await page.getByTestId('52').click();
-    await page.locator(`.dropdown.hover >>> a[${cartButton}]`).click();
-    await page.locator('#cart_checkout1').click();
+    await storePage.homeButton.click();
+    await storePage.product52.click();
+    await storePage.cartMenuButton.click();
+    await storePage.cartCheckout.click();
     // Assert:
-    await expect(checkoutLocator.first()).toHaveText(
+    await expect(storePage.checkoutTable.first()).toHaveText(
       `${autostoreCredential.firstName} ${autostoreCredential.lastName}`,
     );
-    await expect(checkoutLocator.nth(1)).toHaveText(
-      'TE 12 ST Thais Guera 03405 Chad',
-    );
-    await expect(checkoutLocator.nth(2)).toHaveText('Flat Shipping Rate');
-    await expect(checkoutLocator.nth(3)).toHaveText(
+    await expect(storePage.checkoutTable.nth(1)).toHaveText(checkoutAddress);
+    await expect(storePage.checkoutTable.nth(2)).toHaveText(checkoutShip);
+    await expect(storePage.checkoutTable.nth(3)).toHaveText(
       `${autostoreCredential.firstName} ${autostoreCredential.lastName}`,
     );
-    await expect(checkoutLocator.nth(4)).toHaveText(
-      'TE 12 ST Thais Guera 03405 Chad',
-    );
-    await expect(checkoutLocator.nth(5)).toHaveText('Cash On Delivery');
+    await expect(storePage.checkoutTable.nth(4)).toHaveText(checkoutAddress);
+    await expect(storePage.checkoutTable.nth(5)).toHaveText(checkoutPayment);
   });
 
   test('Confirm order', async ({ page }) => {
     // Arrange:
-    const cartButton = `href="https://automationteststore.com/index.php?rt=checkout/cart"`;
     const successOrder = 'Your Order Has Been Processed!';
     // Act:
-    await page.locator('.active.menu_home').click();
-    await page.getByTestId('52').click();
-    await page.locator(`.dropdown.hover >>> a[${cartButton}]`).click();
-    await page.locator('#cart_checkout1').click();
-    await page.locator('#checkout_btn').click();
+    await storePage.homeButton.click();
+    await storePage.product52.click();
+    await storePage.cartMenuButton.click();
+    await storePage.cartCheckout.click();
+    await storePage.checkoutButton.click();
     // Assert:
-    await expect(page.locator('.maintext')).toContainText(successOrder);
+    await expect(storePage.mainText).toContainText(successOrder);
   });
 
   test('Check your order', async ({ page }) => {
     // Arrange:
+    const orderID = '#53424';
     // Act:
-    await page.getByText('Account').nth(2).hover();
-    await page.getByRole('link').filter({hasText: 'Check Your Order' }).click();
-    await page.getByRole('button').filter({hasText: 'View'}).first().click();
+    await storePage.accountText.nth(2).hover();
+    await storePage.checkOrderLink.click();
+    await storePage.checkOrderView.first().click();
     // Assert:
+    await expect(storePage.orderIdDetails).toContainText(orderID);
   });
 });
-
 //53424

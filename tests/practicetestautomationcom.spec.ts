@@ -1,11 +1,11 @@
 import { test, expect } from '@playwright/test';
 import { tempData } from '../test-data/practicetestautomation.data';
-import { NowyTest } from '../pages/practicetestautomation.page';
+import { PracticePage } from '../pages/practicetestautomation.page';
 
 test.describe('Test login - practice automation', () => {
-  let tempTest: NowyTest;
+  let tempTest: PracticePage;
   test.beforeEach(async ({ page }) => {
-    tempTest = new NowyTest(page);
+    tempTest = new PracticePage(page);
     await page.goto('https://practicetestautomation.com/practice-test-login/');
   });
   test('Positive LogIn test', async ({ page }) => {

@@ -1,6 +1,6 @@
 import { Locator, Page } from '@playwright/test';
 
-export class NowyTest {
+export class PracticePage {
   loginHeading: Locator;
   loginSubHeading: Locator;
   loginInput: Locator;

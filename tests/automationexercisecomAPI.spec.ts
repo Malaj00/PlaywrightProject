@@ -6,10 +6,10 @@ test.describe('API TESTING', () => {
     const response = await request.get(
       'https://automationexercise.com/api/productsList',
     );
-    expect(response.status()).toBe(200); //sprawdzanie czy odpowiedz jest poprawna czyli ma kod 200
-    const text = await response.text(); //text jest odpowiedzia z tekstem
-    expect(text).toContain('Blue Top'); //odpowiedz zawiera Blue Top czyli jeden z wielu produtkow
-    console.log(await response.json()); //wypis w terminalu co otrzymalismy po get
+    expect(response.status()).toBe(200);
+    const text = await response.text(); 
+    expect(text).toContain('Blue Top'); 
+    console.log(await response.json()); 
   });
 
   test('API 2 - POST To All Products List', async ({ request }) => {
