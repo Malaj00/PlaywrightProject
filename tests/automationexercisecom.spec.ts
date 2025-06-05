@@ -85,7 +85,7 @@ test.describe('Register and login tests', () => {
   test(
     'TC5 - Register User with existing email',
     { tag: '@register' },
-    async ({ page }) => {
+     async ({ page }) => {
       //Arrange
       const emailExist = 'Email Address already exist!';
       //Act
