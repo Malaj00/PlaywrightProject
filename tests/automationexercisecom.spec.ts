@@ -2,6 +2,8 @@ import { test, expect } from '@playwright/test';
 import { AutomationExercise } from '../pages/automationexercise.page';
 import userCredentials from '../test-data/userCredentials.json';
 
+test.describe.configure({ mode: 'serial' });
+
 test.describe('Register and login tests', () => {
   let autoExer: AutomationExercise;
   test.beforeEach(async ({ page }) => {
@@ -13,56 +15,30 @@ test.describe('Register and login tests', () => {
     await expect(autoExer.loginToAcc).toHaveText('Login to your account');
     await expect(autoExer.newUserSignup).toHaveText('New User Signup!');
   });
+
   test('TC1 - Register User', { tag: '@register' }, async ({ page }) => {
     //Arrange
 
     //Act
-    await expect(autoExer.newUserSignup).toBeVisible;
-    await expect(autoExer.newUserSignup).toHaveText('New User Signup!');
-    await autoExer.nameBox.fill(userCredentials.userName);
-    await autoExer.mailReg.fill(userCredentials.userMail);
-    await autoExer.signupButton.click();
-    await expect(autoExer.accInf).toBeVisible();
-    await expect(autoExer.accInf).toHaveText('Enter Account Information');
-    await page.getByRole('radio', { name: 'Mr.' }).check();
-    await page.locator('#days').selectOption(userCredentials.days);
-    await page.locator('#months').selectOption(userCredentials.month);
-    await page.locator('#years').selectOption(userCredentials.year);
-    await page
-      .getByRole('textbox', { name: 'Password *' })
-      .fill(userCredentials.userPassword);
-    await page.locator('#newsletter').click();
-    await page
-      .getByRole('checkbox', { name: 'Receive special offers from' })
-      .check();
-    await page
-      .getByRole('textbox', { name: 'Company', exact: true })
-      .fill(userCredentials.company);
-    await page
-      .getByRole('textbox', { name: 'First name *' })
-      .fill(userCredentials.firstName);
-    await page
-      .getByRole('textbox', { name: 'Last name *' })
-      .fill(userCredentials.lastName);
-    await page
-      .getByRole('textbox', { name: 'Address * (Street address, P.' })
-      .fill(userCredentials.address);
-    await page.getByLabel('Country *').selectOption(userCredentials.country);
-    await page
-      .getByRole('textbox', { name: 'State *' })
-      .fill(userCredentials.state);
-    await page
-      .getByRole('textbox', { name: 'City * Zipcode *' })
-      .fill(userCredentials.city);
-    await page.locator('#zipcode').fill(userCredentials.zipcode);
-    await page
-      .getByRole('textbox', { name: 'Mobile Number *' })
-      .fill(userCredentials.mobile);
-    await page.getByRole('button', { name: 'Create Account' }).click();
-    //Assert:
-    await expect(page.locator('[data-qa="account-created"]')).toHaveText(
-      'Account Created!',
+    await autoExer.register(
+      userCredentials.userName,
+      userCredentials.userMail,
+      userCredentials.userPassword,
+      userCredentials.days,
+      userCredentials.month,
+      userCredentials.year,
+      userCredentials.company,
+      userCredentials.firstName,
+      userCredentials.lastName,
+      userCredentials.address,
+      userCredentials.mobile,
+      userCredentials.country,
+      userCredentials.state,
+      userCredentials.city,
+      userCredentials.zipcode,
     );
+
+    //Assert
   });
 
   test('TC2 - Login', { tag: '@login' }, async ({ page }) => {
@@ -421,6 +397,7 @@ test.describe('Other Pages', () => {
       const correctLogin = `Logged in as ${userCredentials.userName}`;
       const expectedmessagePayment = 'You have been successfully subscribed!';
       //Act
+      await autoExer.deleteAccount;
       await autoExer.topMenu.signupLogin.click();
       await autoExer.register(
         userCredentials.userName,

@@ -50,9 +50,9 @@ test.describe('Test login - practice automation', () => {
 });
 
 test.describe('Test Exceptions', () => {
-  let tempTest: NowyTest;
+  let tempTest: PracticePage;
   test.beforeEach(async ({ page }) => {
-    tempTest = new NowyTest(page);
+    tempTest = new PracticePage(page);
     await page.goto('https://practicetestautomation.com/practice-test-login/');
   });
   test('TC1-NoSuchElementException', async ({ page }) => {
