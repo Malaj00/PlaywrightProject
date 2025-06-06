@@ -78,26 +78,20 @@ test.describe('Register and login tests', () => {
       userCredentials.userPassword,
     );
     await expect(page.getByText(correctLogin)).toHaveText(correctLogin);
-    await page.getByRole('link', { name: ' Logout' }).click();
+    await autoExer.logoutButton.click();
     //Assert
     await expect(page.getByText(logoutMessage)).toHaveText(logoutMessage);
   });
   test(
     'TC5 - Register User with existing email',
     { tag: '@register' },
-     async ({ page }) => {
+    async ({ page }) => {
       //Arrange
       const emailExist = 'Email Address already exist!';
       //Act
-      await page
-        .getByRole('textbox', { name: 'Name' })
-        .fill(userCredentials.userName);
-      await page
-        .locator('form')
-        .filter({ hasText: 'Signup' })
-        .getByPlaceholder('Email Address')
-        .fill(userCredentials.userMail);
-      await page.getByRole('button', { name: 'Signup' }).click();
+      await autoExer.nameBox.fill(userCredentials.userName);
+      await autoExer.mailSignup.fill(userCredentials.userMail);
+      await autoExer.signupButton.click();
       //Assert
       await expect(page.getByText(emailExist)).toHaveText(emailExist);
     },
@@ -111,7 +105,7 @@ test.describe('Register and login tests', () => {
     );
     await autoExer.topMenu.deleteButton.click();
     //Assert
-    await expect(page.locator('[data-qa="account-deleted"]')).toBeVisible();
+    await expect(autoExer.accDel).toBeVisible();
   });
 });
 
@@ -120,8 +114,8 @@ test.describe('Other Pages', () => {
   test.beforeEach(async ({ page }) => {
     autoExer = new AutomationExercise(page);
     await page.goto('http://automationexercise.com');
-    await page.getByRole('button', { name: 'Consent' }).click();
-    await expect(page.locator('#slider-carousel')).toBeVisible();
+    await autoExer.consentButton.click();
+    await expect(autoExer.sliderCarousel).toBeVisible();
   });
   test('TC6 - Contact Us Form', { tag: '@topmenu' }, async ({ page }) => {
     //Arrange
@@ -131,30 +125,24 @@ test.describe('Other Pages', () => {
       'Success! Your details have been submitted successfully.';
     //Act
     await autoExer.topMenu.contactButton.click();
-    await page.getByRole('heading', { name: 'Get In Touch' }).click();
-    await page
-      .getByRole('textbox', { name: 'Email', exact: true })
-      .fill(userCredentials.userMail);
-    await page
-      .getByRole('textbox', { name: 'Name' })
-      .fill(userCredentials.userName);
-    await page.getByRole('textbox', { name: 'Subject' }).fill(subjectMess);
-    await page
-      .getByRole('textbox', { name: 'Your Message Here' })
-      .fill(suppMess);
-    await page.locator('input[name="upload_file"]').setInputFiles('README.md');
+    await autoExer.getinTouch.click();
+    await autoExer.emailContact.fill(userCredentials.userMail);
+    await autoExer.nameBox.fill(userCredentials.userName);
+    await autoExer.subjectBox.fill(subjectMess);
+    await autoExer.contactMess.fill(suppMess);
+    await autoExer.uploadFile.setInputFiles('README.md');
     page.once('dialog', async (dialog) => {
       console.log(`Dialog message: ${dialog.message()}`);
       expect(dialog.message()).toContain('Press OK to proceed!');
       await dialog.accept();
     });
-    await page.getByRole('button', { name: 'Submit' }).click();
-    await expect(
-      page.locator('#contact-page').getByText(submitMessage),
-    ).toHaveText(submitMessage);
-    await page.getByRole('link', { name: ' Home' }).click();
+    await autoExer.submitButton.click();
+    await expect(autoExer.contactPage.getByText(submitMessage)).toHaveText(
+      submitMessage,
+    );
+    await autoExer.homeButton.click();
     //Assert
-    await expect(page.locator('#slider-carousel')).toBeVisible();
+    await expect(autoExer.sliderCarousel).toBeVisible();
   });
 
   test(
@@ -165,7 +153,7 @@ test.describe('Other Pages', () => {
       //Act
       await autoExer.topMenu.testcasesButton.click();
       //Assert
-      await expect(page.locator('h2:has-text("Test Cases")')).toBeVisible();
+      await expect(autoExer.textCenter).toHaveText('Test Cases');
     },
   );
   test(

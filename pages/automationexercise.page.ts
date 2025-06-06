@@ -40,11 +40,27 @@ export class AutomationExercise {
   expiryMonth: Locator;
   expiryYear: Locator;
   payButton: Locator;
+  logoutButton: Locator;
+  mailSignup: Locator;
+  accDel: Locator;
+  getinTouch: Locator;
+  emailContact: Locator;
+  subjectBox: Locator;
+  contactMess: Locator;
+  uploadFile: Locator;
+  submitButton: Locator;
+  contactPage: Locator;
+  homeButton: Locator;
+  textCenter: Locator;
 
   constructor(private page: Page) {
     this.mailInput = page
       .locator('form')
       .filter({ hasText: 'Login' })
+      .getByPlaceholder('Email Address');
+    this.mailSignup = page
+      .locator('form')
+      .filter({ hasText: 'Signup' })
       .getByPlaceholder('Email Address');
     this.passwordInput = page.getByRole('textbox', { name: 'Password' });
     this.loginButton = page.getByRole('button', { name: 'Login' });
@@ -80,7 +96,7 @@ export class AutomationExercise {
     this.addressReg = page.getByRole('textbox', {
       name: 'Address * (Street address, P.',
     });
-    this.companyReg = page.getByLabel('Country *');
+    this.countryReg = page.getByLabel('Country *');
     this.stateReg = page.getByRole('textbox', { name: 'State *' });
     this.cityReg = page.getByRole('textbox', { name: 'City * Zipcode *' });
     this.zipReg = page.locator('#zipcode');
@@ -92,6 +108,17 @@ export class AutomationExercise {
     this.expiryMonth = page.locator('[data-qa="expiry-month"]');
     this.expiryYear = page.locator('[data-qa="expiry-year"]');
     this.payButton = page.locator('[data-qa="pay-button"]');
+    this.logoutButton = page.getByRole('link', { name: ' Logout' });
+    this.accDel = page.locator('[data-qa="account-deleted"]');
+    this.getinTouch = page.getByRole('heading', { name: 'Get In Touch' });
+    this.emailContact = page.getByRole('textbox', { name: 'Email' }).first();
+    this.subjectBox = page.getByRole('textbox', { name: 'Subject' });
+    this.contactMess = page.getByRole('textbox', { name: 'Your Message Here' });
+    this.uploadFile = page.locator('input[name="upload_file"]');
+    this.submitButton = page.getByRole('button', { name: 'Submit' });
+    this.contactPage = page.locator('#contact-page');
+    this.homeButton = page.getByRole('link', { name: ' Home' });
+    this.textCenter = page.locator('.title.text-center')
   }
   async login(userMail: string, userPassword: string): Promise<void> {
     await this.mailInput.fill(userMail);
@@ -133,7 +160,7 @@ export class AutomationExercise {
     await this.firstNReg.fill(firstName);
     await this.lastNReg.fill(lastName);
     await this.addressReg.fill(address);
-    await this.companyReg.selectOption(country);
+    await this.countryReg.selectOption(country);
     await this.stateReg.fill(state);
     await this.cityReg.fill(city);
     await this.zipReg.fill(zipcode);
