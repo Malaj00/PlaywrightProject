@@ -163,44 +163,30 @@ test.describe('Other Pages', () => {
       //Arrange
       //Act
       await autoExer.topMenu.productsButton.click();
-      await expect(
-        page.getByRole('heading', { name: 'All Products' }),
-      ).toBeVisible();
-      await expect(page.locator('.features_items')).toBeVisible();
-      await page.getByText('View Product').first().click();
+      await expect(autoExer.allProducts).toBeVisible();
+      await expect(autoExer.featuresItems).toBeVisible();
+      await autoExer.viewProduct.first().click();
       //Assert
-      await expect(page.locator('h2:has-text("Blue Top")')).toBeVisible();
-      await expect(page.getByText('Category: Women > Tops')).toBeVisible();
-      await expect(page.getByText('Rs.')).toContainText(/^Rs\.\s*\d+/);
-      await expect(page.locator('p:has-text("Availability:")')).toHaveText(
+      await expect(autoExer.blueTop).toBeVisible();
+      await expect(autoExer.categoryTops).toBeVisible();
+      await expect(autoExer.priceProduct).toContainText(/^Rs\.\s*\d+/);
+      await expect(autoExer.availabilityProduct).toHaveText(
         /^Availability:\s*\w.+/,
       );
-      await expect(page.locator('p:has-text("Condition:")')).toHaveText(
-        /^Condition:\s*\w.+/,
-      );
-      await expect(page.locator('p:has-text("Brand:")')).toHaveText(
-        /^Brand:\s*\w.+/,
-      );
+      await expect(autoExer.conditionProduct).toHaveText(/^Condition:\s*\w.+/);
+      await expect(autoExer.brandProduct).toHaveText(/^Brand:\s*\w.+/);
     },
   );
   test('TC9 - Search Product', { tag: '@search' }, async ({ page }) => {
     //Arrange
     //Act
     await autoExer.topMenu.productsButton.click();
-    await expect(
-      page.getByRole('heading', { name: 'All Products' }),
-    ).toBeVisible();
-    await page
-      .getByRole('textbox', { name: 'Search Product' })
-      .fill('Blue Top');
-    await page.locator('#submit_search').click();
-    await expect(
-      page.locator('h2:has-text("Searched Products")'),
-    ).toBeVisible();
+    await expect(autoExer.allProducts).toBeVisible();
+    await autoExer.searchProduct.fill('Blue Top');
+    await autoExer.submitSearch.click();
+    await expect(autoExer.searchedProducts).toBeVisible();
     //Assert
-    await expect(
-      page.locator('.features_items  .col-sm-4  p').first(),
-    ).toContainText('Blue Top');
+    await expect(autoExer.blueTopSearched.first()).toContainText('Blue Top');
   });
   test(
     'TC10 - Verify Subscription in home page',

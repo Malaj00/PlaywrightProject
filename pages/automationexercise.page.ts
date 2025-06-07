@@ -52,8 +52,25 @@ export class AutomationExercise {
   contactPage: Locator;
   homeButton: Locator;
   textCenter: Locator;
+  allProducts: Locator;
+  featuresItems: Locator;
+  viewProduct: Locator;
+  blueTop: Locator;
+  categoryTops: Locator;
+  priceProduct: Locator;
+  availabilityProduct: Locator;
+  conditionProduct: Locator;
+  brandProduct: Locator;
+  searchProduct: Locator;
+  submitSearch: Locator;
+  searchedProducts: Locator;
+  blueTopSearched: Locator;
 
   constructor(private page: Page) {
+    this.blueTopSearched = page.locator('.features_items  .col-sm-4  p');
+    this.submitSearch = page.locator('#submit_search');
+    this.searchedProducts = page.locator('h2:has-text("Searched Products")');
+    this.searchProduct = page.getByRole('textbox', { name: 'Search Product' });
     this.mailInput = page
       .locator('form')
       .filter({ hasText: 'Login' })
@@ -118,7 +135,16 @@ export class AutomationExercise {
     this.submitButton = page.getByRole('button', { name: 'Submit' });
     this.contactPage = page.locator('#contact-page');
     this.homeButton = page.getByRole('link', { name: ' Home' });
-    this.textCenter = page.locator('.title.text-center')
+    this.textCenter = page.locator('.title.text-center');
+    this.allProducts = page.getByRole('heading', { name: 'All Products' });
+    this.featuresItems = page.locator('.features_items');
+    this.viewProduct = page.getByText('View Product');
+    this.blueTop = page.locator('h2:has-text("Blue Top")');
+    this.categoryTops = page.getByText('Category: Women > Tops');
+    this.priceProduct = page.getByText('Rs.');
+    this.availabilityProduct = page.locator('p:has-text("Availability:")');
+    this.conditionProduct = page.locator('p:has-text("Condition:")');
+    this.brandProduct = page.locator('p:has-text("Brand:")');
   }
   async login(userMail: string, userPassword: string): Promise<void> {
     await this.mailInput.fill(userMail);
