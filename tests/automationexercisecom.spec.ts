@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { AutomationExercise } from '../pages/automationexercise.page';
 import userCredentials from '../test-data/userCredentials.json';
+import { pathToFileURL } from 'url';
 
 test.describe.configure({ mode: 'serial' });
 
@@ -150,10 +151,11 @@ test.describe('Other Pages', () => {
     { tag: '@topmenu' },
     async ({ page }) => {
       //Arrange
+      const textTC = 'Test Cases';
       //Act
       await autoExer.topMenu.testcasesButton.click();
       //Assert
-      await expect(autoExer.textCenter).toHaveText('Test Cases');
+      await expect(autoExer.textCenter).toHaveText(textTC);
     },
   );
   test(
@@ -179,31 +181,30 @@ test.describe('Other Pages', () => {
   );
   test('TC9 - Search Product', { tag: '@search' }, async ({ page }) => {
     //Arrange
+    const productName = 'Blue Top';
     //Act
     await autoExer.topMenu.productsButton.click();
     await expect(autoExer.allProducts).toBeVisible();
-    await autoExer.searchProduct.fill('Blue Top');
+    await autoExer.searchProduct.fill(productName);
     await autoExer.submitSearch.click();
     await expect(autoExer.searchedProducts).toBeVisible();
     //Assert
-    await expect(autoExer.blueTopSearched.first()).toContainText('Blue Top');
+    await expect(autoExer.blueTopSearched.first()).toContainText(productName);
   });
   test(
     'TC10 - Verify Subscription in home page',
     { tag: '@subscription' },
     async ({ page }) => {
       //Arrange
+      const sub = 'Subscription';
+      const subbed = 'You have been successfully subscribed!';
       //Act
-      await expect(
-        page.locator('#footer').locator('h2:has-text("Subscription")'),
-      ).toHaveText('Subscription');
-      await page.locator('#susbscribe_email').fill(userCredentials.userMail);
-      await page.getByRole('button', { name: '' }).click();
+      await expect(autoExer.footerPage).toContainText(sub);
+      await autoExer.subsribeMail.fill(userCredentials.userMail);
+      await autoExer.subButton.click();
       //Assert
-      await expect(page.getByText('You have been successfully')).toBeVisible();
-      await expect(page.getByText('You have been successfully')).toHaveText(
-        'You have been successfully subscribed!',
-      );
+      await expect(autoExer.subSucces).toBeVisible();
+      await expect(autoExer.subSucces).toHaveText(subbed);
     },
   );
   test(
@@ -211,50 +212,35 @@ test.describe('Other Pages', () => {
     { tag: '@subscription' },
     async ({ page }) => {
       //Arrange
+      const subbed = 'You have been successfully subscribed!';
+      const sub = 'Subscription';
       //Act
       await autoExer.topMenu.cartButton.click();
-      await expect(
-        page.locator('#footer').locator('h2:has-text("Subscription")'),
-      ).toHaveText('Subscription');
-      await page.locator('#susbscribe_email').fill(userCredentials.userMail);
-      await page.getByRole('button', { name: '' }).click();
+      await expect(autoExer.footerPage).toContainText(sub);
+      await autoExer.subsribeMail.fill(userCredentials.userMail);
+      await autoExer.subButton.click();
       //Assert
-      await expect(page.getByText('You have been successfully')).toBeVisible();
-      await expect(page.getByText('You have been successfully')).toHaveText(
-        'You have been successfully subscribed!',
-      );
+      await expect(autoExer.subSucces).toBeVisible();
+      await expect(autoExer.subSucces).toHaveText(subbed);
     },
   );
   test('TC12 - Add Products in Cart', { tag: '@cart' }, async ({ page }) => {
     //Arrange
     //Act
     await autoExer.topMenu.productsButton.click();
-    await page.locator('[data-product-id="1"]').nth(0).click();
-    await page.getByRole('button', { name: 'Continue Shopping' }).click();
-    await page.locator('[data-product-id="2"]').nth(0).click();
-    await page.getByRole('link', { name: 'View Cart' }).click();
-
+    await autoExer.dataProduct1.nth(0).click();
+    await autoExer.shoppingButton.click();
+    await autoExer.dataProduct2.nth(0).click();
+    await autoExer.viewCart.click();
     //Assert
-    await expect(page.locator('#product-1')).toBeVisible();
-    await expect(page.locator('#product-2')).toBeVisible();
-    await expect(page.locator('#product-1').locator('.cart_price')).toHaveText(
-      /Rs\.\s*\d+/,
-    );
-    await expect(page.locator('#product-2').locator('.cart_price')).toHaveText(
-      /Rs\.\s*\d+/,
-    );
-    await expect(
-      page.locator('#product-1').locator('.cart_total_price'),
-    ).toHaveText(/Rs\.\s*\d+/);
-    await expect(
-      page.locator('#product-2').locator('.cart_total_price'),
-    ).toHaveText(/Rs\.\s*\d+/);
-    await expect(
-      page.locator('#product-1').locator('.cart_quantity').locator('.disabled'),
-    ).toBeVisible();
-    await expect(
-      page.locator('#product-2').locator('.cart_quantity').locator('.disabled'),
-    ).toBeVisible();
+    await expect(autoExer.productOne).toBeVisible();
+    await expect(autoExer.productTwo).toBeVisible();
+    await expect(autoExer.cartP1Price).toHaveText(/Rs\.\s*\d+/);
+    await expect(autoExer.cartP2Price).toHaveText(/Rs\.\s*\d+/);
+    await expect(autoExer.cartP1Total).toHaveText(/Rs\.\s*\d+/);
+    await expect(autoExer.cartP2Total).toHaveText(/Rs\.\s*\d+/);
+    await expect(autoExer.cartP1Quantity).toBeVisible();
+    await expect(autoExer.cartP2Quantity).toBeVisible();
   });
 
   test(
@@ -265,29 +251,19 @@ test.describe('Other Pages', () => {
 
       //Act
       await autoExer.topMenu.productsButton.click();
-      await page
-        .locator('.product-image-wrapper a:has-text("View Product")')
-        .nth(6)
-        .click();
-      await expect(page.getByText('Rs.')).toContainText(/^Rs\.\s*\d+/);
-      await expect(page.locator('p:has-text("Availability:")')).toHaveText(
+      await autoExer.viewProd8.click();
+      await expect(autoExer.rsText).toContainText(/^Rs\.\s*\d+/);
+      await expect(autoExer.availabilityProduct).toHaveText(
         /^Availability:\s*\w.+/,
       );
-      await expect(page.locator('p:has-text("Condition:")')).toHaveText(
-        /^Condition:\s*\w.+/,
-      );
-      await expect(page.locator('p:has-text("Brand:")')).toHaveText(
-        /^Brand:\s*\w.+/,
-      );
-      await page.locator('#quantity').fill('4');
-      await page.getByRole('button', { name: ' Add to cart' }).click();
-      await page.getByRole('link', { name: 'View Cart' }).click();
-      await page
-        .locator('.active')
-        .waitFor({ state: 'visible', timeout: 10000 });
+      await expect(autoExer.conditionProduct).toHaveText(/^Condition:\s*\w.+/);
+      await expect(autoExer.brandProduct).toHaveText(/^Brand:\s*\w.+/);
+      await autoExer.quantityProduct.fill('4');
+      await autoExer.addToCart.click();
+      await autoExer.viewCart.click();
       //Assert
-      await expect(page.locator('.cart_product')).toBeVisible();
-      await expect(page.locator('.cart_quantity .disabled')).toHaveText(/\d+/);
+      await expect(autoExer.cartProduct).toBeVisible();
+      await expect(autoExer.cartQuantity).toHaveText(/\d+/);
     },
   );
 

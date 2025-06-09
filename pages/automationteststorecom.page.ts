@@ -30,6 +30,7 @@ export class AutomationStore {
   checkOrderLink: Locator;
   checkOrderView: Locator;
   orderIdDetails: Locator;
+  subSucces: Locator;
 
   constructor(private page: Page) {
     this.loginPage = page.getByText('Login or register');

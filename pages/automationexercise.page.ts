@@ -65,8 +65,56 @@ export class AutomationExercise {
   submitSearch: Locator;
   searchedProducts: Locator;
   blueTopSearched: Locator;
+  footerPage: Locator;
+  subsribeMail: Locator;
+  subButton: Locator;
+  subSucces: Locator;
+  dataProduct1: Locator;
+  dataProduct2: Locator;
+  shoppingButton: Locator;
+  viewCart: Locator;
+  productOne: Locator;
+  productTwo: Locator;
+  cartP1Price: Locator;
+  cartP2Price: Locator;
+  cartP1Total: Locator;
+  cartP2Total: Locator;
+  cartP1Quantity: Locator;
+  cartP2Quantity: Locator;
+  viewProd8: Locator;
+  rsText: Locator;
+  quantityProduct: Locator;
+  addToCart: Locator;
+  cartProduct: Locator;
+  cartQuantity: Locator;
 
   constructor(private page: Page) {
+    this.cartProduct = page.locator('.cart_product')
+    this.cartQuantity = page.locator('.cart_quantity .disabled')
+    this.addToCart = page.getByRole('button', { name: ' Add to cart' });
+    this.quantityProduct = page.locator('#quantity');
+    this.rsText = page.getByText('Rs.');
+    this.viewProd8 = page.locator(
+      '.features_items a[href="/product_details/8"]',
+    );
+    this.cartP1Quantity = page.locator('#product-1 .cart_quantity .disabled');
+    this.cartP2Quantity = page.locator('#product-2 .cart_quantity .disabled');
+    this.cartP1Total = page.locator('#product-1 .cart_total_price');
+    this.cartP2Total = page.locator('#product-2 .cart_total_price');
+    this.cartP2Price = page.locator('#product-2 .cart_price');
+    this.cartP1Price = page.locator('#product-1 .cart_price');
+    this.productOne = page.locator('#product-1');
+    this.productTwo = page.locator('#product-2');
+    this.viewCart = page.getByRole('link', { name: 'View Cart' });
+    this.shoppingButton = page.getByRole('button', {
+      name: 'Continue Shopping',
+    });
+    this.dataProduct1 = page.locator('[data-product-id="1"]');
+    this.dataProduct2 = page.locator('[data-product-id="2"]');
+    this.subSucces = page.getByText('You have been successfully');
+    this.subButton = page.locator('#subscribe');
+    this.subsribeMail = page.locator('#susbscribe_email');
+    this.footerPage = page.locator('#footer');
     this.blueTopSearched = page.locator('.features_items  .col-sm-4  p');
     this.submitSearch = page.locator('#submit_search');
     this.searchedProducts = page.locator('h2:has-text("Searched Products")');
