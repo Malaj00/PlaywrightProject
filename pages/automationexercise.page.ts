@@ -87,10 +87,32 @@ export class AutomationExercise {
   addToCart: Locator;
   cartProduct: Locator;
   cartQuantity: Locator;
+  shoppingCart: Locator;
+  gotoCheckout: Locator;
+  reglogLink: Locator;
+  accCreated: Locator;
+  contButton: Locator;
+  deliveryFName: Locator;
+  invoiceFName: Locator;
+  cartItems: Locator;
+  formControl: Locator;
+  placeOrder: Locator;
+  alertSucces: Locator;
 
   constructor(private page: Page) {
-    this.cartProduct = page.locator('.cart_product')
-    this.cartQuantity = page.locator('.cart_quantity .disabled')
+    this.alertSucces = page.locator('.alert-success')
+    this.placeOrder = page.getByRole('link', { name: 'Place Order' });
+    this.formControl = page.locator('.form-control');
+    this.cartItems = page.locator('#cart_items');
+    this.invoiceFName = page.locator('#address_invoice .address_firstname');
+    this.deliveryFName = page.locator('#address_delivery .address_firstname');
+    this.contButton = page.locator('[data-qa="continue-button"]');
+    this.accCreated = page.locator('[data-qa="account-created"]');
+    this.reglogLink = page.getByRole('link', { name: 'Register / Login' });
+    this.gotoCheckout = page.getByText('Proceed To Checkout');
+    this.shoppingCart = page.getByText('Shopping Cart');
+    this.cartProduct = page.locator('.cart_product');
+    this.cartQuantity = page.locator('.cart_quantity .disabled');
     this.addToCart = page.getByRole('button', { name: ' Add to cart' });
     this.quantityProduct = page.locator('#quantity');
     this.rsText = page.getByText('Rs.');
