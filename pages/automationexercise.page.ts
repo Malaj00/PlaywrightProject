@@ -98,9 +98,51 @@ export class AutomationExercise {
   formControl: Locator;
   placeOrder: Locator;
   alertSucces: Locator;
+  emptyCart: Locator;
+  sideBarCat: Locator;
+  panelGroup: Locator;
+  womenLink: Locator;
+  dressLink: Locator;
+  titleText: Locator;
+  badgeClass: Locator;
+  jeansLink: Locator;
+  sideBarBrand: Locator;
+  navClass: Locator;
+  productInfo: Locator;
+  reviewText: Locator;
+  nameReview: Locator;
+  emailReview: Locator;
+  reviewTextBox: Locator;
+  reviewButton: Locator;
+  reviewSection: Locator;
+  itemsRecomm: Locator;
+  recommendedCart: Locator;
+  continueCart: Locator;
 
   constructor(private page: Page) {
-    this.alertSucces = page.locator('.alert-success')
+    this.continueCart = page.getByRole('button', { name: 'Continue On Cart' });
+    this.recommendedCart = page.locator(
+      '#recommended-item-carousel .add-to-cart',
+    );
+    this.itemsRecomm = page.locator('.recommended_items');
+    this.reviewSection = page.locator('#review-section');
+    this.nameReview = page.locator('#name');
+    this.emailReview = page.locator('#email');
+    this.reviewTextBox = page.locator('#review');
+    this.reviewButton = page.locator('#button-review');
+    this.reviewText = page.locator('a[href="#reviews"]');
+    this.productInfo = page.locator('.productinfo p:has-text("Blue Top")');
+    this.navClass = page.locator('.nav');
+    this.sideBarBrand = page.locator('.left-sidebar h2:has-text("Brands")');
+    this.jeansLink = page.getByRole('link', { name: 'Jeans' });
+    this.badgeClass = page.locator('.badge');
+    this.sideBarCat = page.locator('.left-sidebar h2:has-text("Category")');
+    this.panelGroup = page.locator('.panel-group');
+    this.womenLink = page.getByRole('link', { name: 'Women' });
+    this.dressLink = page.getByRole('link', { name: 'Dress' });
+    this.titleText = page.locator('.title');
+    this.emptyCart = page.locator('#empty_cart');
+    this.alertSucces = page.locator('.alert-success');
     this.placeOrder = page.getByRole('link', { name: 'Place Order' });
     this.formControl = page.locator('.form-control');
     this.cartItems = page.locator('#cart_items');

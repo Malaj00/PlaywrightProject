@@ -451,18 +451,15 @@ test.describe('Other Pages', () => {
     { tag: '@cart' },
     async ({ page }) => {
       //Arrange
+      const cartEmpty = 'Cart is empty!';
       //Act
       await autoExer.dataProduct1.nth(0).click();
       await autoExer.shoppingButton.click();
       await autoExer.topMenu.cartButton.click();
       await expect(autoExer.shoppingCart).toBeVisible();
-      await page
-        .locator('[data-product-id="1"]')
-        .locator('.fa')
-        .first()
-        .click();
+      await autoExer.dataProduct1.first().click();
       //Assert
-      await expect(page.locator('#empty_cart')).toBeVisible();
+      await expect(autoExer.emptyCart).toContainText(cartEmpty);
     },
   );
   test(
@@ -471,17 +468,15 @@ test.describe('Other Pages', () => {
     async ({ page }) => {
       //Arrange
       //Act
-      await expect(
-        page.locator('.left-sidebar h2:has-text("Category")'),
-      ).toBeVisible();
-      await expect(page.locator('.panel-group')).toBeVisible();
-      await page.getByRole('link', { name: 'Women' }).click();
-      await page.getByRole('link', { name: 'Dress' }).click();
-      await expect(page.locator('.title')).toBeVisible();
-      await page.locator('.badge').nth(1).click();
-      await page.getByRole('link', { name: 'Jeans' }).click();
+      await expect(autoExer.sideBarCat).toBeVisible();
+      await expect(autoExer.panelGroup).toBeVisible();
+      await autoExer.womenLink.click();
+      await autoExer.dressLink.click();
+      await expect(autoExer.titleText).toBeVisible();
+      await autoExer.badgeClass.nth(1).click();
+      await autoExer.jeansLink.click();
       //Assert
-      await expect(page.locator('.title')).toBeVisible();
+      await expect(autoExer.titleText).toBeVisible();
     },
   );
   test(
@@ -491,14 +486,12 @@ test.describe('Other Pages', () => {
       //Arrange
       //Act
       autoExer.topMenu.productsButton.click();
-      await expect(
-        page.locator('.left-sidebar h2:has-text("Brands")'),
-      ).toBeVisible();
-      await page.locator('.nav').first().click();
-      await expect(page.locator('.title')).toBeVisible();
-      await page.locator('.nav').nth(1).click();
+      await expect(autoExer.sideBarBrand).toBeVisible();
+      await autoExer.navClass.first().click();
+      await expect(autoExer.titleText).toBeVisible();
+      await autoExer.navClass.nth(1).click();
       //Assert
-      await expect(page.locator('.title')).toBeVisible();
+      await expect(autoExer.titleText).toBeVisible();
     },
   );
   test(
@@ -506,17 +499,14 @@ test.describe('Other Pages', () => {
     { tag: ['@cart', '@login'] },
     async ({ page }) => {
       //Arrange
+      const blueTop = 'Blue Top';
       //Act
       autoExer.topMenu.productsButton.click();
-      await expect(
-        page.getByRole('heading', { name: 'All Products' }),
-      ).toBeVisible();
-      await page.locator('#search_product').fill('Blue Top');
-      await page.locator('#submit_search').click();
-      await expect(
-        page.locator('.productinfo p:has-text("Blue Top")'),
-      ).toBeVisible();
-      await page.locator('[data-product-id="1"]').first().click();
+      await expect(autoExer.allProducts).toBeVisible();
+      await autoExer.searchProduct.fill(blueTop);
+      await autoExer.submitSearch.click();
+      await expect(autoExer.productInfo).toBeVisible();
+      await autoExer.dataProduct1.first().click();
       autoExer.topMenu.cartButton.click();
       autoExer.topMenu.signupLogin.click();
       await autoExer.login(
@@ -525,29 +515,25 @@ test.describe('Other Pages', () => {
       );
       autoExer.topMenu.cartButton.click();
       //Assert
-      await expect(page.locator('#product-1')).toBeVisible();
+      await expect(autoExer.productOne).toBeVisible();
     },
   );
   test('TC21 - Add review on product', { tag: '@revuew' }, async ({ page }) => {
     //Arrange
     const addReview = 'Adding New Review';
     const revMessage = 'Thank you for your review.';
+    const writeRev = 'Write Your Review';
     //Act
     autoExer.topMenu.productsButton.click();
-    page.getByRole('heading', { name: 'All Products' }),
-      await expect(
-        page.getByRole('heading', { name: 'All Products' }),
-      ).toBeVisible();
-    await page.getByText('View Product').first().click();
-    await expect(
-      page.locator('.category-tab .nav a[href="#reviews"]'),
-    ).toHaveText('Write Your Review');
-    await page.locator('#name').fill(userCredentials.userName);
-    await page.locator('#email').fill(userCredentials.userMail);
-    await page.locator('#review').fill(addReview);
-    await page.locator('#button-review').click();
+    await expect(autoExer.allProducts).toBeVisible();
+    await autoExer.viewProduct.first().click();
+    await expect(autoExer.reviewText).toHaveText(writeRev);
+    await autoExer.nameReview.fill(userCredentials.userName);
+    await autoExer.emailReview.fill(userCredentials.userMail);
+    await autoExer.reviewTextBox.fill(addReview);
+    await autoExer.reviewButton.click();
     //Assert
-    await expect(page.locator('#review-section')).toHaveText(revMessage);
+    await expect(autoExer.reviewSection).toHaveText(revMessage);
   });
   test(
     'TC22 - Add to cart from Recommended items',
@@ -556,17 +542,11 @@ test.describe('Other Pages', () => {
       //Arrange
 
       //Act
-      await expect(page.locator('.recommended_items')).toBeVisible();
-      await page
-        .locator('#recommended-item-carousel')
-        .locator('.add-to-cart')
-        .first()
-        .click();
-      await page
-        .locator('.modal-content .text-center a[href="/view_cart"]')
-        .click();
+      await expect(autoExer.itemsRecomm).toBeVisible();
+      await autoExer.recommendedCart.first().click();
+      await autoExer.viewCart.click();
       //Assert
-      await expect(page.locator('#product-1')).toBeVisible();
+      await expect(autoExer.productOne).toBeVisible();
     },
   );
   test(
@@ -574,6 +554,7 @@ test.describe('Other Pages', () => {
     { tag: '@register' },
     async ({ page }) => {
       //Arrange
+      const accountCreated = 'Account Created!';
       const correctLogin = `Logged in as ${userCredentials.userName}`;
       //Act
       autoExer.topMenu.signupLogin.click();
@@ -594,29 +575,23 @@ test.describe('Other Pages', () => {
         userCredentials.city,
         userCredentials.zipcode,
       );
-      await expect(page.locator('[data-qa="account-created"]')).toHaveText(
-        'Account Created!',
-      );
-      await page.locator('[data-qa="continue-button"]').click();
+      await expect(autoExer.accCreated).toHaveText(accountCreated);
+      await autoExer.contButton.click();
       await expect(page.getByText(correctLogin)).toHaveText(correctLogin);
-      await page.locator('[data-product-id="1"]').nth(0).click();
-      await page.getByRole('button', { name: 'Continue Shopping' }).click();
+      await autoExer.dataProduct1.nth(0).click();
+      await autoExer.shoppingButton.click();
       await autoExer.topMenu.cartButton.click();
-      await expect(page.getByText('Shopping Cart')).toBeVisible();
-      await page.getByText('Proceed To Checkout').click();
-      await expect(
-        page.locator('#address_delivery').locator('.address_firstname'),
-      ).toContainText(
+      await expect(autoExer.shoppingCart).toBeVisible();
+      await autoExer.gotoCheckout.click();
+      await expect(autoExer.deliveryFName).toContainText(
         `Mr. ${userCredentials.firstName} ${userCredentials.lastName}`,
       );
-      await expect(
-        page.locator('#address_invoice').locator('.address_firstname'),
-      ).toContainText(
+      await expect(autoExer.invoiceFName).toContainText(
         `Mr. ${userCredentials.firstName} ${userCredentials.lastName}`,
       );
       //Assert
       await autoExer.deleteAcc.click();
-      await expect(page.locator('[data-qa="account-deleted"]')).toBeVisible();
+      await expect(autoExer.accDel).toBeVisible();
     },
   );
 
@@ -627,13 +602,14 @@ test.describe('Other Pages', () => {
       //Arrange
       const correctLogin = `Logged in as ${userCredentials.userName}`;
       const expectedmessagePayment = 'You have been successfully subscribed!';
+      const accCreated = 'Account Created!';
       //Act
-      await page.locator('[data-product-id="1"]').nth(0).click();
-      await page.getByRole('button', { name: 'Continue Shopping' }).click();
+      await autoExer.dataProduct1.nth(0).click();
+      await autoExer.shoppingButton.click();
       await autoExer.topMenu.cartButton.click();
-      await expect(page.getByText('Shopping Cart')).toBeVisible();
-      await page.getByText('Proceed To Checkout').click();
-      await page.getByRole('button', { name: 'Continue On Cart' }).click();
+      await expect(autoExer.shoppingCart).toBeVisible();
+      await autoExer.gotoCheckout.click();
+      await autoExer.continueCart.click();
       await autoExer.topMenu.signupLogin.click();
       await autoExer.register(
         userCredentials.userName,
@@ -652,21 +628,15 @@ test.describe('Other Pages', () => {
         userCredentials.city,
         userCredentials.zipcode,
       );
-      await expect(page.locator('[data-qa="account-created"]')).toHaveText(
-        'Account Created!',
-      );
-      await page.locator('[data-qa="continue-button"]').click();
+      await expect(autoExer.accCreated).toHaveText(accCreated);
+      await autoExer.contButton.click();
       await expect(page.getByText(correctLogin)).toHaveText(correctLogin);
       await autoExer.topMenu.cartButton.click();
-      await page.getByText('Proceed To Checkout').click();
-      await expect(
-        page.locator('#address_delivery').locator('.address_firstname'),
-      ).toContainText(
+      await autoExer.gotoCheckout.click();
+      await expect(autoExer.deliveryFName).toContainText(
         `Mr. ${userCredentials.firstName} ${userCredentials.lastName}`,
       );
-      await expect(
-        page.locator('#address_invoice').locator('.address_firstname'),
-      ).toContainText(
+      await expect(autoExer.invoiceFName).toContainText(
         `Mr. ${userCredentials.firstName} ${userCredentials.lastName}`,
       );
       await expect(
