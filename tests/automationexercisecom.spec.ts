@@ -600,6 +600,8 @@ test.describe('Other Pages', () => {
     { tag: ['@invoice', '@register'] },
     async ({ page }) => {
       //Arrange
+      const testMess = 'Testmessage';
+      const reviewOrder = 'Review Your Order';
       const correctLogin = `Logged in as ${userCredentials.userName}`;
       const expectedmessagePayment = 'You have been successfully subscribed!';
       const accCreated = 'Account Created!';
@@ -640,14 +642,11 @@ test.describe('Other Pages', () => {
         `Mr. ${userCredentials.firstName} ${userCredentials.lastName}`,
       );
       await expect(
-        page.locator('#cart_items').locator('h2:has-text("Review Your Order")'),
+        autoExer.cartItems.filter({ has: page.getByText(reviewOrder) }),
       ).toBeVisible();
-      await expect(page.locator('#product-1')).toBeVisible();
-      await page
-        .locator('#ordermsg')
-        .locator('.form-control')
-        .fill('Testmessage');
-      await page.getByRole('link', { name: 'Place Order' }).click();
+      await expect(autoExer.productOne).toBeVisible();
+      await autoExer.orderMsg.fill(testMess);
+      await autoExer.placeOrder.click();
       await autoExer.cardPay(
         userCredentials.nameOnCard,
         userCredentials.cardNumber,
@@ -655,15 +654,13 @@ test.describe('Other Pages', () => {
         userCredentials.exprMonth,
         userCredentials.exprYears,
       );
-      await expect(page.locator('.alert-success')).toHaveText(
-        expectedmessagePayment,
-      );
+      await expect(autoExer.alertSucces).toHaveText(expectedmessagePayment);
       const downloadPromise = page.waitForEvent('download');
-      await page.getByRole('link', { name: 'Download Invoice' }).click();
-      await page.getByRole('link', { name: 'Continue' }).click();
+      await autoExer.downloadInvoice.click();
+      await autoExer.continueButton.click();
       //Assert
       await autoExer.topMenu.deleteButton.click();
-      await expect(page.locator('[data-qa="account-deleted"]')).toBeVisible();
+      await expect(autoExer.accDel).toBeVisible();
     },
   );
 
@@ -672,22 +669,19 @@ test.describe('Other Pages', () => {
     { tag: '@scroll' },
     async ({ page }) => {
       //Arrange
+      const sub = 'Subscription';
       const expectedMess =
         'Full-Fledged practice website for Automation Engineers';
       //Act
-      await expect(
-        page.locator('#footer').locator('h2:has-text("Subscription")'),
-      ).toHaveText('Subscription');
+      await expect(autoExer.footerPage).toContainText(sub);
       await page.evaluate(() => {
         window.scrollBy(0, 700);
       });
-      await page.locator('#scrollUp').click();
+      await autoExer.scrllUp.click();
       await page.waitForTimeout(200);
       //Assert
-      await expect(page.locator('#slider-carousel')).toBeInViewport();
-      await expect(page.locator('#slider-carousel')).toContainText(
-        expectedMess,
-      );
+      await expect(autoExer.sliderCarousel).toBeInViewport();
+      await expect(autoExer.sliderCarousel).toContainText(expectedMess);
     },
   );
   test(
@@ -695,12 +689,11 @@ test.describe('Other Pages', () => {
     { tag: '@scroll' },
     async ({ page }) => {
       //Arrange
+      const sub = 'Subscription';
       const expectedMess =
         'Full-Fledged practice website for Automation Engineers';
       //Act
-      await expect(
-        page.locator('#footer').locator('h2:has-text("Subscription")'),
-      ).toHaveText('Subscription');
+      await expect(autoExer.footerPage).toContainText(sub);
       //await page.locator('.grippy-host').click();
       await page.evaluate(() => {
         window.scrollBy(0, 700);
@@ -709,10 +702,8 @@ test.describe('Other Pages', () => {
         window.scrollBy(0, -700);
       });
       //Assert
-      await expect(page.locator('#slider-carousel')).toBeInViewport();
-      await expect(page.locator('#slider-carousel')).toContainText(
-        expectedMess,
-      );
+      await expect(autoExer.sliderCarousel).toBeInViewport();
+      await expect(autoExer.sliderCarousel).toContainText(expectedMess);
     },
   );
 });

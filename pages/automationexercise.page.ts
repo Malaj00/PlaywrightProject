@@ -118,8 +118,14 @@ export class AutomationExercise {
   itemsRecomm: Locator;
   recommendedCart: Locator;
   continueCart: Locator;
+  orderMsg: Locator;
+  downloadInvoice: Locator;
+  scrllUp: Locator;
 
   constructor(private page: Page) {
+    this.scrllUp = page.locator('#scrollUp')
+    this.downloadInvoice = page.getByRole('link', { name: 'Download Invoice' });
+    this.orderMsg = page.locator('#ordermsg .form-control');
     this.continueCart = page.getByRole('button', { name: 'Continue On Cart' });
     this.recommendedCart = page.locator(
       '#recommended-item-carousel .add-to-cart',
