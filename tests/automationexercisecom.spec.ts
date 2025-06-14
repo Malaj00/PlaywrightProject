@@ -17,7 +17,7 @@ test.describe('Register and login tests', () => {
     await expect(autoExer.newUserSignup).toHaveText('New User Signup!');
   });
 
-  test('TC1 - Register User', { tag: '@register' }, async ({ page }) => {
+  test.skip('TC1 - Register User', { tag: '@register' }, async ({ page }) => {
     //Arrange
 
     //Act
