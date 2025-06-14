@@ -31,8 +31,10 @@ export class AutomationStore {
   checkOrderView: Locator;
   orderIdDetails: Locator;
   subSucces: Locator;
+  tdLocator: Locator;
 
   constructor(private page: Page) {
+    this.tdLocator = page.locator('td');
     this.loginPage = page.getByText('Login or register');
     this.loginInput = page.locator('#loginFrm_loginname');
     this.passwordInput = page.locator('#loginFrm_password');

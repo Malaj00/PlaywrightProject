@@ -192,13 +192,18 @@ test.describe('Cart tests', () => {
 
   test('Check your order', async ({ page }) => {
     // Arrange:
-    const orderID = '#53424';
+    const orderID = '#54607';
+    const payAddress = 'Payment Address';
     // Act:
     await storePage.accountText.nth(2).hover();
     await storePage.checkOrderLink.click();
     await storePage.checkOrderView.first().click();
     // Assert:
-    await expect(storePage.orderIdDetails).toContainText(orderID);
+    await expect(
+      storePage.tdLocator.filter({ hasText: payAddress }),
+    ).toContainText(
+      `${autostoreCredential.firstName} ${autostoreCredential.lastName}`,
+    );
   });
 });
 //53424

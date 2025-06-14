@@ -121,6 +121,7 @@ export class AutomationExercise {
   orderMsg: Locator;
   downloadInvoice: Locator;
   scrllUp: Locator;
+  tdLocator: Locator;
 
   constructor(private page: Page) {
     this.scrllUp = page.locator('#scrollUp')
