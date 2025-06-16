@@ -127,7 +127,7 @@ test.describe('Login and Register functionality', () => {
   });
 });
 
-test.describe('Cart tests', () => {
+test.describe('Store tests', () => {
   let storePage: AutomationStore;
   test.use({ testIdAttribute: 'data-id' });
   test.beforeEach(async ({ page }) => {
@@ -192,7 +192,6 @@ test.describe('Cart tests', () => {
 
   test('Check your order', async ({ page }) => {
     // Arrange:
-    const orderID = '#54607';
     const payAddress = 'Payment Address';
     // Act:
     await storePage.accountText.nth(2).hover();
@@ -205,5 +204,105 @@ test.describe('Cart tests', () => {
       `${autostoreCredential.firstName} ${autostoreCredential.lastName}`,
     );
   });
+
+  test('Cart checkout while logged off', async ({ page }) => {
+    // Arrange:
+    const logoutText = ' Account Logout';
+    const checkoutAddress = 'TE 12 ST Thais Guera 03405 Chad';
+    const checkoutShip = 'Flat Shipping Rate';
+    const checkoutPayment = 'Cash On Delivery';
+    const successOrder = 'Your Order Has Been Processed!';
+    // Act:
+    await storePage.accountText.nth(2).hover();
+    await storePage.logoutButton.click();
+    await expect(storePage.mainText).toHaveText(logoutText);
+    await storePage.continueButton.click();
+    await storePage.product52.click();
+    await storePage.cartMenuButton.click();
+    await storePage.cartCheckout.click();
+    await storePage.login(
+      autostoreCredential.userName,
+      autostoreCredential.userPassword,
+    );
+    await expect(storePage.checkoutTable.first()).toHaveText(
+      `${autostoreCredential.firstName} ${autostoreCredential.lastName}`,
+    );
+    await expect(storePage.checkoutTable.nth(1)).toHaveText(checkoutAddress);
+    await expect(storePage.checkoutTable.nth(2)).toHaveText(checkoutShip);
+    await expect(storePage.checkoutTable.nth(3)).toHaveText(
+      `${autostoreCredential.firstName} ${autostoreCredential.lastName}`,
+    );
+    await expect(storePage.checkoutTable.nth(4)).toHaveText(checkoutAddress);
+    await expect(storePage.checkoutTable.nth(5)).toHaveText(checkoutPayment);
+    await storePage.checkoutButton.click();
+    // Assert:
+    await expect(storePage.mainText).toContainText(successOrder);
+  });
+
+  test('Special Offers', async ({ page }) => {
+    // Arrange:
+    const specialOff = ' Special Offers';
+    const productSale = 'Absolue Eye Precious Cells';
+    const shopCart =  ' Shopping Cart'
+    // Act:
+    await storePage.specialsButton.click();
+    await expect(storePage.mainText).toHaveText(specialOff);
+    await expect(storePage.saleClass.first()).toBeVisible();
+    await expect(storePage.productName.first()).toHaveText(productSale);
+    await expect(storePage.oldPrice.first()).toBeVisible();
+    await expect(storePage.newPrice.first()).toBeVisible();
+    await storePage.product65.first().click();
+    await storePage.quickBasket.click();
+    // Assert:
+    await expect(storePage.mainText).toHaveText(shopCart)
+  });
+
+  test("Currency change", async ({ page }) => {
+    // Arrange:
+    
+    // Act:
+    
+    // Assert:
+    
+  });
 });
-//53424
+
+test.describe('Other tests', () => {
+  let storePage: AutomationStore;
+  test.beforeEach(async ({ page }) => {
+    storePage = new AutomationStore(page);
+    await page.goto('https://automationteststore.com/');
+    await expect(storePage.welcomeMsg).toContainText(
+      'Welcome to the Automation Test Store!',
+    );
+  });
+
+  test('Newsletter signup - invalid', async ({ page }) => {
+    // Arrange:
+    const newsLetter = 'Newsletter Signup';
+    const subError =
+      'Our records indicate that you have an account with us. Please login to your account to manage your newsletter subscription.';
+    const captchaError = 'Human verification has failed! Please try agan.';
+    // Act:
+    await expect(storePage.newsSignup).toContainText(newsLetter);
+    await storePage.newsInput.fill(autostoreCredential.userMail);
+    await storePage.subButton.click();
+    await storePage.subFName.fill(autostoreCredential.firstName);
+    await storePage.subLName.fill(autostoreCredential.lastName);
+    await storePage.subButton.first().click();
+    // Assert:
+    await expect(storePage.errorAlert).toContainText(subError);
+    await expect(storePage.helpBlock.nth(4)).toHaveText(captchaError);
+  });
+
+  test('Scroll up button', async ({ page }) => {
+    // Arrange:
+    // Act:
+    await page.evaluate(() => {
+      window.scrollBy(0, 700);
+    });
+    await storePage.scrollUp.click();
+    // Assert:
+    await expect(storePage.searchBox).toBeInViewport();
+  });
+});

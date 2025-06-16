@@ -32,8 +32,41 @@ export class AutomationStore {
   orderIdDetails: Locator;
   subSucces: Locator;
   tdLocator: Locator;
+  logoutButton: Locator;
+  specialsButton: Locator;
+  saleClass: Locator;
+  productName: Locator;
+  product65: Locator;
+  oldPrice: Locator;
+  newPrice: Locator;
+  quickBasket: Locator;
+  newsSignup: Locator;
+  newsInput: Locator;
+  subButton: Locator;
+  subFName: Locator;
+  subLName: Locator;
+  helpBlock: Locator;
+  scrollUp: Locator;
+  searchBox: Locator;
+
 
   constructor(private page: Page) {
+    this.searchBox = page.locator('#filter_keyword')
+    this.scrollUp = page.locator('#gotop');
+    this.helpBlock = page.locator('.help-block');
+    this.subLName = page.locator('#SubscriberFrm_lastname');
+    this.subFName = page.locator('#SubscriberFrm_firstname');
+    this.subButton = page.locator('.btn.btn-orange');
+    this.newsInput = page.locator('#appendedInputButton');
+    this.newsSignup = page.locator('#newslettersignup');
+    this.quickBasket = page.locator('.quick_basket');
+    this.newPrice = page.locator('.thumbnail .pricenew');
+    this.oldPrice = page.locator('.thumbnail .priceold');
+    this.product65 = page.getByTestId('65');
+    this.productName = page.locator('.contentpanel .prdocutname');
+    this.saleClass = page.locator('.contentpanel .sale');
+    this.specialsButton = page.locator('#topnav').getByTestId('menu_specials');
+    this.logoutButton = page.getByRole('link').filter({ hasText: 'Logout' });
     this.tdLocator = page.locator('td');
     this.loginPage = page.getByText('Login or register');
     this.loginInput = page.locator('#loginFrm_loginname');
