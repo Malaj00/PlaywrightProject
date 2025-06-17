@@ -243,7 +243,7 @@ test.describe('Store tests', () => {
     // Arrange:
     const specialOff = ' Special Offers';
     const productSale = 'Absolue Eye Precious Cells';
-    const shopCart =  ' Shopping Cart'
+    const shopCart = ' Shopping Cart';
     // Act:
     await storePage.specialsButton.click();
     await expect(storePage.mainText).toHaveText(specialOff);
@@ -254,16 +254,22 @@ test.describe('Store tests', () => {
     await storePage.product65.first().click();
     await storePage.quickBasket.click();
     // Assert:
-    await expect(storePage.mainText).toHaveText(shopCart)
+    await expect(storePage.mainText).toHaveText(shopCart);
   });
 
-  test("Currency change", async ({ page }) => {
+  test('Currency change', async ({ page }) => {
     // Arrange:
-    
+    const dollar = '$28.00';
+    const euro = '26.28€';
     // Act:
-    
+    await storePage.homeButton.click();
+    await storePage.product52.click();
+    await storePage.cartMenuButton.click();
+    await expect(storePage.priceDollarCart).toContainText(dollar);
+    await storePage.currencyHover.first().hover();
+    await storePage.euroSet.click();
     // Assert:
-    
+    await expect(storePage.priceEuroCart).toContainText(euro);
   });
 });
 
@@ -304,5 +310,17 @@ test.describe('Other tests', () => {
     await storePage.scrollUp.click();
     // Assert:
     await expect(storePage.searchBox).toBeInViewport();
+  });
+
+  test('Categories', async ({ page }) => {
+    // Arrange:
+    const shoes = 'Shoes';
+    const tshirts = 'T-shirts';
+    // Act:
+    await storePage.categoryMenu.ApparelAcc.hover();
+    await expect(storePage.categoryMenu.Shoes).toHaveText(shoes);
+    await expect(storePage.categoryMenu.Tshirts).toHaveText(tshirts);
+    
+    // Assert:
   });
 });

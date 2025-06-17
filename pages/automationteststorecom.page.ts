@@ -1,4 +1,5 @@
 import { Locator, Page } from '@playwright/test';
+import { AutoStoreCat } from '../components/automationteststoreCat.components';
 
 export class AutomationStore {
   loginPage: Locator;
@@ -48,10 +49,29 @@ export class AutomationStore {
   helpBlock: Locator;
   scrollUp: Locator;
   searchBox: Locator;
-
+  currencyHover: Locator;
+  priceDollarCart: Locator;
+  priceEuroCart: Locator;
+  euroSet: Locator;
+  categoryMenu: AutoStoreCat;
+  subCat: Locator;
 
   constructor(private page: Page) {
-    this.searchBox = page.locator('#filter_keyword')
+    this.subCat = page.locator('.subcategories').getByTitle('Shoes');
+    this.categoryMenu = new AutoStoreCat(this.page);
+    this.priceEuroCart = page
+      .getByRole('row')
+      .nth(1)
+      .filter({ has: page.getByText('26.28€') });
+    this.euroSet = page.locator(
+      'a[href="https://automationteststore.com/index.php?rt=checkout/cart&currency=EUR"]',
+    );
+    this.priceDollarCart = page
+      .getByRole('row')
+      .nth(1)
+      .filter({ has: page.getByText('$28.00') });
+    this.currencyHover = page.locator('.dropdown.hover');
+    this.searchBox = page.locator('#filter_keyword');
     this.scrollUp = page.locator('#gotop');
     this.helpBlock = page.locator('.help-block');
     this.subLName = page.locator('#SubscriberFrm_lastname');
