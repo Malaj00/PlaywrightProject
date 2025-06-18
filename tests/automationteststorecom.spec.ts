@@ -316,11 +316,40 @@ test.describe('Other tests', () => {
     // Arrange:
     const shoes = 'Shoes';
     const tshirts = 'T-shirts';
+    const cheeks = 'Cheeks';
+    const eyesMake = 'Eyes';
+    const faceMake = 'Face';
+    const lips = 'Lips';
+    const nails = 'Nails';
+    const valuesets = 'Value Sets';
+    const eyesSkin = 'Eyes';
+    const faceSkin = 'Face';
+    const giftSets = 'Gift Ideas & Sets';
+    const handsNails = 'Hands & Nails';
+    const sun = 'Sun';
+    const man = 'Men';
+    const women = 'Women';
+
     // Act:
     await storePage.categoryMenu.ApparelAcc.hover();
     await expect(storePage.categoryMenu.Shoes).toHaveText(shoes);
     await expect(storePage.categoryMenu.Tshirts).toHaveText(tshirts);
-    
+    await storePage.categoryMenu.Makeup.hover();
+    await expect(storePage.categoryMenu.Cheeks).toHaveText(cheeks);
+    await expect(storePage.categoryMenu.EyesMake).toHaveText(eyesMake);
+    await expect(storePage.categoryMenu.FaceMake).toHaveText(faceMake);
+    await expect(storePage.categoryMenu.Lips).toHaveText(lips);
+    await expect(storePage.categoryMenu.Nails).toHaveText(nails);
+    await expect(storePage.categoryMenu.ValueSets).toHaveText(valuesets);
+    await storePage.categoryMenu.Skincare.hover();
+    await expect(storePage.categoryMenu.EyesSkin).toHaveText(eyesSkin);
+    await expect(storePage.categoryMenu.FaceSkin).toHaveText(faceSkin);
+    await expect(storePage.categoryMenu.GiftSets).toHaveText(giftSets);
+    await expect(storePage.categoryMenu.HandsNails).toHaveText(handsNails);
+    await expect(storePage.categoryMenu.Sun).toHaveText(sun);
+    await storePage.categoryMenu.Fragrnance.hover();
+    await expect(storePage.categoryMenu.MenFragn).toHaveText(man);
+    await expect(storePage.categoryMenu.WomenFragn).toHaveText(women);
     // Assert:
   });
 });
