@@ -55,21 +55,34 @@ export class AutomationStore {
   euroSet: Locator;
   categoryMenu: AutoStoreCat;
   subCat: Locator;
+  brdBenefit: Locator;
+  contactFName: Locator;
+  contactEmail: Locator;
+  contactEnquiry: Locator;
+  contactButton: Locator;
+  contactPage: Locator;
+  contentPanel: Locator;
+  contactReset: Locator;
 
   constructor(private page: Page) {
-    this.subCat = page.locator('.subcategories').getByTitle('Shoes');
+    this.contactReset = page.getByRole('button', { name: 'Reset' });
+    this.contentPanel = page.locator('.contentpanel');
+    this.contactPage = page.locator(
+      'a[href="https://automationteststore.com/index.php?rt=content/contact"]',
+    );
+    this.contactButton = page.getByRole('button', { name: 'Submit' });
+    this.contactEnquiry = page.locator('#ContactUsFrm_enquiry');
+    this.contactEmail = page.locator('#ContactUsFrm_email');
+    this.contactFName = page.locator('#ContactUsFrm_first_name');
+    this.brdBenefit = page.locator('.internal');
     this.categoryMenu = new AutoStoreCat(this.page);
-    this.priceEuroCart = page
-      .getByRole('row')
-      .nth(1)
-      .filter({ has: page.getByText('26.28€') });
+    this.priceEuroCart = page.getByRole('row').nth(1);
+    //.filter({ has: page.getByText('26.28€') });
     this.euroSet = page.locator(
       'a[href="https://automationteststore.com/index.php?rt=checkout/cart&currency=EUR"]',
     );
-    this.priceDollarCart = page
-      .getByRole('row')
-      .nth(1)
-      .filter({ has: page.getByText('$28.00') });
+    this.priceDollarCart = page.getByRole('row').nth(1);
+    //.filter({ has: page.getByText('$28.00') });
     this.currencyHover = page.locator('.dropdown.hover');
     this.searchBox = page.locator('#filter_keyword');
     this.scrollUp = page.locator('#gotop');

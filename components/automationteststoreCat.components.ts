@@ -33,6 +33,36 @@ export class AutoStoreCat {
   Paperback: Locator;
 
   constructor(private page: Page) {
+    this.MenSkincare = page.locator(
+      'a[href="https://automationteststore.com/index.php?rt=product/category&path=58_60"]',
+    );
+    this.Shaving = page.locator(
+      'a[href="https://automationteststore.com/index.php?rt=product/category&path=58_61"]',
+    );
+    this.FragnanceSets = page.locator(
+      'a[href="https://automationteststore.com/index.php?rt=product/category&path=58_59"]',
+    );
+    this.BodyShower = page.locator(
+      'a[href="https://automationteststore.com/index.php?rt=product/category&path=58_63"]',
+    );
+    this.Paperback = page.locator(
+      'a[href="https://automationteststore.com/index.php?rt=product/category&path=65_67"]',
+    );
+    this.AudioCD = page.locator(
+      'a[href="https://automationteststore.com/index.php?rt=product/category&path=65_66"]',
+    );
+    this.Shampoo = page.locator(
+      'a[href="https://automationteststore.com/index.php?rt=product/category&path=52_53"]',
+    );
+    this.Conditioner = page.locator(
+      'a[href="https://automationteststore.com/index.php?rt=product/category&path=52_54"]',
+    );
+    this.MenFragn = page.locator(
+      'a[href="https://automationteststore.com/index.php?rt=product/category&path=49_51"]',
+    );
+    this.WomenFragn = page.locator(
+      'a[href="https://automationteststore.com/index.php?rt=product/category&path=49_50"]',
+    );
     this.Sun = page.locator(
       'a[href="https://automationteststore.com/index.php?rt=product/category&path=43_44"]',
     );
@@ -79,7 +109,7 @@ export class AutoStoreCat {
       'a[href="https://automationteststore.com/index.php?rt=product/category&path=43"]',
     );
     this.Fragrnance = page.locator(
-      'a[href="https://automationteststore.com/index.php?rt=product/category&path=49""]',
+      'a[href="https://automationteststore.com/index.php?rt=product/category&path=49"]',
     );
     this.Men = page.locator(
       'a[href="https://automationteststore.com/index.php?rt=product/category&path=58"]',

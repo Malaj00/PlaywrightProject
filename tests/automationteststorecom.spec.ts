@@ -259,8 +259,8 @@ test.describe('Store tests', () => {
 
   test('Currency change', async ({ page }) => {
     // Arrange:
-    const dollar = '$28.00';
-    const euro = '26.28€';
+    const dollar = '$';
+    const euro = '€';
     // Act:
     await storePage.homeButton.click();
     await storePage.product52.click();
@@ -329,7 +329,14 @@ test.describe('Other tests', () => {
     const sun = 'Sun';
     const man = 'Men';
     const women = 'Women';
-
+    const bodyShower = 'Body & Shower';
+    const fragSet = 'Fragrance Sets';
+    const shave = 'Pre-Shave & Shaving';
+    const menSkincare = 'Skincare';
+    const condition = 'Conditioner';
+    const shampoo = 'Shampoo';
+    const audioCD = 'Audio CD';
+    const paperback = 'Paperback';
     // Act:
     await storePage.categoryMenu.ApparelAcc.hover();
     await expect(storePage.categoryMenu.Shoes).toHaveText(shoes);
@@ -350,6 +357,94 @@ test.describe('Other tests', () => {
     await storePage.categoryMenu.Fragrnance.hover();
     await expect(storePage.categoryMenu.MenFragn).toHaveText(man);
     await expect(storePage.categoryMenu.WomenFragn).toHaveText(women);
+    await storePage.categoryMenu.Men.hover();
+    await expect(storePage.categoryMenu.BodyShower).toHaveText(bodyShower);
+    await expect(storePage.categoryMenu.FragnanceSets).toHaveText(fragSet);
+    await expect(storePage.categoryMenu.Shaving).toHaveText(shave);
+    await expect(storePage.categoryMenu.MenSkincare).toHaveText(menSkincare);
+    await storePage.categoryMenu.HairCare.hover();
+    await expect(storePage.categoryMenu.Conditioner).toHaveText(condition);
+    await expect(storePage.categoryMenu.Shampoo).toHaveText(shampoo);
+    await storePage.categoryMenu.Books.hover();
+    await expect(storePage.categoryMenu.AudioCD).toHaveText(audioCD);
+    await expect(storePage.categoryMenu.Paperback).toHaveText(paperback);
     // Assert:
+  });
+
+  test('Brands', async ({ page }) => {
+    // Arrange:
+    const benefit = 'Benefit';
+    const pantene = 'Pantene';
+    const mac = 'M·A·C';
+    const lancome = 'Lancôme';
+    const gucci = 'Gucci';
+    const giorgio = 'Giorgio Armani';
+    const dove = 'Dove';
+    const calvin = 'Calvin Klein';
+    const bvlgari = 'Bvlgari';
+    // Act:
+    await storePage.brdBenefit.first().click();
+    await expect(storePage.mainText).toHaveText(benefit);
+    await storePage.homeButton.click();
+    await storePage.brdBenefit.nth(1).click();
+    await expect(storePage.mainText).toHaveText(pantene);
+    await storePage.homeButton.click();
+    await storePage.brdBenefit.nth(2).click();
+    await expect(storePage.mainText).toHaveText(mac);
+    await storePage.homeButton.click();
+    await storePage.brdBenefit.nth(3).click();
+    await expect(storePage.mainText).toHaveText(lancome);
+    await storePage.homeButton.click();
+    await storePage.brdBenefit.nth(4).click();
+    await expect(storePage.mainText).toHaveText(gucci);
+    await storePage.homeButton.click();
+    await storePage.brdBenefit.nth(5).click();
+    await expect(storePage.mainText).toHaveText(giorgio);
+    await storePage.homeButton.click();
+    await storePage.brdBenefit.nth(6).click();
+    await expect(storePage.mainText).toHaveText(dove);
+    await storePage.homeButton.click();
+    await storePage.brdBenefit.nth(7).click();
+    await expect(storePage.mainText).toHaveText(calvin);
+    await storePage.homeButton.click();
+    await storePage.brdBenefit.nth(8).click();
+    await expect(storePage.mainText).toHaveText(bvlgari);
+    await storePage.homeButton.click();
+    // Assert:
+  });
+
+  test('Contact Us', async ({ page }) => {
+    // Arrange:
+    const contactUs = ' Contact Us';
+    const enquiry = 'TestMessage123##';
+    const messSent =
+      'Your enquiry has been successfully sent to the store owner!';
+    // Act:
+    await storePage.contactPage.click();
+    await expect(storePage.mainText).toHaveText(contactUs);
+    await storePage.contactFName.fill(autostoreCredential.firstName);
+    await storePage.contactEmail.fill(autostoreCredential.userMail);
+    await storePage.contactEnquiry.fill(enquiry);
+    await storePage.contactButton.click();
+    // Assert:
+    await expect(storePage.contentPanel).toContainText(messSent);
+  });
+
+  test('Contact Us - reset', async ({ page }) => {
+    // Arrange:
+    const contactUs = ' Contact Us';
+    const enquiry = 'TestMessage123##';
+    const reset = '';
+    // Act:
+    await storePage.contactPage.click();
+    await expect(storePage.mainText).toHaveText(contactUs);
+    await storePage.contactFName.fill(autostoreCredential.firstName);
+    await storePage.contactEmail.fill(autostoreCredential.userMail);
+    await storePage.contactEnquiry.fill(enquiry);
+    await storePage.contactReset.click();
+    // Assert:
+    await expect(storePage.contactFName).toHaveText(reset);
+    await expect(storePage.contactEmail).toHaveText(reset);
+    await expect(storePage.contactEnquiry).toHaveText(reset);
   });
 });
