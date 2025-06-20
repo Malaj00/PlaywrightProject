@@ -154,6 +154,18 @@ test.describe('Store tests', () => {
     await expect(storePage.quantity52).toBeVisible;
   });
 
+  test('Remove product from the cart', async ({ page }) => {
+    // Arrange:
+    const emptyCart = 'Your shopping cart is empty!';
+    // Act:
+    await storePage.homeButton.click();
+    await storePage.product52.click();
+    await storePage.cartMenuButton.click();
+    await storePage.removeButton.click();
+    // Assert:
+    await expect(storePage.contentPanel).toContainText(emptyCart);
+  });
+
   test('Checkout page', async ({ page }) => {
     // Arrange:
     const checkoutAddress = 'TE 12 ST Thais Guera 03405 Chad';
@@ -425,7 +437,7 @@ test.describe('Other tests', () => {
     await storePage.contactFName.fill(autostoreCredential.firstName);
     await storePage.contactEmail.fill(autostoreCredential.userMail);
     await storePage.contactEnquiry.fill(enquiry);
-    await storePage.contactButton.click();
+    await storePage.submitButton.click();
     // Assert:
     await expect(storePage.contentPanel).toContainText(messSent);
   });
@@ -446,5 +458,34 @@ test.describe('Other tests', () => {
     await expect(storePage.contactFName).toHaveText(reset);
     await expect(storePage.contactEmail).toHaveText(reset);
     await expect(storePage.contactEnquiry).toHaveText(reset);
+  });
+
+  test('Review as logged User - negative', async ({ page }) => {
+    // Arrange:
+    const bronzer = 'Skinsheen Bronzer Stick';
+    const reviewMess = 'Testmesage123#!@0-1';
+    const humanVerifi = 'Human verification has failed! Please try again.';
+    // Act:
+    await storePage.bronzerStick.first().click();
+    await expect(storePage.nameOfProduct).toHaveText(bronzer);
+    await storePage.productReview.click();
+    await storePage.fiveStar.first().click();
+    await storePage.reviewName.fill(autostoreCredential.firstName);
+    await storePage.reviewText.fill(reviewMess);
+    await storePage.submitButton.click();
+    // Assert:
+    await expect(storePage.errorAlert).toContainText(humanVerifi);
+  });
+
+  test('Using tags in product page', async ({ page }) => {
+    // Arrange:
+    const makeup = 'makeup';
+    // Act:
+    await storePage.bronzerStick.first().click();
+    await storePage.productTag.click();
+    await storePage.makeupTag.click();
+    // Assert:
+    await expect(storePage.searchKeyword).toHaveValue(makeup);
+    await expect(storePage.bronzerStick).toBeVisible();
   });
 });

@@ -59,18 +59,42 @@ export class AutomationStore {
   contactFName: Locator;
   contactEmail: Locator;
   contactEnquiry: Locator;
-  contactButton: Locator;
+  submitButton: Locator;
   contactPage: Locator;
   contentPanel: Locator;
   contactReset: Locator;
+  removeButton: Locator;
+  bronzerStick: Locator;
+  nameOfProduct: Locator;
+  productReview: Locator;
+  fiveStar: Locator;
+  reviewName: Locator;
+  reviewText: Locator;
+  productTag: Locator;
+  makeupTag: Locator;
+  searchKeyword: Locator;
 
   constructor(private page: Page) {
+    this.searchKeyword = page.locator('#keyword')
+    this.makeupTag = page.locator(
+      'a[href="https://automationteststore.com/index.php?rt=product/search&keyword=makeup"]',
+    );
+    this.productTag = page.locator('a[href="#producttag"]');
+    this.reviewText = page.locator('#text');
+    this.reviewName = page.locator('#name');
+    this.fiveStar = page.locator('#rating5');
+    this.productReview = page.locator('a[href="#review"]');
+    this.nameOfProduct = page.locator('.productname .bgnone');
+    this.bronzerStick = page.getByTitle('Skinsheen Bronzer Stick');
+    this.removeButton = page.locator(
+      'a[href="https://automationteststore.com/index.php?rt=checkout/cart&remove=52"]',
+    );
     this.contactReset = page.getByRole('button', { name: 'Reset' });
     this.contentPanel = page.locator('.contentpanel');
     this.contactPage = page.locator(
       'a[href="https://automationteststore.com/index.php?rt=content/contact"]',
     );
-    this.contactButton = page.getByRole('button', { name: 'Submit' });
+    this.submitButton = page.getByRole('button', { name: 'Submit' });
     this.contactEnquiry = page.locator('#ContactUsFrm_enquiry');
     this.contactEmail = page.locator('#ContactUsFrm_email');
     this.contactFName = page.locator('#ContactUsFrm_first_name');

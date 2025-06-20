@@ -124,7 +124,7 @@ export class AutomationExercise {
   tdLocator: Locator;
 
   constructor(private page: Page) {
-    this.scrllUp = page.locator('#scrollUp')
+    this.scrllUp = page.locator('#scrollUp');
     this.downloadInvoice = page.getByRole('link', { name: 'Download Invoice' });
     this.orderMsg = page.locator('#ordermsg .form-control');
     this.continueCart = page.getByRole('button', { name: 'Continue On Cart' });
