@@ -460,7 +460,7 @@ test.describe('Other tests', () => {
     await expect(storePage.contactEnquiry).toHaveText(reset);
   });
 
-  test('Review as logged User - negative', async ({ page }) => {
+  test('Review - negative', async ({ page }) => {
     // Arrange:
     const bronzer = 'Skinsheen Bronzer Stick';
     const reviewMess = 'Testmesage123#!@0-1';
@@ -487,5 +487,25 @@ test.describe('Other tests', () => {
     // Assert:
     await expect(storePage.searchKeyword).toHaveValue(makeup);
     await expect(storePage.bronzerStick).toBeVisible();
+  });
+
+  test('Wishlist', async ({ page }) => {
+    // Arrange:
+    const remove = ' Remove from wish list ';
+    const bronzer = 'Skinsheen Bronzer Stick';
+    // Act:
+    await storePage.loginPage.click();
+    await storePage.login(
+      autostoreCredential.userName,
+      autostoreCredential.userPassword,
+    );
+    await storePage.homeButton.click();
+    await storePage.bronzerStick.first().click();
+    await storePage.addToWish.click();
+    await expect(storePage.removeFromWish).toHaveText(remove);
+    await storePage.accButton.click();
+    await storePage.wishList.click();
+    // Assert:
+    await expect(storePage.contentPanel).toContainText(bronzer);
   });
 });

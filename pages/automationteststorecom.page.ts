@@ -73,9 +73,17 @@ export class AutomationStore {
   productTag: Locator;
   makeupTag: Locator;
   searchKeyword: Locator;
+  addToWish: Locator;
+  removeFromWish: Locator;
+  accButton: Locator;
+  wishList: Locator;
 
   constructor(private page: Page) {
-    this.searchKeyword = page.locator('#keyword')
+    this.wishList = page.locator('.sidewidt').getByText('My wish list')
+    this.accButton = page.getByRole('link', { name: '  Account' });
+    this.addToWish = page.locator('.wishlist_add.btn.btn-large');
+    this.removeFromWish = page.locator('.wishlist_remove.btn.btn-large');
+    this.searchKeyword = page.locator('#keyword');
     this.makeupTag = page.locator(
       'a[href="https://automationteststore.com/index.php?rt=product/search&keyword=makeup"]',
     );
