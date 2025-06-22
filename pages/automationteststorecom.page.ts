@@ -77,9 +77,26 @@ export class AutomationStore {
   removeFromWish: Locator;
   accButton: Locator;
   wishList: Locator;
+  couponBox: Locator;
+  couponButton: Locator;
+  couponRemove: Locator;
+  cartUpadate: Locator;
+  shipCountry: Locator;
+  estimateButton: Locator;
+  shippingRate: Locator;
 
   constructor(private page: Page) {
-    this.wishList = page.locator('.sidewidt').getByText('My wish list')
+    this.shippingRate = page
+      .locator('#totals_table')
+      .locator('td')
+      .filter({ has: page.getByText('$2.00') });
+    this.estimateButton = page.getByTitle('Estimate');
+    this.shipCountry = page.locator('#estimate_country');
+    this.cartUpadate = page.locator('#cart_update');
+    this.couponRemove = page.locator('#remove_coupon_btn');
+    this.couponButton = page.locator('#apply_coupon_btn');
+    this.couponBox = page.locator('#coupon_coupon');
+    this.wishList = page.locator('.sidewidt').getByText('My wish list');
     this.accButton = page.getByRole('link', { name: '  Account' });
     this.addToWish = page.locator('.wishlist_add.btn.btn-large');
     this.removeFromWish = page.locator('.wishlist_remove.btn.btn-large');

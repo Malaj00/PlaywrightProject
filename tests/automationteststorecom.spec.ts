@@ -283,6 +283,55 @@ test.describe('Store tests', () => {
     // Assert:
     await expect(storePage.priceEuroCart).toContainText(euro);
   });
+
+  test('Apply invalid coupon', async ({ page }) => {
+    // Arrange:
+    const coupon = 'asd123';
+    const errorCoupon = `Error: Coupon is either invalid, expired or reached it's usage limit!`;
+    const removed = 'Success: Coupon has been removed!';
+    const emptyBox = '';
+    // Act:
+    await storePage.homeButton.click();
+    await storePage.product52.click();
+    await storePage.cartMenuButton.click();
+    await storePage.couponBox.fill(coupon);
+    await storePage.couponButton.click();
+    await expect(storePage.errorAlert).toHaveText(errorCoupon);
+    await storePage.couponRemove.click();
+    // Assert:
+    await expect(storePage.succesAlert).toContainText(removed);
+    await expect(storePage.couponBox).toHaveText(emptyBox);
+  });
+
+  test('Update cart', async ({ page }) => {
+    // Arrange:
+    const quantity4 = '4';
+    const quantity2 = '2';
+    // Act:
+    await storePage.homeButton.click();
+    await storePage.product52.click();
+    await storePage.cartMenuButton.click();
+    await expect(storePage.quantity52).toHaveValue(quantity2);
+    await storePage.quantity52.fill(quantity4);
+    await storePage.cartUpadate.click();
+    // Assert:
+    await expect(storePage.quantity52).toHaveValue(quantity4);
+  });
+
+  test('Estimate shipping and taxes', async ({ page }) => {
+    // Arrange:
+    const Poland = '170';
+    const twoDollar = '$2.00';
+    // Act:
+    await storePage.homeButton.click();
+    await storePage.product52.click();
+    await storePage.cartMenuButton.click();
+    await storePage.shipCountry.selectOption(Poland);
+    await expect(storePage.shipCountry).toHaveValue(Poland);
+    await storePage.estimateButton.click();
+    // Assert:
+    await expect(storePage.shippingRate).toHaveText(twoDollar);
+  });
 });
 
 test.describe('Other tests', () => {
