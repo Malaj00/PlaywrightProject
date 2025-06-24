@@ -7,9 +7,9 @@ test.describe('API TESTING', () => {
       'https://automationexercise.com/api/productsList',
     );
     expect(response.status()).toBe(200);
-    const text = await response.text(); 
-    expect(text).toContain('Blue Top'); 
-    console.log(await response.json()); 
+    const text = await response.text();
+    expect(text).toContain('Blue Top');
+    console.log(await response.json());
   });
 
   test('API 2 - POST To All Products List', async ({ request }) => {
@@ -306,7 +306,7 @@ test.describe('API TESTING', () => {
     expect(response.status()).toBe(200);
     const text = await response.text();
 
-    expect(text).toContain('TestingCompany');
+    expect(text).toContain(userCredentials.company);
     console.log(await response.json());
   });
 });

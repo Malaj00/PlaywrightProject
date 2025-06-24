@@ -1,117 +1,114 @@
-# Playwright E2E Test Project
+### 🎯 PlaywrightProject – E2E Test Automation with Playwright & TypeScript
 
-## Description
+This project contains a set of **end-to-end automated tests** using **Playwright** and **TypeScript**, covering user journeys such as:
 
-This project contains end-to-end (E2E) automated tests built using **Playwright** with TypeScript.
-The tests cover UI interactions, element verifications, and API requests.
+- Registration and login
+- Cart interactions
+- Form validations
+- Product search and checkout
 
----
+Main testing targets include:
 
-## Links with tested websites
-
-- https://automationexercise.com/test_cases
-- https://practicetestautomation.com/practice/
-- https://www.saucedemo.com/
-- http://www.uitestingplayground.com/
-- https://automationteststore.com/
+- [Automation Test Store](https://automationteststore.com/)
+- [Automation Exercise](https://automationexercise.com/)
 
 ---
 
-## Requirements
-
-- Node.js (recommended LTS version, e.g., 18.x)
-- Playwright (installed via npm install)
-- Installed project dependencies
-
----
-
-## Extensions
-
-- GitLens - view details of your repository i.e. commits history
-- Prettier - default formatter for editor
-- Playwright Helpers - adds predefined commands for Node.js Playwright.
-- Playwright Snippets for VS Code - adds predefined useful code snippets for Playwright.
-- Playwright Snippets UI for VS Code - adds UI for extension Playwright Snippets for VS Code.
-
----
-
-## Installation
-
-1. Clone the repository:
-
-   ```
-   git clone <repo-url>
-   cd <project-folder>
-   ```
-
-2. Install dependencies:
-
-   ```
-   npm install
-   ```
-
----
-
-## Running Tests
-
-### Run all tests:
+## 📁 Project Structure
 
 ```
+PlaywrightProject/
+├── tests/                   # Test cases grouped by site or feature
+├── pages/                   # Page Object Models (POM)
+├── test-data/               # JSON files for test data
+├── utils/                   # Utility functions and helpers
+├── playwright.config.ts     # Main configuration file
+└── README.md                # Project documentation
+```
+
+---
+
+## 🚀 How to Run
+
+### 1. Install dependencies
+
+```bash
+npm install
+```
+
+### 2. Run all tests
+
+```bash
 npx playwright test
 ```
 
-### Run tests in a specific file:
+### 3. Run specific test file
 
-```
-npx playwright test tests/example.spec.ts
-```
-
-### Run tests with visible browser (headed mode):
-
-```
-npx playwright test --headed
+```bash
+npx playwright test tests/register.spec.ts
 ```
 
-### Run only tests marked with `.only`:
+### 4. Open UI Test Runner (debug)
 
-```
-npx playwright test --only
+```bash
+npx playwright test --ui
 ```
 
 ---
 
-## Reports
+## 📊 Test Report
 
-After running tests, generate the HTML report:
+After execution, an HTML report is available:
 
-```
+```bash
 npx playwright show-report
 ```
 
----
-
-## Configuration
-
-The main configuration is in:
+Or open manually:
 
 ```
-playwright.config.ts
+.playwright/html-report/index.html
 ```
-
-You can configure:
-
-- test timeouts
-- test file locations
-- devices/browsers (e.g., Chrome, Firefox)
-- retries on failure
 
 ---
 
-## Project Structure (example)
+## 🧰 Features & Highlights
 
+- ✔️ Page Object Model (POM)
+- 📦 Test data via JSON files (e.g., `automationstore.json`)
+- 🎯 Assertions like `toHaveText`, `toBeChecked`, `toBeVisible`, etc.
+- 🧠 Logical assertions (e.g., `expect(array.length).toBeGreaterThan(0)`)
+- 🎯 File download events: `page.waitForEvent('download')`
+- 🔽 Dropdowns, checkboxes, modals, hover interactions
+- 🧪 API test examples with response validation
+
+---
+
+## 🔧 Recommended Improvements
+
+To further develop your testing skills and improve this project:
+
+- **Fixtures**: Use `test.use()` to dynamically load test contexts or credentials.
+- **Typed JSON**: Define interfaces (e.g. `UserCredentials`) for autocompletion.
+- **Unit/Integration tests**: Create tests for logic (e.g. form validation).
+- **CI/CD**: Add GitHub Actions for automated testing workflows.
+- **Error boundaries**: Add retry logic or conditional waits for flaky UIs.
+
+---
+
+## 📌 Tips
+
+```bash
+# Install Playwright and browsers
+npx playwright install
+
+# Run tests in debug mode with inspector
+npx playwright test --debug
 ```
-/tests               → test files
-/test-data           → Files with test data
-/pages	             → Page Object Model classes
-/playwright.config.ts → Playwright configuration
-```
+
+---
+
+## 👤 Author
+
+GitHub: [Malaj00](https://github.com/Malaj00)  
+Repository: [PlaywrightProject](https://github.com/Malaj00/PlaywrightProject)

@@ -17,30 +17,40 @@ test.describe('Register and login tests', () => {
     await expect(autoExer.newUserSignup).toHaveText('New User Signup!');
   });
 
-  test.skip('TC1 - Register User', { tag: '@register' }, async ({ page }) => {
-    //Arrange
+  test.skip(
+    'TC1 - Register User',
+    {
+      tag: ['@register', '@exercise'],
+      annotation: {
+        type: 'exercise',
+        description: 'https://automationexercise.com/test_cases',
+      },
+    },
+    async ({ page }) => {
+      //Arrange
 
-    //Act
-    await autoExer.register(
-      userCredentials.userName,
-      userCredentials.userMail,
-      userCredentials.userPassword,
-      userCredentials.days,
-      userCredentials.month,
-      userCredentials.year,
-      userCredentials.company,
-      userCredentials.firstName,
-      userCredentials.lastName,
-      userCredentials.address,
-      userCredentials.mobile,
-      userCredentials.country,
-      userCredentials.state,
-      userCredentials.city,
-      userCredentials.zipcode,
-    );
+      //Act
+      await autoExer.register(
+        userCredentials.userName,
+        userCredentials.userMail,
+        userCredentials.userPassword,
+        userCredentials.days,
+        userCredentials.month,
+        userCredentials.year,
+        userCredentials.company,
+        userCredentials.firstName,
+        userCredentials.lastName,
+        userCredentials.address,
+        userCredentials.mobile,
+        userCredentials.country,
+        userCredentials.state,
+        userCredentials.city,
+        userCredentials.zipcode,
+      );
 
-    //Assert
-  });
+      //Assert
+    },
+  );
 
   test('TC2 - Login', { tag: '@login' }, async ({ page }) => {
     //Arrange

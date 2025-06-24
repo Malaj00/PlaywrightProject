@@ -84,8 +84,10 @@ export class AutomationStore {
   shipCountry: Locator;
   estimateButton: Locator;
   shippingRate: Locator;
+  totalAmount: Locator;
 
   constructor(private page: Page) {
+    this.totalAmount = page.locator('.bold.totalamout');
     this.shippingRate = page
       .locator('#totals_table')
       .locator('td')

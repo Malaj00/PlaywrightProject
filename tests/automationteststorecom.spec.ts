@@ -187,6 +187,9 @@ test.describe('Store tests', () => {
     );
     await expect(storePage.checkoutTable.nth(4)).toHaveText(checkoutAddress);
     await expect(storePage.checkoutTable.nth(5)).toHaveText(checkoutPayment);
+    const totalPrice = await storePage.totalAmount.nth(1).textContent();
+    const price = Number(totalPrice?.replace('$', ''));
+    await expect(price).toBeGreaterThan(0);
   });
 
   test('Confirm order', async ({ page }) => {
