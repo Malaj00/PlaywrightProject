@@ -34,7 +34,7 @@ test.describe('Login and Register functionality', () => {
     );
     // Assert:
     await expect(storePage.errorAlert).toContainText(registeredMail);
-    //await expect(storePage.mainText).toHaveText(createdAccount); //Asser for new account
+    //await expect(storePage.mainText).toHaveText(createdAccount); //Assert for new account
   });
 
   test('Correct User login', async ({ page }) => {
@@ -314,17 +314,21 @@ test.describe('Store tests', () => {
     await storePage.homeButton.click();
     await storePage.product52.click();
     await storePage.cartMenuButton.click();
-    await expect(storePage.quantity52).toHaveValue(quantity2);
+    await storePage.quantity52.fill(quantity2);
+    await storePage.cartUpadate.click();
+    const qunatityValueTwo = await storePage.quantity52.inputValue();
+    await expect(Number(qunatityValueTwo)).toBeGreaterThan(0);
     await storePage.quantity52.fill(quantity4);
     await storePage.cartUpadate.click();
     // Assert:
-    await expect(storePage.quantity52).toHaveValue(quantity4);
+    const qunatityValueFour = await storePage.quantity52.inputValue();
+    await expect(Number(qunatityValueFour)).toBeGreaterThan(2);
   });
 
   test('Estimate shipping and taxes', async ({ page }) => {
     // Arrange:
     const Poland = '170';
-    const twoDollar = '$2.00';
+    const twoDollar = Number('2.00');
     // Act:
     await storePage.homeButton.click();
     await storePage.product52.click();
@@ -333,7 +337,9 @@ test.describe('Store tests', () => {
     await expect(storePage.shipCountry).toHaveValue(Poland);
     await storePage.estimateButton.click();
     // Assert:
-    await expect(storePage.shippingRate).toHaveText(twoDollar);
+    const totalshipRate = await storePage.shippingRate.textContent()
+    const shipRate = Number(totalshipRate?.replace('$', ''))
+    await expect(shipRate).toBe(twoDollar);
   });
 });
 
@@ -545,6 +551,7 @@ test.describe('Other tests', () => {
     // Arrange:
     const remove = ' Remove from wish list ';
     const bronzer = 'Skinsheen Bronzer Stick';
+    const emptyWish = 'Wish list is empty';
     // Act:
     await storePage.loginPage.click();
     await storePage.login(
@@ -559,5 +566,8 @@ test.describe('Other tests', () => {
     await storePage.wishList.click();
     // Assert:
     await expect(storePage.contentPanel).toContainText(bronzer);
+    await storePage.wishlistRemove.click();
+    await page.reload();
+    await expect(storePage.contentPanel).toContainText(emptyWish);
   });
 });

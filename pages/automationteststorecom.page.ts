@@ -85,8 +85,10 @@ export class AutomationStore {
   estimateButton: Locator;
   shippingRate: Locator;
   totalAmount: Locator;
+  wishlistRemove: Locator;
 
   constructor(private page: Page) {
+    this.wishlistRemove = page.locator('.btn.btn-sm.btn-default.btn-remove')
     this.totalAmount = page.locator('.bold.totalamout');
     this.shippingRate = page
       .locator('#totals_table')
