@@ -161,7 +161,11 @@ test.describe('Store tests', () => {
     await storePage.homeButton.click();
     await storePage.product52.click();
     await storePage.cartMenuButton.click();
-    await storePage.removeButton.click();
+    const removeButtons = storePage.removeButton;
+    while ((await removeButtons.count()) > 0) {
+      await removeButtons.nth(0).click();
+      await page.waitForTimeout(100); 
+    }
     // Assert:
     await expect(storePage.contentPanel).toContainText(emptyCart);
   });
@@ -337,8 +341,8 @@ test.describe('Store tests', () => {
     await expect(storePage.shipCountry).toHaveValue(Poland);
     await storePage.estimateButton.click();
     // Assert:
-    const totalshipRate = await storePage.shippingRate.textContent()
-    const shipRate = Number(totalshipRate?.replace('$', ''))
+    const totalshipRate = await storePage.shippingRate.textContent();
+    const shipRate = Number(totalshipRate?.replace('$', ''));
     await expect(shipRate).toBe(twoDollar);
   });
 });

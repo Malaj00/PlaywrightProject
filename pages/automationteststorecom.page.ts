@@ -116,7 +116,7 @@ export class AutomationStore {
     this.nameOfProduct = page.locator('.productname .bgnone');
     this.bronzerStick = page.getByTitle('Skinsheen Bronzer Stick');
     this.removeButton = page.locator(
-      'a[href="https://automationteststore.com/index.php?rt=checkout/cart&remove=52"]',
+      '.btn.btn-sm.btn-default',
     );
     this.contactReset = page.getByRole('button', { name: 'Reset' });
     this.contentPanel = page.locator('.contentpanel');
