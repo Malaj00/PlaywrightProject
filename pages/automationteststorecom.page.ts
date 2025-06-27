@@ -86,8 +86,38 @@ export class AutomationStore {
   shippingRate: Locator;
   totalAmount: Locator;
   wishlistRemove: Locator;
+  menuAccount: Locator;
+  editAcc: Locator;
+  lastNameInput: Locator;
+  addressBook: Locator;
+  newAddress: Locator;
+  firstNameInput: Locator;
+  addresInput: Locator;
+  cityInput: Locator;
+  regionInput: Locator;
+  zipInput: Locator;
+  countryInput: Locator;
+  lastNameAddress: Locator;
+  addressRadio: Locator;
+  addressBox: Locator;
+  addressDelete: Locator;
 
   constructor(private page: Page) {
+    this.addressDelete = page.getByTitle('Delete')
+    this.addressBox = page.locator('.genericbox.border-bottom')
+    this.addressRadio = page.locator('#AddressFrm_default0')
+    this.countryInput = page.locator('#AddressFrm_country_id')
+    this.zipInput = page.locator('#AddressFrm_postcode')
+    this.regionInput = page.locator('#AddressFrm_zone_id')
+    this.cityInput = page.locator('#AddressFrm_city')
+    this.addresInput = page.locator('#AddressFrm_address_1')
+    this.firstNameInput = page.locator('#AddressFrm_firstname')
+    this.lastNameAddress = page.locator('#AddressFrm_lastname')
+    this.lastNameInput = page.locator('#AccountFrm_lastname')
+    this.newAddress = page.getByTitle('New Address')
+    this.addressBook = page.getByTitle('Manage Address Book')
+    this.editAcc = page.locator('a[href="https://automationteststore.com/index.php?rt=account/edit"]')
+    this.menuAccount = page.locator('.menu_account')
     this.wishlistRemove = page.locator('.btn.btn-sm.btn-default.btn-remove')
     this.totalAmount = page.locator('.bold.totalamout');
     this.shippingRate = page

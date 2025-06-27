@@ -164,7 +164,7 @@ test.describe('Store tests', () => {
     const removeButtons = storePage.removeButton;
     while ((await removeButtons.count()) > 0) {
       await removeButtons.nth(0).click();
-      await page.waitForTimeout(100); 
+      await page.waitForTimeout(100);
     }
     // Assert:
     await expect(storePage.contentPanel).toContainText(emptyCart);
@@ -573,5 +573,72 @@ test.describe('Other tests', () => {
     await storePage.wishlistRemove.click();
     await page.reload();
     await expect(storePage.contentPanel).toContainText(emptyWish);
+  });
+
+  test('Last Name change and revert change', async ({ page }) => {
+    // Arrange:
+    const tempLastName = 'testLastName';
+    const successChange =
+      'Success: Your account has been successfully updated.';
+    // Act:
+    await storePage.loginPage.click();
+    await storePage.login(
+      autostoreCredential.userName,
+      autostoreCredential.userPassword,
+    );
+    await storePage.editAcc.nth(1).click();
+    await expect(storePage.lastNameInput).toHaveValue(
+      autostoreCredential.lastName,
+    );
+    await storePage.lastNameInput.clear();
+    await storePage.lastNameInput.fill(tempLastName);
+    await storePage.continueButton.click();
+    await storePage.editAcc.nth(1).click();
+    await expect(storePage.lastNameInput).toHaveValue(tempLastName);
+    await storePage.lastNameInput.clear();
+    await storePage.lastNameInput.fill(autostoreCredential.lastName);
+    await storePage.continueButton.click();
+    await expect(storePage.succesAlert).toContainText(successChange);
+    await storePage.editAcc.nth(1).click();
+    // Assert:
+    await expect(storePage.lastNameInput).toHaveValue(
+      autostoreCredential.lastName,
+    );
+  });
+
+  test('Add new address', async ({ page }) => {
+    // Arrange:
+    const tempFName = 'tempFName';
+    const tempLName = 'tempLName';
+    const tempAddress = 'tempAddress';
+    const tempCity = 'tempCity';
+    const tempRegion = '2640';
+    const tempZip = '131313';
+    const tempCountry = '170';
+    const alertSuccess = 'Your address has been successfully inserted';
+    // Act:
+    await storePage.loginPage.click();
+    await storePage.login(
+      autostoreCredential.userName,
+      autostoreCredential.userPassword,
+    );
+    await storePage.addressBook.click();
+    await storePage.newAddress.click();
+    await storePage.firstNameInput.fill(tempFName);
+    await storePage.lastNameAddress.fill(tempLName);
+    await storePage.addresInput.fill(tempAddress);
+    await storePage.cityInput.fill(tempCity);
+    await storePage.countryInput.selectOption(tempCountry);
+    await storePage.regionInput.selectOption(tempRegion);
+    await storePage.zipInput.fill(tempZip);
+    await expect(storePage.addressRadio).toBeChecked();
+    await storePage.continueButton.click();
+    await expect(storePage.succesAlert).toContainText(alertSuccess);
+    await expect(storePage.addressBox.nth(1)).toContainText(tempFName);
+    await expect(storePage.addressBox.nth(1)).toContainText(tempLName);
+    await storePage.addressDelete.click();
+    // Assert:
+    const boxCount = await storePage.addressBox.count();
+    await expect(boxCount).toBe(1);
   });
 });
