@@ -641,4 +641,27 @@ test.describe('Other tests', () => {
     const boxCount = await storePage.addressBox.count();
     await expect(boxCount).toBe(1);
   });
+
+  test('Notification newsletter setting', async ({ page }) => {
+    // Arrange:
+    const successAlert =
+      'Success: Your notification settings has been successfully updated!';
+    // Act:
+    await storePage.loginPage.click();
+    await storePage.login(
+      autostoreCredential.userName,
+      autostoreCredential.userPassword,
+    );
+    await storePage.notifyButton.nth(1).click();
+    await expect(storePage.notifyCheckbox).not.toBeChecked();
+    await storePage.notifyCheckbox.check();
+    await storePage.continueButton.click();
+    await expect(storePage.succesAlert).toContainText(successAlert);
+    await storePage.notifyButton.nth(1).click();
+    await expect(storePage.notifyCheckbox).toBeChecked();
+    await storePage.notifyCheckbox.check();
+    await storePage.continueButton.click();
+    // Assert:
+    await expect(storePage.succesAlert).toContainText(successAlert);
+  });
 });

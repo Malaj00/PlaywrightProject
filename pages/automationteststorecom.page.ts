@@ -101,8 +101,12 @@ export class AutomationStore {
   addressRadio: Locator;
   addressBox: Locator;
   addressDelete: Locator;
+  notifyButton: Locator;
+  notifyCheckbox: Locator;
 
   constructor(private page: Page) {
+    this.notifyCheckbox = page.locator('#imFrm_settingsnewsletteremail')
+    this.notifyButton = page.locator('a[href="https://automationteststore.com/index.php?rt=account/notification"]')
     this.addressDelete = page.getByTitle('Delete')
     this.addressBox = page.locator('.genericbox.border-bottom')
     this.addressRadio = page.locator('#AddressFrm_default0')
