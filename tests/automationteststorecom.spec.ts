@@ -659,7 +659,28 @@ test.describe('Other tests', () => {
     await expect(storePage.succesAlert).toContainText(successAlert);
     await storePage.notifyButton.nth(1).click();
     await expect(storePage.notifyCheckbox).toBeChecked();
-    await storePage.notifyCheckbox.check();
+    await storePage.notifyCheckbox.click();
+    await storePage.continueButton.click();
+    // Assert:
+    await expect(storePage.succesAlert).toContainText(successAlert);
+    console.log(await storePage.succesAlert.textContent())
+  });
+
+  test.skip('Change password', async ({ page }) => {
+    // Arrange:
+    const newPassword = 'Newpassword123';
+    const successAlert =
+      'Success: Your password has been successfully updated.';
+    // Act:
+    await storePage.loginPage.click();
+    await storePage.login(
+      autostoreCredential.userName,
+      autostoreCredential.userPassword,
+    );
+    await storePage.changePass.nth(1).click();
+    await storePage.currentPass.fill(autostoreCredential.userPassword);
+    await storePage.newPass.fill(newPassword);
+    await storePage.newPassConfirm.fill(newPassword);
     await storePage.continueButton.click();
     // Assert:
     await expect(storePage.succesAlert).toContainText(successAlert);
