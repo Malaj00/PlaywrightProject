@@ -107,8 +107,14 @@ export class AutomationStore {
   currentPass: Locator;
   newPass: Locator;
   newPassConfirm: Locator;
+  welcomeBackAcc: Locator;
+  welcomeBackLogout: Locator;
+  searchButton: Locator;
 
   constructor(private page: Page) {
+    this.searchButton = page.locator('.button-in-search')
+    this.welcomeBackLogout = page.getByText('Not First Name?')
+    this.welcomeBackAcc = page.locator('.top.menu_account')
     this.newPassConfirm = page.locator('#PasswordFrm_confirm')
     this.newPass = page.locator('#PasswordFrm_password')
     this.currentPass = page.locator('#PasswordFrm_current_password')

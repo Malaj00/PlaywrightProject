@@ -125,6 +125,33 @@ test.describe('Login and Register functionality', () => {
     // Assert:
     await expect(storePage.errorFrgPass).toContainText(errorMess);
   });
+
+  test('Login - Logout - Login', async ({ page }) => {
+    // Arrange:
+    const successLogout =
+      'You have been logged off your account. It is now safe to leave the computer.';
+    // Act:
+    await storePage.login(
+      autostoreCredential.userName,
+      autostoreCredential.userPassword,
+    );
+    await expect(storePage.welcomeBackAcc.first()).toHaveText(
+      `Welcome back ${autostoreCredential.firstName}`,
+    );
+    await storePage.welcomeBackAcc.first().hover();
+    await storePage.welcomeBackLogout.click();
+    await expect(storePage.contentPanel).toContainText(successLogout);
+    await storePage.continueButton.click();
+    await storePage.loginPage.click();
+    await storePage.login(
+      autostoreCredential.userName,
+      autostoreCredential.userPassword,
+    );
+    // Assert:
+    await expect(storePage.welcomeBackAcc.first()).toHaveText(
+      `Welcome back ${autostoreCredential.firstName}`,
+    );
+  });
 });
 
 test.describe('Store tests', () => {
@@ -663,7 +690,7 @@ test.describe('Other tests', () => {
     await storePage.continueButton.click();
     // Assert:
     await expect(storePage.succesAlert).toContainText(successAlert);
-    console.log(await storePage.succesAlert.textContent())
+    console.log(await storePage.succesAlert.textContent());
   });
 
   test.skip('Change password', async ({ page }) => {
@@ -684,5 +711,16 @@ test.describe('Other tests', () => {
     await storePage.continueButton.click();
     // Assert:
     await expect(storePage.succesAlert).toContainText(successAlert);
+  });
+  
+  test("Search by keyword", async ({ page }) => {
+    // Arrange:
+    const keywordCream = 'Cream'
+    // Act:
+    await storePage.searchBox.fill(keywordCream)
+    await storePage.searchButton.click()
+    // Assert:
+    await expect(storePage.searchKeyword).toHaveValue(keywordCream)
+    await expect(storePage.productName.first()).toContainText(keywordCream)
   });
 });
