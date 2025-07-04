@@ -549,6 +549,20 @@ test.describe('Other tests', () => {
     await expect(storePage.contactEnquiry).toHaveText(reset);
   });
 
+  test('Check review', async ({ page }) => {
+    // Arrange:
+    const tshirts = 'T-shirts';
+    const noReview = 'There are no reviews for this product.';
+    // Act:
+    await storePage.categoryMenu.ApparelAcc.hover();
+    await storePage.categoryMenu.Tshirts.click();
+    await expect(storePage.mainText).toHaveText(tshirts);
+    await storePage.tshirtPack.click();
+    await storePage.productReview.click();
+    // Assert:
+    await expect(storePage.currentReviews).not.toHaveText(noReview);
+  });
+
   test('Review - negative', async ({ page }) => {
     // Arrange:
     const bronzer = 'Skinsheen Bronzer Stick';
@@ -712,15 +726,31 @@ test.describe('Other tests', () => {
     // Assert:
     await expect(storePage.succesAlert).toContainText(successAlert);
   });
-  
-  test("Search by keyword", async ({ page }) => {
+
+  test('Search by keyword', async ({ page }) => {
     // Arrange:
-    const keywordCream = 'Cream'
+    const keywordCream = 'Cream';
     // Act:
-    await storePage.searchBox.fill(keywordCream)
-    await storePage.searchButton.click()
+    await storePage.searchBox.fill(keywordCream);
+    await storePage.searchButton.click();
     // Assert:
-    await expect(storePage.searchKeyword).toHaveValue(keywordCream)
-    await expect(storePage.productName.first()).toContainText(keywordCream)
+    await expect(storePage.searchKeyword).toHaveValue(keywordCream);
+    await expect(storePage.productName.first()).toContainText(keywordCream);
+  });
+
+  test('Sort By options', async ({ page }) => {
+    // Arrange:
+    const nameAZ = 'pd.name-ASC';
+    const nameZA = 'pd.name-DESC';
+    const productAZ = 'Absolue Eye Precious Cells';
+    const productZA =
+      'LE ROUGE ABSOLU Reshaping & Replenishing LipColour SPF 15';
+    // Act:
+    await storePage.specialsButton.first().click();
+    await storePage.sortBy.selectOption(nameAZ);
+    await expect(storePage.productName.first()).toHaveText(productAZ);
+    await storePage.sortBy.selectOption(nameZA);
+    await expect(storePage.productName.first()).toHaveText(productZA);
+    // Assert:
   });
 });

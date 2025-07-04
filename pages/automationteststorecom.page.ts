@@ -110,14 +110,22 @@ export class AutomationStore {
   welcomeBackAcc: Locator;
   welcomeBackLogout: Locator;
   searchButton: Locator;
+  tshirtPack: Locator;
+  currentReviews: Locator;
+  sortBy: Locator;
 
   constructor(private page: Page) {
-    this.searchButton = page.locator('.button-in-search')
-    this.welcomeBackLogout = page.getByText('Not First Name?')
-    this.welcomeBackAcc = page.locator('.top.menu_account')
-    this.newPassConfirm = page.locator('#PasswordFrm_confirm')
-    this.newPass = page.locator('#PasswordFrm_password')
-    this.currentPass = page.locator('#PasswordFrm_current_password')
+    this.sortBy = page.locator('#sort');
+    this.currentReviews = page.locator('#current_reviews');
+    this.tshirtPack = page.getByRole('link', {
+      name: 'Fruit of the Loom T-Shirts 5 Pack - Super Premium',
+    });
+    this.searchButton = page.locator('.button-in-search');
+    this.welcomeBackLogout = page.getByText('Not First Name?');
+    this.welcomeBackAcc = page.locator('.top.menu_account');
+    this.newPassConfirm = page.locator('#PasswordFrm_confirm');
+    this.newPass = page.locator('#PasswordFrm_password');
+    this.currentPass = page.locator('#PasswordFrm_current_password');
     this.changePass = page.locator(
       'a[href="https://automationteststore.com/index.php?rt=account/password"]',
     );
@@ -203,7 +211,9 @@ export class AutomationStore {
     this.product65 = page.getByTestId('65');
     this.productName = page.locator('.contentpanel .prdocutname');
     this.saleClass = page.locator('.contentpanel .sale');
-    this.specialsButton = page.locator('#topnav').getByTestId('menu_specials');
+    this.specialsButton = page.locator(
+      'a[href="https://automationteststore.com/index.php?rt=product/special"]',
+    );
     this.logoutButton = page.getByRole('link').filter({ hasText: 'Logout' });
     this.tdLocator = page.locator('td');
     this.loginPage = page.getByText('Login or register');
