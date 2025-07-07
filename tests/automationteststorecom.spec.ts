@@ -38,7 +38,7 @@ test.describe('Login and Register functionality', () => {
     //await expect(storePage.mainText).toHaveText(createdAccount); //Assert for new account
   });
 
-  test('Correct User login', async ({ loggedInPage }) => {
+  test('Correct User login', async ({ page }) => {
     // Arrange:
     const myAcc = ' My Account';
     // Act:
@@ -749,6 +749,18 @@ test.describe('Other tests', () => {
     await expect(storePage.productName.first()).toHaveText(productAZ);
     await storePage.sortBy.selectOption(nameZA);
     await expect(storePage.productName.first()).toHaveText(productZA);
+    // Assert:
+  });
+});
+
+test.describe('Testing new fixture functionality', () => {
+  
+  test.use({ loggedIn: true }); //note about test.use 
+  test('Testing new fixture', async ({ storePage }) => {
+    // Arrange:
+    // Act:
+    await storePage.homeButton.click();
+    await storePage.bronzerStick.first().click();
     // Assert:
   });
 });
