@@ -1,4 +1,5 @@
-import { test, expect } from '@playwright/test';
+import { test } from '../fixtures/autoStoreFixture';
+import { expect } from '@playwright/test';
 import { AutomationStore } from '../pages/automationteststorecom.page';
 import autostoreCredential from '../test-data/automationstore.json';
 
@@ -37,14 +38,11 @@ test.describe('Login and Register functionality', () => {
     //await expect(storePage.mainText).toHaveText(createdAccount); //Assert for new account
   });
 
-  test('Correct User login', async ({ page }) => {
+  test('Correct User login', async ({ loggedInPage }) => {
     // Arrange:
     const myAcc = ' My Account';
     // Act:
-    await storePage.login(
-      autostoreCredential.userName,
-      autostoreCredential.userPassword,
-    );
+    //await storePage.login(autostoreCredential.userName, autostoreCredential.userPassword);
     // Assert:
     await expect(storePage.mainText).toHaveText(myAcc);
     await expect(storePage.subText).toHaveText(autostoreCredential.firstName);
