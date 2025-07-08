@@ -4,21 +4,25 @@ import { AutomationStore } from '../pages/automationteststorecom.page';
 import autostoreCredential from '../test-data/automationstore.json';
 
 test.describe('Login and Register functionality', () => {
-  let storePage: AutomationStore;
-  test.beforeEach(async ({ page }) => {
-    storePage = new AutomationStore(page);
-    await page.goto('https://automationteststore.com/');
-    await expect(storePage.welcomeMsg).toContainText(
-      'Welcome to the Automation Test Store!',
-    );
-    await storePage.loginPage.click();
-  });
+  // let storePage: AutomationStore;
+  //test.beforeEach(async ({ page }) => {
+  //   storePage = new AutomationStore(page);
+  //   await page.goto('https://automationteststore.com/');
+  //   await expect(storePage.welcomeMsg).toContainText(
+  //     'Welcome to the Automation Test Store!',
+  //   );
+  //await page.context().clearCookies();
+  //});
 
-  test('User Register', async ({ page }) => {
+  test('User Register', async ({ storePage }) => {
     // Arrange:
     const createdAccount = ' Your Account Has Been Created!';
     const registeredMail = 'Error: E-Mail Address is already registered!';
     // Act:
+    await expect(storePage.welcomeMsg).toContainText(
+      'Welcome to the Automation Test Store!',
+    );
+    await storePage.loginPage.click();
     await expect(storePage.radioRegister).toBeChecked();
     await storePage.continueButton.click();
     await storePage.register(
@@ -38,7 +42,8 @@ test.describe('Login and Register functionality', () => {
     //await expect(storePage.mainText).toHaveText(createdAccount); //Assert for new account
   });
 
-  test('Correct User login', async ({ page }) => {
+  test.use({ loggedIn: true });
+  test('Correct User login', async ({ storePage }) => {
     // Arrange:
     const myAcc = ' My Account';
     // Act:
@@ -48,11 +53,13 @@ test.describe('Login and Register functionality', () => {
     await expect(storePage.subText).toHaveText(autostoreCredential.firstName);
   });
 
-  test('Incorrect username login', async ({ page }) => {
+  test.use({ loggedIn: false });
+  test('Incorrect username login', async ({ storePage }) => {
     // Arrange:
     const incName = 'loginName';
     const errorMess = 'Error: Incorrect login or password provided.';
     // Act:
+    await storePage.loginPage.click();
     await storePage.loginInput.fill(incName);
     await storePage.passwordInput.fill(autostoreCredential.userPassword);
     await storePage.loginButton.click();
@@ -60,11 +67,13 @@ test.describe('Login and Register functionality', () => {
     await expect(storePage.errorAlert).toContainText(errorMess);
   });
 
-  test('Incorrect password login', async ({ page }) => {
+  test.use({ loggedIn: false });
+  test('Incorrect password login', async ({ storePage }) => {
     // Arrange:
     const incPass = 'passWord';
     const errorMess = 'Error: Incorrect login or password provided.';
     // Act:
+    await storePage.loginPage.click();
     await storePage.loginInput.fill(autostoreCredential.userName);
     await storePage.passwordInput.fill(incPass);
     await storePage.loginButton.click();
@@ -72,11 +81,13 @@ test.describe('Login and Register functionality', () => {
     await expect(storePage.errorAlert).toContainText(errorMess);
   });
 
-  test('Forgot password positive', async ({ page }) => {
+  test.use({ loggedIn: false });
+  test('Forgot password positive', async ({ storePage }) => {
     // Arrange:
     const correctMess =
       'Success: Password reset link has been sent to your e-mail address.';
     // Act:
+    await storePage.loginPage.click();
     await storePage.forgotPass.click();
     await storePage.forgotLogInput.fill(autostoreCredential.userName);
     await storePage.forgotEmlInput.fill(autostoreCredential.userMail);
@@ -85,11 +96,13 @@ test.describe('Login and Register functionality', () => {
     await expect(storePage.succesAlert).toContainText(correctMess);
   });
 
-  test('Forgot password negative', async ({ page }) => {
+  test.use({ loggedIn: false });
+  test('Forgot password negative', async ({ storePage }) => {
     // Arrange:
     const errorMess =
       'Error: No records found matching information your provided, please check your information and try again!';
     // Act:
+    await storePage.loginPage.click();
     await storePage.forgotPass.click();
     await storePage.forgotLogInput.fill('test123');
     await storePage.forgotEmlInput.fill(autostoreCredential.userMail);
@@ -98,11 +111,13 @@ test.describe('Login and Register functionality', () => {
     await expect(storePage.errorFrgPass).toContainText(errorMess);
   });
 
-  test('Forgot login positive', async ({ page }) => {
+  test.use({ loggedIn: false });
+  test('Forgot login positive', async ({ storePage }) => {
     // Arrange:
     const correctMess =
       'Success: Your login name reminder has been sent to your e-mail address.';
     // Act:
+    await storePage.loginPage.click();
     await storePage.forgotLogin.click();
     await storePage.forgotLNameInput.fill(autostoreCredential.lastName);
     await storePage.forgotEmlInput.fill(autostoreCredential.userMail);
@@ -111,11 +126,13 @@ test.describe('Login and Register functionality', () => {
     await expect(storePage.succesAlert).toContainText(correctMess);
   });
 
-  test('Forgot login negative', async ({ page }) => {
+  test.use({ loggedIn: false });
+  test('Forgot login negative', async ({ storePage }) => {
     // Arrange:
     const errorMess =
       'Error: No records found matching information your provided, please check your information and try again!';
     // Act:
+    await storePage.loginPage.click();
     await storePage.forgotLogin.click();
     await storePage.forgotLNameInput.fill('test123');
     await storePage.forgotEmlInput.fill(autostoreCredential.userMail);
@@ -124,15 +141,12 @@ test.describe('Login and Register functionality', () => {
     await expect(storePage.errorFrgPass).toContainText(errorMess);
   });
 
-  test('Login - Logout - Login', async ({ page }) => {
+  test.use({ loggedIn: true });
+  test('Login - Logout - Login', async ({ storePage }) => {
     // Arrange:
     const successLogout =
       'You have been logged off your account. It is now safe to leave the computer.';
     // Act:
-    await storePage.login(
-      autostoreCredential.userName,
-      autostoreCredential.userPassword,
-    );
     await expect(storePage.welcomeBackAcc.first()).toHaveText(
       `Welcome back ${autostoreCredential.firstName}`,
     );
@@ -754,8 +768,7 @@ test.describe('Other tests', () => {
 });
 
 test.describe('Testing new fixture functionality', () => {
-  
-  test.use({ loggedIn: true }); //note about test.use 
+  test.use({ loggedIn: true }); //note about test.use
   test('Testing new fixture', async ({ storePage }) => {
     // Arrange:
     // Act:
