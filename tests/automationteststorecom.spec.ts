@@ -19,9 +19,6 @@ test.describe('Login and Register functionality', () => {
     const createdAccount = ' Your Account Has Been Created!';
     const registeredMail = 'Error: E-Mail Address is already registered!';
     // Act:
-    await expect(storePage.welcomeMsg).toContainText(
-      'Welcome to the Automation Test Store!',
-    );
     await storePage.loginPage.click();
     await expect(storePage.radioRegister).toBeChecked();
     await storePage.continueButton.click();
@@ -42,18 +39,17 @@ test.describe('Login and Register functionality', () => {
     //await expect(storePage.mainText).toHaveText(createdAccount); //Assert for new account
   });
 
-  test.use({ loggedIn: true });
-  test('Correct User login', async ({ storePage }) => {
+  test('Correct User login', async ({ loggedInStorePage }) => {
     // Arrange:
     const myAcc = ' My Account';
     // Act:
-    //await storePage.login(autostoreCredential.userName, autostoreCredential.userPassword);
     // Assert:
-    await expect(storePage.mainText).toHaveText(myAcc);
-    await expect(storePage.subText).toHaveText(autostoreCredential.firstName);
+    await expect(loggedInStorePage.mainText).toHaveText(myAcc);
+    await expect(loggedInStorePage.subText).toHaveText(
+      autostoreCredential.firstName,
+    );
   });
 
-  test.use({ loggedIn: false });
   test('Incorrect username login', async ({ storePage }) => {
     // Arrange:
     const incName = 'loginName';
@@ -67,7 +63,6 @@ test.describe('Login and Register functionality', () => {
     await expect(storePage.errorAlert).toContainText(errorMess);
   });
 
-  test.use({ loggedIn: false });
   test('Incorrect password login', async ({ storePage }) => {
     // Arrange:
     const incPass = 'passWord';
@@ -81,7 +76,6 @@ test.describe('Login and Register functionality', () => {
     await expect(storePage.errorAlert).toContainText(errorMess);
   });
 
-  test.use({ loggedIn: false });
   test('Forgot password positive', async ({ storePage }) => {
     // Arrange:
     const correctMess =
@@ -96,7 +90,6 @@ test.describe('Login and Register functionality', () => {
     await expect(storePage.succesAlert).toContainText(correctMess);
   });
 
-  test.use({ loggedIn: false });
   test('Forgot password negative', async ({ storePage }) => {
     // Arrange:
     const errorMess =
@@ -111,7 +104,6 @@ test.describe('Login and Register functionality', () => {
     await expect(storePage.errorFrgPass).toContainText(errorMess);
   });
 
-  test.use({ loggedIn: false });
   test('Forgot login positive', async ({ storePage }) => {
     // Arrange:
     const correctMess =
@@ -126,7 +118,6 @@ test.describe('Login and Register functionality', () => {
     await expect(storePage.succesAlert).toContainText(correctMess);
   });
 
-  test.use({ loggedIn: false });
   test('Forgot login negative', async ({ storePage }) => {
     // Arrange:
     const errorMess =
@@ -141,59 +132,49 @@ test.describe('Login and Register functionality', () => {
     await expect(storePage.errorFrgPass).toContainText(errorMess);
   });
 
-  test.use({ loggedIn: true });
-  test('Login - Logout - Login', async ({ storePage }) => {
+  test('Login - Logout - Login', async ({ loggedInStorePage }) => {
     // Arrange:
     const successLogout =
       'You have been logged off your account. It is now safe to leave the computer.';
     // Act:
-    await expect(storePage.welcomeBackAcc.first()).toHaveText(
+    await expect(loggedInStorePage.welcomeBackAcc.first()).toHaveText(
       `Welcome back ${autostoreCredential.firstName}`,
     );
-    await storePage.welcomeBackAcc.first().hover();
-    await storePage.welcomeBackLogout.click();
-    await expect(storePage.contentPanel).toContainText(successLogout);
-    await storePage.continueButton.click();
-    await storePage.loginPage.click();
-    await storePage.login(
+    await loggedInStorePage.welcomeBackAcc.first().hover();
+    await loggedInStorePage.welcomeBackLogout.click();
+    await expect(loggedInStorePage.contentPanel).toContainText(successLogout);
+    await loggedInStorePage.continueButton.click();
+    await loggedInStorePage.loginPage.click();
+    await loggedInStorePage.login(
       autostoreCredential.userName,
       autostoreCredential.userPassword,
     );
     // Assert:
-    await expect(storePage.welcomeBackAcc.first()).toHaveText(
+    await expect(loggedInStorePage.welcomeBackAcc.first()).toHaveText(
       `Welcome back ${autostoreCredential.firstName}`,
     );
   });
 });
 
 test.describe('Store tests', () => {
-  let storePage: AutomationStore;
+  // let storePage: AutomationStore;
   test.use({ testIdAttribute: 'data-id' });
-  test.beforeEach(async ({ page }) => {
-    storePage = new AutomationStore(page);
-    await page.goto('https://automationteststore.com/');
-    await expect(storePage.welcomeMsg).toContainText(
-      'Welcome to the Automation Test Store!',
-    );
-    await storePage.loginPage.click();
-    await storePage.login(
-      autostoreCredential.userName,
-      autostoreCredential.userPassword,
-    );
-  });
+  // test.beforeEach(async ({ page }) => {
+  // storePage = new AutomationStore(page);
+  // });
 
-  test('Add product to cart while logged', async ({ page }) => {
+  test('Add product to cart while logged', async ({ loggedInStorePage }) => {
     // Arrange:
     // Act:
-    await storePage.homeButton.click();
-    await storePage.product52.click();
-    await storePage.cartMenuButton.click();
+    await loggedInStorePage.homeButton.click();
+    await loggedInStorePage.product52.click();
+    await loggedInStorePage.cartMenuButton.click();
     // Assert:
-    await expect(storePage.bellaBambaCart).toBeVisible();
-    await expect(storePage.quantity52).toBeVisible;
+    await expect(loggedInStorePage.bellaBambaCart).toBeVisible();
+    await expect(loggedInStorePage.quantity52).toBeVisible;
   });
 
-  test('Remove product from the cart', async ({ page }) => {
+  test('Remove product from the cart', async ({ storePage, page }) => {
     // Arrange:
     const emptyCart = 'Your shopping cart is empty!';
     // Act:
@@ -209,61 +190,69 @@ test.describe('Store tests', () => {
     await expect(storePage.contentPanel).toContainText(emptyCart);
   });
 
-  test('Checkout page', async ({ page }) => {
+  test('Checkout page', async ({ loggedInStorePage }) => {
     // Arrange:
     const checkoutAddress = 'TE 12 ST Thais Guera 03405 Chad';
     const checkoutShip = 'Flat Shipping Rate';
     const checkoutPayment = 'Cash On Delivery';
     // Act:
-    await storePage.homeButton.click();
-    await storePage.product52.click();
-    await storePage.cartMenuButton.click();
-    await storePage.cartCheckout.click();
+    await loggedInStorePage.homeButton.click();
+    await loggedInStorePage.product52.click();
+    await loggedInStorePage.cartMenuButton.click();
+    await loggedInStorePage.cartCheckout.click();
     // Assert:
-    await expect(storePage.checkoutTable.first()).toHaveText(
+    await expect(loggedInStorePage.checkoutTable.first()).toHaveText(
       `${autostoreCredential.firstName} ${autostoreCredential.lastName}`,
     );
-    await expect(storePage.checkoutTable.nth(1)).toHaveText(checkoutAddress);
-    await expect(storePage.checkoutTable.nth(2)).toHaveText(checkoutShip);
-    await expect(storePage.checkoutTable.nth(3)).toHaveText(
+    await expect(loggedInStorePage.checkoutTable.nth(1)).toHaveText(
+      checkoutAddress,
+    );
+    await expect(loggedInStorePage.checkoutTable.nth(2)).toHaveText(
+      checkoutShip,
+    );
+    await expect(loggedInStorePage.checkoutTable.nth(3)).toHaveText(
       `${autostoreCredential.firstName} ${autostoreCredential.lastName}`,
     );
-    await expect(storePage.checkoutTable.nth(4)).toHaveText(checkoutAddress);
-    await expect(storePage.checkoutTable.nth(5)).toHaveText(checkoutPayment);
-    const totalPrice = await storePage.totalAmount.nth(1).textContent();
+    await expect(loggedInStorePage.checkoutTable.nth(4)).toHaveText(
+      checkoutAddress,
+    );
+    await expect(loggedInStorePage.checkoutTable.nth(5)).toHaveText(
+      checkoutPayment,
+    );
+    const totalPrice = await loggedInStorePage.totalAmount.nth(1).textContent();
     const price = Number(totalPrice?.replace('$', ''));
     await expect(price).toBeGreaterThan(0);
   });
 
-  test('Confirm order', async ({ page }) => {
+  test('Confirm order', async ({ loggedInStorePage }) => {
     // Arrange:
     const successOrder = 'Your Order Has Been Processed!';
     // Act:
-    await storePage.homeButton.click();
-    await storePage.product52.click();
-    await storePage.cartMenuButton.click();
-    await storePage.cartCheckout.click();
-    await storePage.checkoutButton.click();
+    await loggedInStorePage.homeButton.click();
+    await loggedInStorePage.product52.click();
+    await loggedInStorePage.cartMenuButton.click();
+    await loggedInStorePage.cartCheckout.click();
+    await loggedInStorePage.checkoutButton.click();
     // Assert:
-    await expect(storePage.mainText).toContainText(successOrder);
+    await expect(loggedInStorePage.mainText).toContainText(successOrder);
   });
 
-  test('Check your order', async ({ page }) => {
+  test('Check your order', async ({ loggedInStorePage }) => {
     // Arrange:
     const payAddress = 'Payment Address';
     // Act:
-    await storePage.accountText.nth(2).hover();
-    await storePage.checkOrderLink.click();
-    await storePage.checkOrderView.first().click();
+    await loggedInStorePage.accountText.nth(2).hover();
+    await loggedInStorePage.checkOrderLink.click();
+    await loggedInStorePage.checkOrderView.first().click();
     // Assert:
     await expect(
-      storePage.tdLocator.filter({ hasText: payAddress }),
+      loggedInStorePage.tdLocator.filter({ hasText: payAddress }),
     ).toContainText(
       `${autostoreCredential.firstName} ${autostoreCredential.lastName}`,
     );
   });
 
-  test('Cart checkout while logged off', async ({ page }) => {
+  test('Cart checkout while logged off', async ({ loggedInStorePage }) => {
     // Arrange:
     const logoutText = ' Account Logout';
     const checkoutAddress = 'TE 12 ST Thais Guera 03405 Chad';
@@ -271,33 +260,41 @@ test.describe('Store tests', () => {
     const checkoutPayment = 'Cash On Delivery';
     const successOrder = 'Your Order Has Been Processed!';
     // Act:
-    await storePage.accountText.nth(2).hover();
-    await storePage.logoutButton.click();
-    await expect(storePage.mainText).toHaveText(logoutText);
-    await storePage.continueButton.click();
-    await storePage.product52.click();
-    await storePage.cartMenuButton.click();
-    await storePage.cartCheckout.click();
-    await storePage.login(
+    await loggedInStorePage.accountText.nth(2).hover();
+    await loggedInStorePage.logoutButton.click();
+    await expect(loggedInStorePage.mainText).toHaveText(logoutText);
+    await loggedInStorePage.continueButton.click();
+    await loggedInStorePage.product52.click();
+    await loggedInStorePage.cartMenuButton.click();
+    await loggedInStorePage.cartCheckout.click();
+    await loggedInStorePage.login(
       autostoreCredential.userName,
       autostoreCredential.userPassword,
     );
-    await expect(storePage.checkoutTable.first()).toHaveText(
+    await expect(loggedInStorePage.checkoutTable.first()).toHaveText(
       `${autostoreCredential.firstName} ${autostoreCredential.lastName}`,
     );
-    await expect(storePage.checkoutTable.nth(1)).toHaveText(checkoutAddress);
-    await expect(storePage.checkoutTable.nth(2)).toHaveText(checkoutShip);
-    await expect(storePage.checkoutTable.nth(3)).toHaveText(
+    await expect(loggedInStorePage.checkoutTable.nth(1)).toHaveText(
+      checkoutAddress,
+    );
+    await expect(loggedInStorePage.checkoutTable.nth(2)).toHaveText(
+      checkoutShip,
+    );
+    await expect(loggedInStorePage.checkoutTable.nth(3)).toHaveText(
       `${autostoreCredential.firstName} ${autostoreCredential.lastName}`,
     );
-    await expect(storePage.checkoutTable.nth(4)).toHaveText(checkoutAddress);
-    await expect(storePage.checkoutTable.nth(5)).toHaveText(checkoutPayment);
-    await storePage.checkoutButton.click();
+    await expect(loggedInStorePage.checkoutTable.nth(4)).toHaveText(
+      checkoutAddress,
+    );
+    await expect(loggedInStorePage.checkoutTable.nth(5)).toHaveText(
+      checkoutPayment,
+    );
+    await loggedInStorePage.checkoutButton.click();
     // Assert:
-    await expect(storePage.mainText).toContainText(successOrder);
+    await expect(loggedInStorePage.mainText).toContainText(successOrder);
   });
 
-  test('Special Offers', async ({ page }) => {
+  test('Special Offers', async ({ storePage }) => {
     // Arrange:
     const specialOff = ' Special Offers';
     const productSale = 'Absolue Eye Precious Cells';
@@ -315,7 +312,7 @@ test.describe('Store tests', () => {
     await expect(storePage.mainText).toHaveText(shopCart);
   });
 
-  test('Currency change', async ({ page }) => {
+  test('Currency change', async ({ storePage }) => {
     // Arrange:
     const dollar = '$';
     const euro = '€';
@@ -330,7 +327,7 @@ test.describe('Store tests', () => {
     await expect(storePage.priceEuroCart).toContainText(euro);
   });
 
-  test('Apply invalid coupon', async ({ page }) => {
+  test('Apply invalid coupon', async ({ storePage }) => {
     // Arrange:
     const coupon = 'asd123';
     const errorCoupon = `Error: Coupon is either invalid, expired or reached it's usage limit!`;
@@ -349,7 +346,7 @@ test.describe('Store tests', () => {
     await expect(storePage.couponBox).toHaveText(emptyBox);
   });
 
-  test('Update cart', async ({ page }) => {
+  test('Update cart', async ({ storePage }) => {
     // Arrange:
     const quantity4 = '4';
     const quantity2 = '2';
@@ -368,7 +365,7 @@ test.describe('Store tests', () => {
     await expect(Number(qunatityValueFour)).toBeGreaterThan(2);
   });
 
-  test('Estimate shipping and taxes', async ({ page }) => {
+  test('Estimate shipping and taxes', async ({ storePage }) => {
     // Arrange:
     const Poland = '170';
     const twoDollar = Number('2.00');
@@ -387,16 +384,16 @@ test.describe('Store tests', () => {
 });
 
 test.describe('Other tests', () => {
-  let storePage: AutomationStore;
-  test.beforeEach(async ({ page }) => {
-    storePage = new AutomationStore(page);
-    await page.goto('https://automationteststore.com/');
-    await expect(storePage.welcomeMsg).toContainText(
-      'Welcome to the Automation Test Store!',
-    );
-  });
+  // let storePage: AutomationStore;
+  // test.beforeEach(async ({ page }) => {
+  //   storePage = new AutomationStore(page);
+  //   await page.goto('https://automationteststore.com/');
+  //   await expect(storePage.welcomeMsg).toContainText(
+  //     'Welcome to the Automation Test Store!',
+  //   );
+  // });
 
-  test('Newsletter signup - invalid', async ({ page }) => {
+  test('Newsletter signup - invalid', async ({ storePage }) => {
     // Arrange:
     const newsLetter = 'Newsletter Signup';
     const subError =
@@ -414,7 +411,7 @@ test.describe('Other tests', () => {
     await expect(storePage.helpBlock.nth(4)).toHaveText(captchaError);
   });
 
-  test('Scroll up button', async ({ page }) => {
+  test('Scroll up button', async ({ storePage, page }) => {
     // Arrange:
     // Act:
     await page.evaluate(() => {
@@ -425,7 +422,7 @@ test.describe('Other tests', () => {
     await expect(storePage.searchBox).toBeInViewport();
   });
 
-  test('Categories', async ({ page }) => {
+  test('Categories', async ({ storePage }) => {
     // Arrange:
     const shoes = 'Shoes';
     const tshirts = 'T-shirts';
@@ -483,8 +480,7 @@ test.describe('Other tests', () => {
     await expect(storePage.categoryMenu.Paperback).toHaveText(paperback);
     // Assert:
   });
-
-  test('Brands', async ({ page }) => {
+  test('Brands', async ({ storePage }) => {
     // Arrange:
     const benefit = 'Benefit';
     const pantene = 'Pantene';
@@ -526,7 +522,7 @@ test.describe('Other tests', () => {
     // Assert:
   });
 
-  test('Contact Us', async ({ page }) => {
+  test('Contact Us', async ({ storePage }) => {
     // Arrange:
     const contactUs = ' Contact Us';
     const enquiry = 'TestMessage123##';
@@ -543,7 +539,7 @@ test.describe('Other tests', () => {
     await expect(storePage.contentPanel).toContainText(messSent);
   });
 
-  test('Contact Us - reset', async ({ page }) => {
+  test('Contact Us - reset', async ({ storePage }) => {
     // Arrange:
     const contactUs = ' Contact Us';
     const enquiry = 'TestMessage123##';
@@ -561,7 +557,7 @@ test.describe('Other tests', () => {
     await expect(storePage.contactEnquiry).toHaveText(reset);
   });
 
-  test('Check review', async ({ page }) => {
+  test('Check review', async ({ storePage }) => {
     // Arrange:
     const tshirts = 'T-shirts';
     const noReview = 'There are no reviews for this product.';
@@ -575,7 +571,7 @@ test.describe('Other tests', () => {
     await expect(storePage.currentReviews).not.toHaveText(noReview);
   });
 
-  test('Review - negative', async ({ page }) => {
+  test('Review - negative', async ({ storePage }) => {
     // Arrange:
     const bronzer = 'Skinsheen Bronzer Stick';
     const reviewMess = 'Testmesage123#!@0-1';
@@ -592,7 +588,7 @@ test.describe('Other tests', () => {
     await expect(storePage.errorAlert).toContainText(humanVerifi);
   });
 
-  test('Using tags in product page', async ({ page }) => {
+  test('Using tags in product page', async ({ storePage }) => {
     // Arrange:
     const makeup = 'makeup';
     // Act:
@@ -604,62 +600,52 @@ test.describe('Other tests', () => {
     await expect(storePage.bronzerStick).toBeVisible();
   });
 
-  test('Wishlist', async ({ page }) => {
+  test('Wishlist', async ({ loggedInStorePage, page }) => {
     // Arrange:
     const remove = ' Remove from wish list ';
     const bronzer = 'Skinsheen Bronzer Stick';
     const emptyWish = 'Wish list is empty';
     // Act:
-    await storePage.loginPage.click();
-    await storePage.login(
-      autostoreCredential.userName,
-      autostoreCredential.userPassword,
-    );
-    await storePage.homeButton.click();
-    await storePage.bronzerStick.first().click();
-    await storePage.addToWish.click();
-    await expect(storePage.removeFromWish).toHaveText(remove);
-    await storePage.accButton.click();
-    await storePage.wishList.click();
+    await loggedInStorePage.homeButton.click();
+    await loggedInStorePage.bronzerStick.first().click();
+    await loggedInStorePage.addToWish.click();
+    await expect(loggedInStorePage.removeFromWish).toHaveText(remove);
+    await loggedInStorePage.accButton.click();
+    await loggedInStorePage.wishList.click();
     // Assert:
-    await expect(storePage.contentPanel).toContainText(bronzer);
-    await storePage.wishlistRemove.click();
+    await expect(loggedInStorePage.contentPanel).toContainText(bronzer);
+    await loggedInStorePage.wishlistRemove.click();
     await page.reload();
-    await expect(storePage.contentPanel).toContainText(emptyWish);
+    await expect(loggedInStorePage.contentPanel).toContainText(emptyWish);
   });
 
-  test('Last Name change and revert change', async ({ page }) => {
+  test('Last Name change and revert change', async ({ loggedInStorePage }) => {
     // Arrange:
     const tempLastName = 'testLastName';
     const successChange =
       'Success: Your account has been successfully updated.';
     // Act:
-    await storePage.loginPage.click();
-    await storePage.login(
-      autostoreCredential.userName,
-      autostoreCredential.userPassword,
-    );
-    await storePage.editAcc.nth(1).click();
-    await expect(storePage.lastNameInput).toHaveValue(
+    await loggedInStorePage.editAcc.nth(1).click();
+    await expect(loggedInStorePage.lastNameInput).toHaveValue(
       autostoreCredential.lastName,
     );
-    await storePage.lastNameInput.clear();
-    await storePage.lastNameInput.fill(tempLastName);
-    await storePage.continueButton.click();
-    await storePage.editAcc.nth(1).click();
-    await expect(storePage.lastNameInput).toHaveValue(tempLastName);
-    await storePage.lastNameInput.clear();
-    await storePage.lastNameInput.fill(autostoreCredential.lastName);
-    await storePage.continueButton.click();
-    await expect(storePage.succesAlert).toContainText(successChange);
-    await storePage.editAcc.nth(1).click();
+    await loggedInStorePage.lastNameInput.clear();
+    await loggedInStorePage.lastNameInput.fill(tempLastName);
+    await loggedInStorePage.continueButton.click();
+    await loggedInStorePage.editAcc.nth(1).click();
+    await expect(loggedInStorePage.lastNameInput).toHaveValue(tempLastName);
+    await loggedInStorePage.lastNameInput.clear();
+    await loggedInStorePage.lastNameInput.fill(autostoreCredential.lastName);
+    await loggedInStorePage.continueButton.click();
+    await expect(loggedInStorePage.succesAlert).toContainText(successChange);
+    await loggedInStorePage.editAcc.nth(1).click();
     // Assert:
-    await expect(storePage.lastNameInput).toHaveValue(
+    await expect(loggedInStorePage.lastNameInput).toHaveValue(
       autostoreCredential.lastName,
     );
   });
 
-  test('Add new address', async ({ page }) => {
+  test('Add new address', async ({ loggedInStorePage }) => {
     // Arrange:
     const tempFName = 'tempFName';
     const tempLName = 'tempLName';
@@ -670,76 +656,69 @@ test.describe('Other tests', () => {
     const tempCountry = '170';
     const alertSuccess = 'Your address has been successfully inserted';
     // Act:
-    await storePage.loginPage.click();
-    await storePage.login(
-      autostoreCredential.userName,
-      autostoreCredential.userPassword,
-    );
-    await storePage.addressBook.click();
-    await storePage.newAddress.click();
-    await storePage.firstNameInput.fill(tempFName);
-    await storePage.lastNameAddress.fill(tempLName);
-    await storePage.addresInput.fill(tempAddress);
-    await storePage.cityInput.fill(tempCity);
-    await storePage.countryInput.selectOption(tempCountry);
-    await storePage.regionInput.selectOption(tempRegion);
-    await storePage.zipInput.fill(tempZip);
-    await expect(storePage.addressRadio).toBeChecked();
-    await storePage.continueButton.click();
-    await expect(storePage.succesAlert).toContainText(alertSuccess);
-    await expect(storePage.addressBox.nth(1)).toContainText(tempFName);
-    await expect(storePage.addressBox.nth(1)).toContainText(tempLName);
-    await storePage.addressDelete.click();
+    await loggedInStorePage.addressBook.click();
+    await loggedInStorePage.newAddress.click();
+    await loggedInStorePage.firstNameInput.fill(tempFName);
+    await loggedInStorePage.lastNameAddress.fill(tempLName);
+    await loggedInStorePage.addresInput.fill(tempAddress);
+    await loggedInStorePage.cityInput.fill(tempCity);
+    await loggedInStorePage.countryInput.selectOption(tempCountry);
+    await loggedInStorePage.regionInput.selectOption(tempRegion);
+    await loggedInStorePage.zipInput.fill(tempZip);
+    await expect(loggedInStorePage.addressRadio).toBeChecked();
+    await loggedInStorePage.continueButton.click();
+    await expect(loggedInStorePage.succesAlert).toContainText(alertSuccess);
+    await expect(loggedInStorePage.addressBox.nth(1)).toContainText(tempFName);
+    await expect(loggedInStorePage.addressBox.nth(1)).toContainText(tempLName);
+    await loggedInStorePage.addressDelete.click();
     // Assert:
-    const boxCount = await storePage.addressBox.count();
+    const boxCount = await loggedInStorePage.addressBox.count();
     await expect(boxCount).toBe(1);
   });
 
-  test('Notification newsletter setting', async ({ page }) => {
+  test('Notification newsletter setting', async ({ loggedInStorePage }) => {
     // Arrange:
     const successAlert =
       'Success: Your notification settings has been successfully updated!';
     // Act:
-    await storePage.loginPage.click();
-    await storePage.login(
-      autostoreCredential.userName,
-      autostoreCredential.userPassword,
-    );
-    await storePage.notifyButton.nth(1).click();
-    await expect(storePage.notifyCheckbox).not.toBeChecked();
-    await storePage.notifyCheckbox.check();
-    await storePage.continueButton.click();
-    await expect(storePage.succesAlert).toContainText(successAlert);
-    await storePage.notifyButton.nth(1).click();
-    await expect(storePage.notifyCheckbox).toBeChecked();
-    await storePage.notifyCheckbox.click();
-    await storePage.continueButton.click();
+    await loggedInStorePage.notifyButton.nth(1).click();
+    await expect(loggedInStorePage.notifyCheckbox).not.toBeChecked();
+    await loggedInStorePage.notifyCheckbox.check();
+    await loggedInStorePage.continueButton.click();
+    await expect(loggedInStorePage.succesAlert).toContainText(successAlert);
+    await loggedInStorePage.notifyButton.nth(1).click();
+    await expect(loggedInStorePage.notifyCheckbox).toBeChecked();
+    await loggedInStorePage.notifyCheckbox.click();
+    await loggedInStorePage.continueButton.click();
     // Assert:
-    await expect(storePage.succesAlert).toContainText(successAlert);
-    console.log(await storePage.succesAlert.textContent());
+    await expect(loggedInStorePage.succesAlert).toContainText(successAlert);
+    console.log(await loggedInStorePage.succesAlert.textContent());
   });
 
-  test.skip('Change password', async ({ page }) => {
+  test('Change password and revert', async ({ loggedInStorePage }) => {
     // Arrange:
     const newPassword = 'Newpassword123';
     const successAlert =
       'Success: Your password has been successfully updated.';
     // Act:
-    await storePage.loginPage.click();
-    await storePage.login(
-      autostoreCredential.userName,
+    await loggedInStorePage.changePass.nth(1).click();
+    await loggedInStorePage.currentPass.fill(autostoreCredential.userPassword);
+    await loggedInStorePage.newPass.fill(newPassword);
+    await loggedInStorePage.newPassConfirm.fill(newPassword);
+    await loggedInStorePage.continueButton.click();
+    await expect(loggedInStorePage.succesAlert).toContainText(successAlert);
+    await loggedInStorePage.changePass.nth(1).click();
+    await loggedInStorePage.currentPass.fill(newPassword);
+    await loggedInStorePage.newPass.fill(autostoreCredential.userPassword);
+    await loggedInStorePage.newPassConfirm.fill(
       autostoreCredential.userPassword,
     );
-    await storePage.changePass.nth(1).click();
-    await storePage.currentPass.fill(autostoreCredential.userPassword);
-    await storePage.newPass.fill(newPassword);
-    await storePage.newPassConfirm.fill(newPassword);
-    await storePage.continueButton.click();
+    await loggedInStorePage.continueButton.click();
     // Assert:
-    await expect(storePage.succesAlert).toContainText(successAlert);
+    await expect(loggedInStorePage.succesAlert).toContainText(successAlert);
   });
 
-  test('Search by keyword', async ({ page }) => {
+  test('Search by keyword', async ({ storePage }) => {
     // Arrange:
     const keywordCream = 'Cream';
     // Act:
@@ -750,7 +729,7 @@ test.describe('Other tests', () => {
     await expect(storePage.productName.first()).toContainText(keywordCream);
   });
 
-  test('Sort By options', async ({ page }) => {
+  test('Sort By options', async ({ storePage }) => {
     // Arrange:
     const nameAZ = 'pd.name-ASC';
     const nameZA = 'pd.name-DESC';
@@ -763,17 +742,6 @@ test.describe('Other tests', () => {
     await expect(storePage.productName.first()).toHaveText(productAZ);
     await storePage.sortBy.selectOption(nameZA);
     await expect(storePage.productName.first()).toHaveText(productZA);
-    // Assert:
-  });
-});
-
-test.describe('Testing new fixture functionality', () => {
-  test.use({ loggedIn: true }); //note about test.use
-  test('Testing new fixture', async ({ storePage }) => {
-    // Arrange:
-    // Act:
-    await storePage.homeButton.click();
-    await storePage.bronzerStick.first().click();
     // Assert:
   });
 });

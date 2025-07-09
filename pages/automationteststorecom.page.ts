@@ -211,9 +211,11 @@ export class AutomationStore {
     this.product65 = page.getByTestId('65');
     this.productName = page.locator('.contentpanel .prdocutname');
     this.saleClass = page.locator('.contentpanel .sale');
-    this.specialsButton = page.locator(
-      'a[href="https://automationteststore.com/index.php?rt=product/special"]',
-    );
+    this.specialsButton = page
+      .locator(
+        'a[href="https://automationteststore.com/index.php?rt=product/special"]',
+      )
+      .first();
     this.logoutButton = page.getByRole('link').filter({ hasText: 'Logout' });
     this.tdLocator = page.locator('td');
     this.loginPage = page.getByText('Login or register');
@@ -285,6 +287,7 @@ export class AutomationStore {
   }
 
   async login(userName: string, userPassword: string) {
+    await this.loginPage.click();
     await this.loginInput.fill(userName);
     await this.passwordInput.fill(userPassword);
     await this.loginButton.click();
