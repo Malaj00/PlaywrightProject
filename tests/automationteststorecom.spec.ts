@@ -339,7 +339,6 @@ test.describe('Store tests', () => {
   test('Estimate shipping and taxes', async ({ storePage }) => {
     // Arrange:
     const Poland = '170';
-    const twoDollar = Number('2.00');
     // Act:
     await storePage.homeButton.click();
     await storePage.product52.click();
@@ -350,7 +349,7 @@ test.describe('Store tests', () => {
     // Assert:
     const totalshipRate = await storePage.shippingRate.textContent();
     const shipRate = Number(totalshipRate?.replace('$', ''));
-    await expect(shipRate).toBe(twoDollar);
+    await expect(shipRate).toBe(2);
   });
 });
 

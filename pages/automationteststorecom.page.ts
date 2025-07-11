@@ -299,3 +299,17 @@ export class AutomationStore {
     await this.page.locator('#topnav').getByTestId('menu_cart').click();
   }
 }
+
+
+
+  //multiple products to cart methods
+  // async addTest(productId: number) {
+  //   const addToCartButton = this.page.getByTestId(`${productId}`);
+  //   await addToCartButton.click();
+  // }
+  // async addMultipleProductsToCart(productIds: number[]) {
+  //   for (const id of productIds) {
+  //     await this.addTest(id);
+  //   }
+  // }
+  // await storePage.addMultipleProductsToCart([52, 68, 66])
