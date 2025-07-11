@@ -163,78 +163,58 @@ test.describe('Store tests', () => {
   // storePage = new AutomationStore(page);
   // });
 
-  test('Add product to cart while logged', async ({ loggedInStorePage }) => {
+  test('Add product to cart while logged', async ({ cartProducts }) => {
     // Arrange:
     // Act:
-    await loggedInStorePage.homeButton.click();
-    await loggedInStorePage.product52.click();
-    await loggedInStorePage.cartMenuButton.click();
     // Assert:
-    await expect(loggedInStorePage.bellaBambaCart).toBeVisible();
-    await expect(loggedInStorePage.quantity52).toBeVisible;
+    await expect(cartProducts.bellaBambaCart).toBeVisible();
+    await expect(cartProducts.quantity52).toBeVisible;
   });
 
-  test('Remove product from the cart', async ({ storePage, page }) => {
+  test('Remove product from the cart', async ({ cartProducts, page }) => {
     // Arrange:
     const emptyCart = 'Your shopping cart is empty!';
     // Act:
-    await storePage.homeButton.click();
-    await storePage.product52.click();
-    await storePage.cartMenuButton.click();
-    const removeButtons = storePage.removeButton;
+    const removeButtons = cartProducts.removeButton;
     while ((await removeButtons.count()) > 0) {
       await removeButtons.nth(0).click();
       await page.waitForTimeout(100);
     }
     // Assert:
-    await expect(storePage.contentPanel).toContainText(emptyCart);
+    await expect(cartProducts.contentPanel).toContainText(emptyCart);
   });
 
-  test('Checkout page', async ({ loggedInStorePage }) => {
+  test('Checkout page', async ({ cartProducts }) => {
     // Arrange:
     const checkoutAddress = 'TE 12 ST Thais Guera 03405 Chad';
     const checkoutShip = 'Flat Shipping Rate';
     const checkoutPayment = 'Cash On Delivery';
     // Act:
-    await loggedInStorePage.homeButton.click();
-    await loggedInStorePage.product52.click();
-    await loggedInStorePage.cartMenuButton.click();
-    await loggedInStorePage.cartCheckout.click();
+    await cartProducts.cartCheckout.click();
     // Assert:
-    await expect(loggedInStorePage.checkoutTable.first()).toHaveText(
+    await expect(cartProducts.checkoutTable.first()).toHaveText(
       `${autostoreCredential.firstName} ${autostoreCredential.lastName}`,
     );
-    await expect(loggedInStorePage.checkoutTable.nth(1)).toHaveText(
-      checkoutAddress,
-    );
-    await expect(loggedInStorePage.checkoutTable.nth(2)).toHaveText(
-      checkoutShip,
-    );
-    await expect(loggedInStorePage.checkoutTable.nth(3)).toHaveText(
+    await expect(cartProducts.checkoutTable.nth(1)).toHaveText(checkoutAddress);
+    await expect(cartProducts.checkoutTable.nth(2)).toHaveText(checkoutShip);
+    await expect(cartProducts.checkoutTable.nth(3)).toHaveText(
       `${autostoreCredential.firstName} ${autostoreCredential.lastName}`,
     );
-    await expect(loggedInStorePage.checkoutTable.nth(4)).toHaveText(
-      checkoutAddress,
-    );
-    await expect(loggedInStorePage.checkoutTable.nth(5)).toHaveText(
-      checkoutPayment,
-    );
-    const totalPrice = await loggedInStorePage.totalAmount.nth(1).textContent();
+    await expect(cartProducts.checkoutTable.nth(4)).toHaveText(checkoutAddress);
+    await expect(cartProducts.checkoutTable.nth(5)).toHaveText(checkoutPayment);
+    const totalPrice = await cartProducts.totalAmount.nth(1).textContent();
     const price = Number(totalPrice?.replace('$', ''));
     await expect(price).toBeGreaterThan(0);
   });
 
-  test('Confirm order', async ({ loggedInStorePage }) => {
+  test('Confirm order', async ({ cartProducts }) => {
     // Arrange:
     const successOrder = 'Your Order Has Been Processed!';
     // Act:
-    await loggedInStorePage.homeButton.click();
-    await loggedInStorePage.product52.click();
-    await loggedInStorePage.cartMenuButton.click();
-    await loggedInStorePage.cartCheckout.click();
-    await loggedInStorePage.checkoutButton.click();
+    await cartProducts.cartCheckout.click();
+    await cartProducts.checkoutButton.click();
     // Assert:
-    await expect(loggedInStorePage.mainText).toContainText(successOrder);
+    await expect(cartProducts.mainText).toContainText(successOrder);
   });
 
   test('Check your order', async ({ loggedInStorePage }) => {
@@ -312,56 +292,47 @@ test.describe('Store tests', () => {
     await expect(storePage.mainText).toHaveText(shopCart);
   });
 
-  test('Currency change', async ({ storePage }) => {
+  test('Currency change', async ({ cartProducts }) => {
     // Arrange:
     const dollar = '$';
     const euro = '€';
     // Act:
-    await storePage.homeButton.click();
-    await storePage.product52.click();
-    await storePage.cartMenuButton.click();
-    await expect(storePage.priceDollarCart).toContainText(dollar);
-    await storePage.currencyHover.first().hover();
-    await storePage.euroSet.click();
+    await expect(cartProducts.priceDollarCart).toContainText(dollar);
+    await cartProducts.currencyHover.first().hover();
+    await cartProducts.euroSet.click();
     // Assert:
-    await expect(storePage.priceEuroCart).toContainText(euro);
+    await expect(cartProducts.priceEuroCart).toContainText(euro);
   });
 
-  test('Apply invalid coupon', async ({ storePage }) => {
+  test('Apply invalid coupon', async ({ cartProducts }) => {
     // Arrange:
     const coupon = 'asd123';
     const errorCoupon = `Error: Coupon is either invalid, expired or reached it's usage limit!`;
     const removed = 'Success: Coupon has been removed!';
     const emptyBox = '';
     // Act:
-    await storePage.homeButton.click();
-    await storePage.product52.click();
-    await storePage.cartMenuButton.click();
-    await storePage.couponBox.fill(coupon);
-    await storePage.couponButton.click();
-    await expect(storePage.errorAlert).toHaveText(errorCoupon);
-    await storePage.couponRemove.click();
+    await cartProducts.couponBox.fill(coupon);
+    await cartProducts.couponButton.click();
+    await expect(cartProducts.errorAlert).toHaveText(errorCoupon);
+    await cartProducts.couponRemove.click();
     // Assert:
-    await expect(storePage.succesAlert).toContainText(removed);
-    await expect(storePage.couponBox).toHaveText(emptyBox);
+    await expect(cartProducts.succesAlert).toContainText(removed);
+    await expect(cartProducts.couponBox).toHaveText(emptyBox);
   });
 
-  test('Update cart', async ({ storePage }) => {
+  test('Update cart', async ({ cartProducts }) => {
     // Arrange:
     const quantity4 = '4';
     const quantity2 = '2';
     // Act:
-    await storePage.homeButton.click();
-    await storePage.product52.click();
-    await storePage.cartMenuButton.click();
-    await storePage.quantity52.fill(quantity2);
-    await storePage.cartUpadate.click();
-    const qunatityValueTwo = await storePage.quantity52.inputValue();
+    await cartProducts.quantity52.fill(quantity2);
+    await cartProducts.cartUpadate.click();
+    const qunatityValueTwo = await cartProducts.quantity52.inputValue();
     await expect(Number(qunatityValueTwo)).toBeGreaterThan(0);
-    await storePage.quantity52.fill(quantity4);
-    await storePage.cartUpadate.click();
+    await cartProducts.quantity52.fill(quantity4);
+    await cartProducts.cartUpadate.click();
     // Assert:
-    const qunatityValueFour = await storePage.quantity52.inputValue();
+    const qunatityValueFour = await cartProducts.quantity52.inputValue();
     await expect(Number(qunatityValueFour)).toBeGreaterThan(2);
   });
 

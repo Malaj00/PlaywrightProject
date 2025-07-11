@@ -5,19 +5,33 @@ import autostoreCredential from '../test-data/automationstore.json';
 const test = base.extend<{
   storePage: AutomationStore;
   loggedInStorePage: AutomationStore;
+  cartProducts: AutomationStore;
 }>({
   storePage: async ({ page }, use) => {
-    const store = await initStore(page);
-    await use(store);
+    const storeMainPage = await initStore(page);
+    await use(storeMainPage);
   },
 
   loggedInStorePage: async ({ page }, use) => {
-    const store = await initStore(page);
-    await store.login(
+    const storeLogin = await initStore(page);
+    await storeLogin.login(
       autostoreCredential.userName,
       autostoreCredential.userPassword,
     );
-    await use(store);
+    await use(storeLogin);
+  },
+
+  cartProducts: async ({ page }, use) => {
+    const addToCart = await initStore(page);
+    await addToCart.login(
+      autostoreCredential.userName,
+      autostoreCredential.userPassword,
+    );
+    await addToCart.homeButton.click();
+    await addToCart.product52.click();
+    await addToCart.cartMenuButton.click();
+
+    await use(addToCart);
   },
 });
 
