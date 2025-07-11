@@ -287,9 +287,15 @@ export class AutomationStore {
   }
 
   async login(userName: string, userPassword: string) {
-    await this.loginPage.click();
-    await this.loginInput.fill(userName);
-    await this.passwordInput.fill(userPassword);
-    await this.loginButton.click();
+    await this.page.getByText('Login or register').click();
+    await this.page.locator('#loginFrm_loginname').fill(userName);
+    await this.page.locator('#loginFrm_password').fill(userPassword);
+    await this.page.getByRole('button', { name: 'Login' }).click();
+  }
+
+  async addToCart() {
+    await this.page.locator('.active.menu_home').click();
+    await this.page.getByTestId('52').click();
+    await this.page.locator('#topnav').getByTestId('menu_cart').click();
   }
 }

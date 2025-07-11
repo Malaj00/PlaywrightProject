@@ -27,10 +27,7 @@ const test = base.extend<{
       autostoreCredential.userName,
       autostoreCredential.userPassword,
     );
-    await addToCart.homeButton.click();
-    await addToCart.product52.click();
-    await addToCart.cartMenuButton.click();
-
+    await addToCart.addToCart();
     await use(addToCart);
   },
 });
