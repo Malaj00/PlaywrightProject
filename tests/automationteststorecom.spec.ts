@@ -714,4 +714,19 @@ test.describe('Other tests', () => {
     await expect(storePage.productName.first()).toHaveText(productZA);
     // Assert:
   });
+
+  test.use({ testIdAttribute: 'data-banner-id' });
+  test('Carosuel switcher', async ({ storePage, page }) => {
+    // Arrange:
+    const autoTest = 'Automation Testing';
+    // Act:
+    await page.waitForTimeout(1000);
+    await storePage.pageCarousel.hover();
+    for (let index = 0; index < 2; index++) {
+      await storePage.arrowCarousel.click();
+      await page.waitForTimeout(1000);
+    }
+    // Assert:
+    await expect(storePage.bannerCarousel17).toHaveText(autoTest);
+  });
 });

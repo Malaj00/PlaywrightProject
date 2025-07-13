@@ -113,8 +113,14 @@ export class AutomationStore {
   tshirtPack: Locator;
   currentReviews: Locator;
   sortBy: Locator;
+  pageCarousel: Locator;
+  arrowCarousel: Locator;
+  bannerCarousel17: Locator;
 
   constructor(private page: Page) {
+    this.bannerCarousel17 = page.getByTestId('17').locator('.txt2');
+    this.arrowCarousel = page.locator('.nextArrow');
+    this.pageCarousel = page.locator('.oneByOneSlide');
     this.sortBy = page.locator('#sort');
     this.currentReviews = page.locator('#current_reviews');
     this.tshirtPack = page.getByRole('link', {
@@ -300,16 +306,22 @@ export class AutomationStore {
   }
 }
 
+//multiple products to cart methods
+// async addTest(productId: number) {
+//   const addToCartButton = this.page.getByTestId(`${productId}`);
+//   await addToCartButton.click();
+// }
+// async addMultipleProductsToCart(productIds: number[]) {
+//   for (const id of productIds) {
+//     await this.addTest(id);
+//   }
+// }
+// await storePage.addMultipleProductsToCart([52, 68, 66])
 
-
-  //multiple products to cart methods
-  // async addTest(productId: number) {
-  //   const addToCartButton = this.page.getByTestId(`${productId}`);
-  //   await addToCartButton.click();
-  // }
-  // async addMultipleProductsToCart(productIds: number[]) {
-  //   for (const id of productIds) {
-  //     await this.addTest(id);
-  //   }
-  // }
-  // await storePage.addMultipleProductsToCart([52, 68, 66])
+//function with for
+//   async function clickWithDelayNTimes(locator: Locator, times: number, delay: number) {
+//   for (let i = 0; i < times; i++) {
+//     await locator.click();
+//     if (i < times - 1) await page.waitForTimeout(delay);
+//   }
+// }
