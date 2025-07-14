@@ -37,7 +37,6 @@ export class AutomationStore {
   specialsButton: Locator;
   saleClass: Locator;
   productName: Locator;
-  product65: Locator;
   oldPrice: Locator;
   newPrice: Locator;
   quickBasket: Locator;
@@ -116,8 +115,32 @@ export class AutomationStore {
   pageCarousel: Locator;
   arrowCarousel: Locator;
   bannerCarousel17: Locator;
+  product96: Locator;
+  product65: Locator;
+  product97: Locator;
+  product62: Locator;
+  product83: Locator;
+  product81: Locator;
+  product86: Locator;
+  product87: Locator;
+  product94: Locator;
+  product95: Locator;
+  product107: Locator;
+  product108: Locator;
 
   constructor(private page: Page) {
+    this.product108 = page.locator('.pricetag.jumbotron').getByTestId('108');
+    this.product107 = page.locator('.pricetag.jumbotron').getByTestId('107');
+    this.product95 = page.locator('.pricetag.jumbotron').getByTestId('95');
+    this.product96 = page.locator('.pricetag.jumbotron').getByTestId('96');
+    this.product65 = page.locator('.pricetag.jumbotron').getByTestId('65');
+    this.product97 = page.locator('.pricetag.jumbotron').getByTestId('97');
+    this.product94 = page.locator('.pricetag.jumbotron').getByTestId('94');
+    this.product62 = page.locator('.pricetag.jumbotron').getByTestId('62');
+    this.product83 = page.locator('.pricetag.jumbotron').getByTestId('83');
+    this.product81 = page.locator('.pricetag.jumbotron').getByTestId('81');
+    this.product86 = page.locator('.pricetag.jumbotron').getByTestId('86');
+    this.product87 = page.locator('.pricetag.jumbotron').getByTestId('87');
     this.bannerCarousel17 = page.getByTestId('17').locator('.txt2');
     this.arrowCarousel = page.locator('.nextArrow');
     this.pageCarousel = page.locator('.oneByOneSlide');
@@ -214,7 +237,6 @@ export class AutomationStore {
     this.quickBasket = page.locator('.quick_basket');
     this.newPrice = page.locator('.thumbnail .pricenew');
     this.oldPrice = page.locator('.thumbnail .priceold');
-    this.product65 = page.getByTestId('65');
     this.productName = page.locator('.contentpanel .prdocutname');
     this.saleClass = page.locator('.contentpanel .sale');
     this.specialsButton = page

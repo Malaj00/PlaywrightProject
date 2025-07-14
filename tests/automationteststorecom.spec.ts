@@ -351,6 +351,33 @@ test.describe('Store tests', () => {
     const shipRate = Number(totalshipRate?.replace('$', ''));
     await expect(shipRate).toBe(2);
   });
+
+  test.use({ testIdAttribute: 'data-id' });
+  test('Multiple products in cart', async ({ storePage, page }) => {
+    // Arrange:
+    // Act:
+    await storePage.categoryMenu.Skincare.hover();
+    await storePage.categoryMenu.EyesSkin.click();
+    await storePage.product96.click();
+    await storePage.product65.click();
+    await storePage.product97.click();
+    await storePage.categoryMenu.Skincare.first().hover();
+    await storePage.categoryMenu.GiftSets.click();
+    await storePage.product94.click();
+    await storePage.product108.click();
+    await storePage.product95.click();
+    await storePage.product107.click();
+    await storePage.categoryMenu.Fragrnance.hover()
+    await storePage.categoryMenu.MenFragn.click()
+    await storePage.product62.click();
+    await storePage.product83.click();
+    await storePage.product81.click();
+    await storePage.product86.click();
+    await storePage.product87.click();
+    await storePage.cartMenuButton.click();
+    // Assert:
+    await expect(page.locator('.product-list tr')).toHaveCount(13)
+  });
 });
 
 test.describe('Other tests', () => {
