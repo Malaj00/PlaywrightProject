@@ -127,8 +127,22 @@ export class AutomationStore {
   product95: Locator;
   product107: Locator;
   product108: Locator;
+  categorySelected: Locator;
+  searchCategory: Locator;
+  singleCategory: Locator;
+  cartRows: Locator;
+  addCart: Locator;
+  menuText: Locator;
+  firstNameAcc: Locator;
 
   constructor(private page: Page) {
+    this.firstNameAcc = page.locator('#AccountFrm_firstname')
+    this.menuText = page.locator('.menu_text')
+    this.addCart = page.getByRole('link', { name: 'Add To Cart' });
+    this.cartRows = page.locator('.product-list tr');
+    this.singleCategory = page.locator('.search-category');
+    this.searchCategory = page.locator('#search-category');
+    this.categorySelected = page.locator('#category_selected');
     this.product108 = page.locator('.pricetag.jumbotron').getByTestId('108');
     this.product107 = page.locator('.pricetag.jumbotron').getByTestId('107');
     this.product95 = page.locator('.pricetag.jumbotron').getByTestId('95');

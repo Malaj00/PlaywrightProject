@@ -367,8 +367,8 @@ test.describe('Store tests', () => {
     await storePage.product108.click();
     await storePage.product95.click();
     await storePage.product107.click();
-    await storePage.categoryMenu.Fragrnance.hover()
-    await storePage.categoryMenu.MenFragn.click()
+    await storePage.categoryMenu.Fragrnance.hover();
+    await storePage.categoryMenu.MenFragn.click();
     await storePage.product62.click();
     await storePage.product83.click();
     await storePage.product81.click();
@@ -376,8 +376,42 @@ test.describe('Store tests', () => {
     await storePage.product87.click();
     await storePage.cartMenuButton.click();
     // Assert:
-    await expect(page.locator('.product-list tr')).toHaveCount(13)
+    await expect(storePage.cartRows).toHaveCount(13);
   });
+
+  // test('Stock availability count', async ({ loggedInStorePage, page }) => {
+  //   // Arrange:
+  //   const removeButtons = loggedInStorePage.removeButton;
+  //   // Act:
+  //   await loggedInStorePage.cartMenuButton.click();
+  //   while ((await removeButtons.count()) > 0) {
+  //     await removeButtons.nth(0).click();
+  //     await page.waitForTimeout(100);
+  //   }
+  //   await loggedInStorePage.categoryMenu.Books.hover();
+  //   await loggedInStorePage.categoryMenu.AudioCD.click();
+  //   await loggedInStorePage.productName.first().click();
+  //   const avaText = await page.locator('.productinfo').innerText();
+  //   const match = avaText.match(/\d+/);
+  //   if (!match) {
+  //     throw new Error('Number was not found!');
+  //   }
+  //   const stock = parseInt(match[0]);
+  //   await loggedInStorePage.addCart.click();
+  //   await loggedInStorePage.cartCheckout.click();
+  //   await loggedInStorePage.checkoutButton.click();
+  //   await loggedInStorePage.categoryMenu.Books.hover();
+  //   await loggedInStorePage.categoryMenu.AudioCD.click();
+  //   await loggedInStorePage.productName.first().click();
+  //   const updatedAva = await page.locator('.productinfo').innerText();
+  //   const secondMatch = updatedAva.match(/\d+/);
+  //   if (!secondMatch) {
+  //     throw new Error('Number was not found!');
+  //   }
+  //   const finalStock = parseInt(secondMatch[0]);
+  //   // Assert:
+  //   await expect(updatedAva).toBe(stock - 1)
+  // });
 });
 
 test.describe('Other tests', () => {
@@ -629,6 +663,7 @@ test.describe('Other tests', () => {
     await loggedInStorePage.lastNameInput.clear();
     await loggedInStorePage.lastNameInput.fill(tempLastName);
     await loggedInStorePage.continueButton.click();
+    await expect(loggedInStorePage.succesAlert).toContainText(successChange);
     await loggedInStorePage.editAcc.nth(1).click();
     await expect(loggedInStorePage.lastNameInput).toHaveValue(tempLastName);
     await loggedInStorePage.lastNameInput.clear();
@@ -639,6 +674,36 @@ test.describe('Other tests', () => {
     // Assert:
     await expect(loggedInStorePage.lastNameInput).toHaveValue(
       autostoreCredential.lastName,
+    );
+  });
+
+  test('First name change and welcome message', async ({
+    loggedInStorePage,
+  }) => {
+    // Arrange:
+    const tempFirstName = 'testLastName';
+    const successChange =
+      'Success: Your account has been successfully updated.';
+    // Act:
+    await loggedInStorePage.editAcc.nth(1).click();
+    await expect(loggedInStorePage.firstNameAcc).toHaveValue(
+      autostoreCredential.firstName,
+    );
+    await loggedInStorePage.firstNameAcc.clear;
+    await loggedInStorePage.firstNameAcc.fill(tempFirstName);
+    await loggedInStorePage.continueButton.click();
+    await expect(loggedInStorePage.succesAlert).toContainText(successChange);
+    await expect(loggedInStorePage.menuText.first()).toHaveText(
+      `Welcome back ${tempFirstName}`,
+    );
+    await loggedInStorePage.editAcc.nth(1).click();
+    await loggedInStorePage.firstNameAcc.clear;
+    await loggedInStorePage.firstNameAcc.fill(autostoreCredential.firstName);
+    await loggedInStorePage.continueButton.click();
+    await expect(loggedInStorePage.succesAlert).toContainText(successChange);
+    // Assert:
+    await expect(loggedInStorePage.menuText.first()).toHaveText(
+      `Welcome back ${autostoreCredential.firstName}`,
     );
   });
 
@@ -755,5 +820,20 @@ test.describe('Other tests', () => {
     }
     // Assert:
     await expect(storePage.bannerCarousel17).toHaveText(autoTest);
+  });
+
+  test('Keyword category', async ({ storePage }) => {
+    // Arrange:
+    const allCat = 'All Categories';
+    const makeupCat = 'Makeup';
+    // Act:
+    await storePage.searchBox.click();
+    await expect(storePage.categorySelected).toHaveText(allCat);
+    const categoryCount = storePage.singleCategory;
+    console.log(await categoryCount.count());
+    await expect(storePage.singleCategory).toHaveCount(8);
+    await storePage.singleCategory.filter({ hasText: makeupCat }).click();
+    // Assert:
+    await expect(storePage.categorySelected).toHaveText(makeupCat);
   });
 });
