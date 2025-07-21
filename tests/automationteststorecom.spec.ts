@@ -754,7 +754,7 @@ test.describe('Other tests', () => {
     await loggedInStorePage.continueButton.click();
     // Assert:
     await expect(loggedInStorePage.succesAlert).toContainText(successAlert);
-    console.log(await loggedInStorePage.succesAlert.textContent());
+    //console.log(await loggedInStorePage.succesAlert.textContent());
   });
 
   test('Change password and revert', async ({ loggedInStorePage }) => {
@@ -830,7 +830,7 @@ test.describe('Other tests', () => {
     await storePage.searchBox.click();
     await expect(storePage.categorySelected).toHaveText(allCat);
     const categoryCount = storePage.singleCategory;
-    console.log(await categoryCount.count());
+    //console.log(await categoryCount.count());
     await expect(storePage.singleCategory).toHaveCount(8);
     await storePage.singleCategory.filter({ hasText: makeupCat }).click();
     // Assert:
