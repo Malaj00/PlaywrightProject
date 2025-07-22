@@ -23,8 +23,28 @@ export class LambdaTests {
   closeAlert: Locator;
   alertInfo: Locator;
   autoInfoAlert: Locator;
+  bootstrapDate: Locator;
+  dateBirtday: Locator;
+  startDate: Locator;
+  endDate: Locator;
+  datePick: Locator;
+  dateYear: Locator;
+  dateMonth: Locator;
+  dateDay: Locator;
+  mainTextDate: Locator;
 
   constructor(private page: Page) {
+    this.mainTextDate = page.getByText('Bootstrap Date Pickers Demo');
+    this.datePick = page.locator('.datepicker-switch');
+    this.dateYear = page.locator('.year');
+    this.dateMonth = page.locator('.month');
+    this.dateDay = page.locator('.day');
+    this.endDate = page.getByPlaceholder('End date');
+    this.startDate = page.getByPlaceholder('Start date');
+    this.dateBirtday = page.locator('#birthday');
+    this.bootstrapDate = page.locator(
+      'a[href="https://www.lambdatest.com/selenium-playground/bootstrap-date-picker-demo"]',
+    );
     this.autoInfoAlert = page.locator('.alert.alert-info').filter({
       has: page.getByText('Normal info message.To close use the close button.'),
     });

@@ -69,7 +69,37 @@ test.describe('First row tests', () => {
 
   test('Bootstrap Date Picker', async ({ page }) => {
     // Arrange:
+    const dateBirth = '1999-09-09';
+    const year2025 = '2025';
+    const july2025 = 'July 2025';
+    const apr2025 = 'April 2020';
+    const year2020 = '2020';
+    const year2029 = '2029';
+    const monthApr = 'Apr';
+    const monthMay = 'May';
+    const day10 = '10';
+    const day21 = '21';
+    const startDateValue = '10/04/2020';
+    const endDateValue = '21/05/2029';
     // Act:
+    await lambdaPG.bootstrapDate.click();
+    await lambdaPG.dateBirtday.fill(dateBirth);
+    await lambdaPG.startDate.click();
+    await lambdaPG.datePick.filter({ hasText: july2025 }).click();
+    await lambdaPG.datePick.filter({ hasText: year2025 }).nth(1).click();
+    await lambdaPG.dateYear.filter({ hasText: year2020 }).click();
+    await lambdaPG.dateMonth.filter({ hasText: monthApr }).click();
+    await lambdaPG.dateDay.filter({ hasText: day10 }).click();
+    await lambdaPG.endDate.click();
+    await lambdaPG.datePick.filter({ hasText: apr2025 }).click();
+    await lambdaPG.datePick.filter({ hasText: year2020 }).nth(1).click();
+    await lambdaPG.dateYear.filter({ hasText: year2029 }).click();
+    await lambdaPG.dateMonth.filter({ hasText: monthMay }).click();
+    await lambdaPG.dateDay.filter({ hasText: day21 }).click();
+    await lambdaPG.dateBirtday.click();
+
     // Assert:
+    await expect(lambdaPG.startDate).toHaveValue(startDateValue);
+    await expect(lambdaPG.endDate).toHaveValue(endDateValue);
   });
 });
