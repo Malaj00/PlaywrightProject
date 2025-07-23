@@ -342,7 +342,7 @@ export class AutomationStore {
   }
 }
 
-//multiple products to cart methods
+// multiple products to cart methods
 // async addTest(productId: number) {
 //   const addToCartButton = this.page.getByTestId(`${productId}`);
 //   await addToCartButton.click();

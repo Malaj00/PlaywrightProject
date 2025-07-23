@@ -16,6 +16,7 @@ test.describe('First row tests', () => {
     const submitMess = 'Ajax Request is Processing!';
     // Act:
     await lambdaPG.ajaxForm.click();
+    await page.waitForLoadState('domcontentloaded');
     await lambdaPG.nameForm.fill(name);
     await lambdaPG.messageForm.fill(message);
     await lambdaPG.submitButton.click();
@@ -97,9 +98,48 @@ test.describe('First row tests', () => {
     await lambdaPG.dateMonth.filter({ hasText: monthMay }).click();
     await lambdaPG.dateDay.filter({ hasText: day21 }).click();
     await lambdaPG.dateBirtday.click();
-
     // Assert:
     await expect(lambdaPG.startDate).toHaveValue(startDateValue);
     await expect(lambdaPG.endDate).toHaveValue(endDateValue);
+  });
+});
+
+test.describe('Second row', () => {
+  let lambdaPG: LambdaTests;
+  test.beforeEach(async ({ page }) => {
+    lambdaPG = new LambdaTests(page);
+    await page.goto('https://www.lambdatest.com/selenium-playground/');
+    await expect(lambdaPG.mainText).toHaveText('Selenium Playground');
+  });
+
+  test('Bootstrap Dual List Demo', async ({ page }) => {
+    // Arrange:
+    const Danville = 'Danville';
+    const Milan = 'Milan';
+    // Act:
+    await lambdaPG.bootDualList.click();
+    for (let index = 0; index < 3; index++) {
+      await lambdaPG.dualListLeft.locator('.list-group-item').first().click();
+      await lambdaPG.moveRight.nth(1).click();
+    }
+    await expect(
+      lambdaPG.dualListRight.locator('.list-group-item'),
+    ).toHaveCount(6);
+    await lambdaPG.searchBox.nth(1).fill(Danville);
+    await page.keyboard.press('Enter');
+    await expect(
+      lambdaPG.dualListRight.locator('.list-group-item:visible'),
+    ).toHaveText(Danville);
+    await expect(
+      lambdaPG.dualListRight.locator('.list-group-item:visible'),
+    ).toHaveCount(1);
+    await expect(
+      lambdaPG.dualListRight.locator('.list-group-item:visible'),
+    ).not.toHaveText(Milan);
+    await lambdaPG.searchBox.nth(1).clear();
+    //Assert:
+    await expect(
+      lambdaPG.dualListRight.locator('.list-group-item'),
+    ).toHaveCount(6);
   });
 });

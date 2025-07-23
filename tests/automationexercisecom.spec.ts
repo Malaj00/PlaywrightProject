@@ -65,7 +65,13 @@ test.describe('Register and login tests', () => {
   });
   test(
     'TC3 - Login with incorrect data',
-    { tag: '@login' },
+    {
+      tag: ['@login', '@exercise'],
+      annotation: {
+        type: 'exercise',
+        description: 'https://automationexercise.com/test_cases',
+      },
+    },
     async ({ page }) => {
       //Arrange
       const userIncMail = 'blabla@mail.com';

@@ -32,9 +32,22 @@ export class LambdaTests {
   dateMonth: Locator;
   dateDay: Locator;
   mainTextDate: Locator;
+  bootDualList: Locator;
+  dualListLeft: Locator;
+  dualListRight: Locator;
+  listItem: Locator;
+  searchBox: Locator;
+  moveRight: Locator;
 
   constructor(private page: Page) {
-    this.mainTextDate = page.getByText('Bootstrap Date Pickers Demo');
+    this.moveRight = page.getByRole('button', { name: '>' })
+    this.searchBox = page.getByPlaceholder('search')
+    this.listItem = page.locator('.list-group-item');
+    this.dualListLeft = page.locator('.dual-list.list-left');
+    this.dualListRight = page.locator('.dual-list.list-right');
+    this.bootDualList = page.locator(
+      'a[href="https://www.lambdatest.com/selenium-playground/bootstrap-dual-list-box-demo"]',
+    );
     this.datePick = page.locator('.datepicker-switch');
     this.dateYear = page.locator('.year');
     this.dateMonth = page.locator('.month');
