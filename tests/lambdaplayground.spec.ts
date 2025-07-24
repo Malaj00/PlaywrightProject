@@ -142,4 +142,101 @@ test.describe('Second row', () => {
       lambdaPG.dualListRight.locator('.list-group-item'),
     ).toHaveCount(6);
   });
+
+  test.use({ testIdAttribute: 'data-target' });
+  test('Bootstrap Modal', async ({ page }) => {
+    // Arrange:
+    const modalText =
+      'This is the place where the content for the modal dialog displays';
+    const modalText2 =
+      'This is the place where the content for the modal dialog displays.';
+    // Act:
+    await page.waitForTimeout(300);
+    await lambdaPG.bootstrapModal.click();
+    await lambdaPG.launchModal.first().click();
+    await expect(lambdaPG.singleModal.locator('.modal-body')).toHaveText(
+      modalText,
+    );
+    await lambdaPG.modalSave.click();
+    await lambdaPG.launchModal.first().click();
+    await lambdaPG.modalClose.click();
+    await lambdaPG.launchModal.nth(1).click();
+    await expect(lambdaPG.multipleModal.locator('.modal-body')).toContainText(
+      modalText2,
+    );
+    await lambdaPG.launchInModal.click();
+    await expect(lambdaPG.singleModal.locator('.modal-body')).toHaveText(
+      modalText,
+    );
+    await lambdaPG.modalSave.nth(1).click();
+    await lambdaPG.modalSave.first().click();
+    // Assert:
+  });
+
+  test('Bootstrap Progress Bar', async ({ page }) => {
+    // Arrange:
+    // Act:
+    await lambdaPG.progressBar.click();
+    await lambdaPG.startDwnl.click();
+    // Assert:
+    await page.waitForTimeout(500);
+    await expect(lambdaPG.progress100).toHaveText('100%');
+    await expect(lambdaPG.complDwnl).toHaveText('Download completed!');
+  });
+
+  test('Broken Image', async ({ page }) => {
+    // Arrange:
+    // Act:
+    await lambdaPG.brokenImg.click();
+    // Assert:
+  });
+});
+
+test.describe('Third row tests', () => {
+  let lambdaPG: LambdaTests;
+  test.beforeEach(async ({ page }) => {
+    lambdaPG = new LambdaTests(page);
+    await page.goto('https://www.lambdatest.com/selenium-playground/');
+    await expect(lambdaPG.mainText).toHaveText('Selenium Playground');
+  });
+
+  test('Checkbox Demo', async ({ page }) => {
+    // Arrange:
+    const Checked = 'Checked!';
+    // Act:
+    await lambdaPG.checkboxDemo.click();
+    await page.waitForLoadState('domcontentloaded');
+    await lambdaPG.singleCheck.check();
+    await expect(lambdaPG.singleCheck).toBeChecked();
+    await expect(page.getByText(Checked)).toHaveText(Checked);
+    await lambdaPG.singleCheck.uncheck();
+    await expect(page.getByText(Checked)).not.toBeVisible();
+    await lambdaPG.optionOne.check();
+    await expect(lambdaPG.optionOne).toBeChecked();
+    await lambdaPG.optionTwo.check();
+    await expect(lambdaPG.optionTwo).toBeChecked();
+    await lambdaPG.optionOne.uncheck();
+    await lambdaPG.optionTwo.uncheck();
+    await expect(lambdaPG.optionOne).not.toBeChecked();
+    await expect(lambdaPG.optionTwo).not.toBeChecked();
+    await expect(lambdaPG.optionThree).toBeDisabled();
+    await expect(lambdaPG.optionFour).toBeDisabled();
+    await expect(lambdaPG.checkAll).toBeVisible();
+    await lambdaPG.multiFirst.check();
+    await expect(lambdaPG.multiFirst).toBeChecked();
+    await lambdaPG.multiSecond.check();
+    await expect(lambdaPG.multiSecond).toBeChecked();
+    await lambdaPG.multiThird.check();
+    await expect(lambdaPG.multiThird).toBeChecked();
+    await lambdaPG.multiFourth.check();
+    await expect(lambdaPG.multiFourth).toBeChecked();
+    await expect(lambdaPG.unCheckAll).toBeVisible();
+    await lambdaPG.unCheckAll.click();
+    await expect(lambdaPG.checkAll).toBeVisible();
+    // Assert:
+    await expect(lambdaPG.multiFirst).not.toBeChecked();
+    await expect(lambdaPG.multiSecond).not.toBeChecked();
+    await expect(lambdaPG.multiThird).not.toBeChecked();
+    await expect(lambdaPG.multiFourth).not.toBeChecked();
+  });
 });
