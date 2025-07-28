@@ -63,8 +63,26 @@ export class LambdaTests {
   multiThird: Locator;
   multiFourth: Locator;
   unCheckAll: Locator;
+  contextMenu: Locator;
+  listFilter: Locator;
+  inputSearch: Locator;
+  visibleBlocks: Locator;
+  downloadFile: Locator;
+  downloadButton: Locator;
 
   constructor(private page: Page) {
+    this.downloadButton = page.getByRole('button', { name: 'Download File' });
+    this.downloadFile = page.locator(
+      'a[href="https://www.lambdatest.com/selenium-playground/download-file-demo"]',
+    );
+    this.visibleBlocks = page.locator('.info-block:visible');
+    this.inputSearch = page.locator('#input-search');
+    this.listFilter = page.locator(
+      'a[href="https://www.lambdatest.com/selenium-playground/data-list-filter-demo"]',
+    );
+    this.contextMenu = page.locator(
+      'a[href="https://www.lambdatest.com/selenium-playground/context-menu"]',
+    );
     this.multiFirst = page
       .locator('.flex')
       .getByText('Option 1')

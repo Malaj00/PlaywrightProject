@@ -136,8 +136,8 @@ export class AutomationStore {
   firstNameAcc: Locator;
 
   constructor(private page: Page) {
-    this.firstNameAcc = page.locator('#AccountFrm_firstname')
-    this.menuText = page.locator('.menu_text')
+    this.firstNameAcc = page.locator('#AccountFrm_firstname');
+    this.menuText = page.locator('.menu_text');
     this.addCart = page.getByRole('link', { name: 'Add To Cart' });
     this.cartRows = page.locator('.product-list tr');
     this.singleCategory = page.locator('.search-category');

@@ -239,4 +239,47 @@ test.describe('Third row tests', () => {
     await expect(lambdaPG.multiThird).not.toBeChecked();
     await expect(lambdaPG.multiFourth).not.toBeChecked();
   });
+
+  test('Context Menu', async ({ page }) => {
+    // Arrange:
+
+    // Act:
+    await lambdaPG.contextMenu.click();
+    await page.locator('#hot-spot').click();
+    // Assert:
+  });
+
+  test('Data List FIlter', async ({ page }) => {
+    // Arrange:
+    const tester = 'Tester';
+    const manager = 'Manager';
+    const enter = 'enter';
+    // Act:
+    await lambdaPG.listFilter.click();
+    await lambdaPG.inputSearch.fill(tester);
+    await page.keyboard.press(enter);
+    await page.waitForTimeout(200);
+    await expect(lambdaPG.visibleBlocks).toContainText(tester);
+    await expect(lambdaPG.visibleBlocks).toHaveCount(1);
+    await lambdaPG.inputSearch.clear();
+    await expect(lambdaPG.visibleBlocks).toHaveCount(6);
+    await lambdaPG.inputSearch.fill(manager);
+    await page.keyboard.press(enter);
+    await expect(lambdaPG.visibleBlocks.first()).toContainText(manager);
+    await expect(lambdaPG.visibleBlocks).toHaveCount(3);
+    await lambdaPG.inputSearch.clear();
+    await expect(lambdaPG.visibleBlocks).toHaveCount(6);
+    // Assert:
+  });
+
+  test('Download File Demo', async ({ page }) => {
+    // Arrange:
+    // Act:
+    await lambdaPG.downloadFile.click();
+    const downloadPromise = page.waitForEvent('download');
+    await lambdaPG.downloadButton.click();
+    const download = await downloadPromise;
+    await download.saveAs('Downloads/new_file.pdf');
+    // Assert:
+  });
 });
