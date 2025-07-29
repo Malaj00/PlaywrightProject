@@ -69,8 +69,54 @@ export class LambdaTests {
   visibleBlocks: Locator;
   downloadFile: Locator;
   downloadButton: Locator;
+  dragdropSliders: Locator;
+  firstSlider: Locator;
+  firstValue: Locator;
+  sixthSlider: Locator;
+  sixthValue: Locator;
+  dragDrop: Locator;
+  dropZone: Locator;
+  Draggable1: Locator;
+  Draggable2: Locator;
+  droppedList: Locator;
+  dragDemo2: Locator;
+  dropDemo2: Locator;
+  dynamicData: Locator;
+  randomUser: Locator;
+  loadingUser: Locator;
+  downloadTxt: Locator;
+  textBox: Locator;
+  createFile: Locator;
+  downloadBtn: Locator;
 
   constructor(private page: Page) {
+    this.downloadBtn = page.locator('#link-to-download')
+    this.createFile = page.locator('#create');
+    this.textBox = page.locator('#textbox');
+    this.downloadTxt = page.locator(
+      'a[href="https://www.lambdatest.com/selenium-playground/generate-file-to-download-demo"]',
+    );
+    this.loadingUser = page.locator('#loading');
+    this.randomUser = page.getByRole('button', { name: 'Get Random User' });
+    this.dynamicData = page.locator(
+      'a[href="https://www.lambdatest.com/selenium-playground/dynamic-data-loading-demo"]',
+    );
+    this.dropDemo2 = page.locator('#droppable');
+    this.dragDemo2 = page.locator('#draggable');
+    this.droppedList = page.locator('#droppedlist span');
+    this.Draggable1 = page.locator('#todrag').getByText('Draggable 1');
+    this.Draggable2 = page.locator('#todrag').getByText('Draggable 2');
+    this.dropZone = page.locator('#mydropzone');
+    this.dragDrop = page.locator(
+      'a[href="https://www.lambdatest.com/selenium-playground/drag-and-drop-demo"]',
+    );
+    this.sixthValue = page.locator('#rangeDanger');
+    this.sixthSlider = page.locator('#slider6').getByRole('slider');
+    this.firstValue = page.locator('#range');
+    this.firstSlider = page.locator('#slider1').getByRole('slider');
+    this.dragdropSliders = page.locator(
+      'a[href="https://www.lambdatest.com/selenium-playground/drag-drop-range-sliders-demo"]',
+    );
     this.downloadButton = page.getByRole('button', { name: 'Download File' });
     this.downloadFile = page.locator(
       'a[href="https://www.lambdatest.com/selenium-playground/download-file-demo"]',

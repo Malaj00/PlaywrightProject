@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { LambdaTests } from '../pages/lambdaplayground.page';
+import { availableMemory } from 'process';
 
 test.describe('First row tests', () => {
   let lambdaPG: LambdaTests;
@@ -178,8 +179,8 @@ test.describe('Second row', () => {
     // Act:
     await lambdaPG.progressBar.click();
     await lambdaPG.startDwnl.click();
-    // Assert:
     await page.waitForTimeout(500);
+    // Assert:
     await expect(lambdaPG.progress100).toHaveText('100%');
     await expect(lambdaPG.complDwnl).toHaveText('Download completed!');
   });
@@ -232,8 +233,8 @@ test.describe('Third row tests', () => {
     await expect(lambdaPG.multiFourth).toBeChecked();
     await expect(lambdaPG.unCheckAll).toBeVisible();
     await lambdaPG.unCheckAll.click();
-    await expect(lambdaPG.checkAll).toBeVisible();
     // Assert:
+    await expect(lambdaPG.checkAll).toBeVisible();
     await expect(lambdaPG.multiFirst).not.toBeChecked();
     await expect(lambdaPG.multiSecond).not.toBeChecked();
     await expect(lambdaPG.multiThird).not.toBeChecked();
@@ -268,8 +269,8 @@ test.describe('Third row tests', () => {
     await expect(lambdaPG.visibleBlocks.first()).toContainText(manager);
     await expect(lambdaPG.visibleBlocks).toHaveCount(3);
     await lambdaPG.inputSearch.clear();
-    await expect(lambdaPG.visibleBlocks).toHaveCount(6);
     // Assert:
+    await expect(lambdaPG.visibleBlocks).toHaveCount(6);
   });
 
   test('Download File Demo', async ({ page }) => {
@@ -281,5 +282,75 @@ test.describe('Third row tests', () => {
     const download = await downloadPromise;
     await download.saveAs('Downloads/new_file.pdf');
     // Assert:
+  });
+});
+
+test.describe('Fourth row', () => {
+  let lambdaPG: LambdaTests;
+  test.beforeEach(async ({ page }) => {
+    lambdaPG = new LambdaTests(page);
+    await page.goto('https://www.lambdatest.com/selenium-playground/');
+    await expect(lambdaPG.mainText).toHaveText('Selenium Playground');
+  });
+
+  test('Slider Demo', async ({ page }) => {
+    // Arrange:
+    const number44 = '44';
+    const number100 = '100';
+    // Act:
+    await lambdaPG.dragdropSliders.click();
+    await lambdaPG.firstSlider.fill(number44);
+    await expect(lambdaPG.firstValue).toHaveText(number44);
+    await lambdaPG.sixthSlider.fill(number100);
+    // Assert:
+    await expect(lambdaPG.sixthValue.first()).toHaveText(number100);
+  });
+
+  test('Drag and Drop', async ({ page }) => {
+    // Arrange:
+    const dropped2 = 'Dropped!';
+    const Drag1 = 'Draggable 1';
+    const Drag2 = 'Draggable 2';
+    // Act:
+    await lambdaPG.dragDrop.click();
+    await lambdaPG.Draggable1.dragTo(lambdaPG.dropZone);
+    await lambdaPG.Draggable2.dragTo(lambdaPG.dropZone);
+    await expect(lambdaPG.droppedList).toHaveText([Drag1, Drag2]);
+    await lambdaPG.dragDemo2.dragTo(lambdaPG.dropDemo2);
+    // Assert:
+    await expect(lambdaPG.dropDemo2).toHaveText(dropped2);
+  });
+
+  test('Dynamic Data Loading', async ({ page }) => {
+    // Arrange:
+    const firstName = 'First Name : ';
+    const lastName = 'Last Name : ';
+    // Act:
+    await lambdaPG.dynamicData.click();
+    await lambdaPG.randomUser.click();
+    // Assert:
+    await expect(lambdaPG.loadingUser).toContainText('loading');
+    await expect(lambdaPG.loadingUser).toContainText(firstName);
+    await expect(lambdaPG.loadingUser).toContainText(lastName);
+    await expect(lambdaPG.loadingUser.locator('img')).toBeVisible();
+  });
+
+  test('File Download', async ({ page }) => {
+    // Arrange:
+    const fileData = 'Random file text';
+    // Act:
+    await lambdaPG.downloadTxt.click();
+    await page.waitForTimeout(300)
+    await lambdaPG.textBox.fill(fileData);
+    await page.waitForTimeout(50)
+    await page.keyboard.press('Enter');
+    await lambdaPG.createFile.click();
+    const [download] = await Promise.all([
+      page.waitForEvent('download'),
+      lambdaPG.downloadBtn.click(),
+    ]);
+    await download.saveAs('Downloads/Lambdainfo.txt');
+    // Assert:
+    expect(download.suggestedFilename()).toBe('Lambdainfo.txt');
   });
 });
