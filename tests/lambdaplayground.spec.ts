@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { LambdaTests } from '../pages/lambdaplayground.page';
-import { availableMemory } from 'process';
+import plgCredentials from '../test-data/lambdaCredentials.json';
 
 test.describe('First row tests', () => {
   let lambdaPG: LambdaTests;
@@ -340,9 +340,9 @@ test.describe('Fourth row', () => {
     const fileData = 'Random file text';
     // Act:
     await lambdaPG.downloadTxt.click();
-    await page.waitForTimeout(300)
+    await page.waitForTimeout(300);
     await lambdaPG.textBox.fill(fileData);
-    await page.waitForTimeout(50)
+    await page.waitForTimeout(50);
     await page.keyboard.press('Enter');
     await lambdaPG.createFile.click();
     const [download] = await Promise.all([
@@ -352,5 +352,126 @@ test.describe('Fourth row', () => {
     await download.saveAs('Downloads/Lambdainfo.txt');
     // Assert:
     expect(download.suggestedFilename()).toBe('Lambdainfo.txt');
+  });
+});
+
+test.describe('Fifth row', () => {
+  let lambdaPG: LambdaTests;
+  test.beforeEach(async ({ page }) => {
+    lambdaPG = new LambdaTests(page);
+    await page.goto('https://www.lambdatest.com/selenium-playground/');
+    await expect(lambdaPG.mainText).toHaveText('Selenium Playground');
+  });
+
+  test('Geolocation Testing', async ({ page }) => {
+    // Arrange:
+    // Act:
+    await lambdaPG.geoLocation.click();
+    // Assert:
+    await expect(lambdaPG.geoResult.getByText('IP Address:')).toContainText(
+      /^IP Address:\s*\d+/,
+    );
+    await expect(lambdaPG.geoResult.getByText('Country Name:')).toContainText(
+      /^Country Name:\s*\w+/,
+    );
+    await expect(lambdaPG.geoResult.getByText('Country Code:')).toContainText(
+      /^Country Code:\s*\w+/,
+    );
+    await expect(lambdaPG.geoResult.getByText('Latitude:')).toContainText(
+      /^Latitude:\s*\d+/,
+    );
+    await expect(lambdaPG.geoResult.getByText('longitude:')).toContainText(
+      /^longitude:\s*\d+/,
+    );
+  });
+
+  test('Hover Demo', async ({ page }) => {
+    // Arrange:
+    const whiteColor = 'rgb(255, 255, 255)';
+    // Act:
+    await lambdaPG.hoverDemo.click();
+    let bgBefore = await lambdaPG.greenHover.evaluate(
+      (el) => window.getComputedStyle(el).backgroundColor,
+    );
+    let textColorBefore = await lambdaPG.greenHover.evaluate(
+      (el) => window.getComputedStyle(el).color,
+    );
+    await lambdaPG.greenHover.hover();
+    await page.waitForTimeout(300);
+    let bgAfter = await lambdaPG.greenHover.evaluate(
+      (el) => window.getComputedStyle(el).backgroundColor,
+    );
+    let textColorAfter = await lambdaPG.greenHover.evaluate(
+      (el) => window.getComputedStyle(el).color,
+    );
+    // Assert:
+    expect(bgBefore).not.toBe(bgAfter);
+    expect(textColorBefore).not.toBe(textColorAfter);
+    expect(bgAfter).toBe(whiteColor);
+  });
+
+  test('Hover Demo 2', async ({ page }) => {
+    // Arrange:
+
+    // Act:
+    await lambdaPG.hoverDemo.click();
+    await page.locator('.s__column.m-15').hover();
+    await expect(page.locator('.text-center.w-300')).toHaveText('Hover');
+    await lambdaPG.blurImage.hover();
+    const blur = await lambdaPG.blurImage.evaluate(
+      (el) => window.getComputedStyle(el).filter,
+    );
+    // Assert:
+    expect(blur).toContain('blur');
+  });
+
+  test('Simple iFrame', async ({ page }) => {
+    // Arrange:
+
+    // Act:
+    await lambdaPG.iframeDemo.click();
+    await page
+      .locator('div')
+      .filter({ hasText: /^Simple iFrame containing Editor$/ })
+      .locator('iframe')
+      .contentFrame()
+      .getByText('Your content.')
+      .fill('12313211');
+    await page
+      .locator('#CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll')
+      .click();
+    await page.evaluate(() => {
+      window.scrollBy(0, 300);
+    });
+    await page
+      .locator('div')
+      .filter({ hasText: /^Simple iFrame containing webpage$/ })
+      .locator('iframe')
+      .contentFrame()
+      .getByRole('button', { name: 'Allow all' })
+      .click();
+    // Assert:
+  });
+
+  test('Input Form Demo', async ({ page }) => {
+    // Arrange:
+    const submitted =
+      'Thanks for contacting us, we will get back to you shortly.';
+    // Act:
+    await lambdaPG.inputForm.click();
+    await lambdaPG.nameInput.fill(plgCredentials.Name);
+    await lambdaPG.emailInput.fill(plgCredentials.Email);
+    await lambdaPG.passInput.fill(plgCredentials.Password);
+    await lambdaPG.companyInput.fill(plgCredentials.Company);
+    await lambdaPG.websiteInput.fill(plgCredentials.Website);
+    await lambdaPG.countryValue.selectOption(plgCredentials.Country);
+    await lambdaPG.cityInput.fill(plgCredentials.City);
+    await lambdaPG.addressInput1.fill(plgCredentials.Address1);
+    await lambdaPG.addressInput2.fill(plgCredentials.Address2);
+    await lambdaPG.stateInput.fill(plgCredentials.State);
+    await lambdaPG.zipcodeInput.fill(plgCredentials.ZipCode);
+    await lambdaPG.submitBtn.click();
+    // Assert:
+    await expect(lambdaPG.successForm).toHaveText(submitted);
   });
 });

@@ -88,9 +88,57 @@ export class LambdaTests {
   textBox: Locator;
   createFile: Locator;
   downloadBtn: Locator;
+  geoLocation: Locator;
+  geoResult: Locator;
+  hoverDemo: Locator;
+  greenHover: Locator;
+  blurImage: Locator;
+  iframeDemo: Locator;
+  inputForm: Locator;
+  nameInput: Locator;
+  emailInput: Locator;
+  passInput: Locator;
+  companyInput: Locator;
+  websiteInput: Locator;
+  countryValue: Locator;
+  cityInput: Locator;
+  addressInput1: Locator;
+  addressInput2: Locator;
+  stateInput: Locator;
+  zipcodeInput: Locator;
+  successForm: Locator;
 
   constructor(private page: Page) {
-    this.downloadBtn = page.locator('#link-to-download')
+    this.successForm = page.locator('.success-msg')
+    this.nameInput = page.locator('#name');
+    this.emailInput = page.locator('#inputEmail4');
+    this.passInput = page.locator('#inputPassword4');
+    this.companyInput = page.locator('#company');
+    this.websiteInput = page.locator('#websitename');
+    this.countryValue = page.locator('select[name="country"]')
+    this.cityInput = page.locator('#inputCity')
+    this.addressInput1 = page.locator('#inputAddress1')
+    this.addressInput2 = page.locator('#inputAddress2')
+    this.stateInput = page.locator('#inputState')
+    this.zipcodeInput = page.locator('#inputZip')
+    this.inputForm = page.locator(
+      'a[href="https://www.lambdatest.com/selenium-playground/input-form-demo"]',
+    );
+    this.iframeDemo = page.locator(
+      'a[href="https://www.lambdatest.com/selenium-playground/iframe-demo"]',
+    );
+    this.blurImage = page
+      .locator('.s__column.hover07 div')
+      .getByAltText('Image');
+    this.greenHover = page.locator('.bg-green-100');
+    this.hoverDemo = page.locator(
+      'a[href="https://www.lambdatest.com/selenium-playground/hover-demo"]',
+    );
+    this.geoResult = page.locator('.p-15');
+    this.geoLocation = page.locator(
+      'a[href="https://www.lambdatest.com/selenium-playground/geolocation-testing"]',
+    );
+    this.downloadBtn = page.locator('#link-to-download');
     this.createFile = page.locator('#create');
     this.textBox = page.locator('#textbox');
     this.downloadTxt = page.locator(
